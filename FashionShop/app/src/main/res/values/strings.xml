@@ -6,8 +6,7 @@
     <string name="login_title2">Sign in to continue</string>
     <string name="skip">Skip</string>
     <string name="login">LogIn</string>
-    <string name="orSignup1">Don’t have a account?</string>
-    <string name="orSignup2">Register</string>
+    <string name="orSignup">Don’t have a account?</string>
     <string name="or">OR</string>
     <string name="google">Login With Google</string>
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scaleType="centerCrop"
-    tools:context=".LoginActivity">
+    tools:context=".SignupActivity">
 
     <Button
         android:id="@+id/skipBtn"
@@ -32,7 +32,7 @@
         android:id="@+id/title1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login_title1"
+        android:text="@string/signupTitle1"
         android:textColor="@color/black"
         android:textSize="32dp"
         android:textStyle="bold"
@@ -44,13 +44,33 @@
         android:id="@+id/title2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login_title2"
+        android:text="@string/signupTitle2"
         android:textColor="@color/gray"
         android:textSize="20sp"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/emailTxt"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/nameTxt"
         app:layout_constraintStart_toStartOf="@+id/title1"
         app:layout_constraintEnd_toEndOf="@+id/title1"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameTxt"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/name"
+        android:textSize="16sp"
+        app:startIconDrawable="@drawable/ic_person"
+        app:layout_constraintBottom_toTopOf="@+id/emailTxt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailTxt"
@@ -76,12 +96,32 @@
         android:id="@+id/passwordTxt"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="8dp"
         android:hint="@string/password"
         android:textSize="16sp"
         app:startIconDrawable="@drawable/ic_privacy"
         app:endIconMode="password_toggle"
-        app:layout_constraintBottom_toTopOf="@+id/loginBtn"
+        app:layout_constraintBottom_toTopOf="@+id/confirmPasswordTxt"
+        app:layout_constraintEnd_toEndOf="@+id/emailTxt"
+        app:layout_constraintStart_toStartOf="@+id/emailTxt"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/confirmPasswordTxt"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="36dp"
+        android:hint="@string/confirmPassword"
+        android:textSize="16sp"
+        app:startIconDrawable="@drawable/ic_privacy"
+        app:endIconMode="password_toggle"
+        app:layout_constraintBottom_toTopOf="@+id/signupBtn"
         app:layout_constraintEnd_toEndOf="@+id/emailTxt"
         app:layout_constraintStart_toStartOf="@+id/emailTxt"
         >
@@ -93,104 +133,51 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/loginBtn"
+        android:id="@+id/signupBtn"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:text="@string/login"
+        android:text="@string/signup"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="40dp"
         style="?attr/materialButtonOutlinedStyle"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:cornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/passwordTxt"
-        app:layout_constraintStart_toStartOf="@+id/passwordTxt"
-        app:layout_constraintBottom_toTopOf="@+id/textDesign3"/>
-
-    <View
-        android:id="@+id/line1"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginBottom="24dp"
-        android:background="@color/gray"
-        app:layout_constraintBottom_toTopOf="@+id/googleBtn"
-        app:layout_constraintEnd_toStartOf="@+id/textDesign3"
-        app:layout_constraintStart_toStartOf="@+id/googleBtn" />
-
-    <TextView
-        android:id="@+id/textDesign3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:text="@string/or"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/line1"
-        app:layout_constraintEnd_toStartOf="@+id/line2"
-        app:layout_constraintStart_toEndOf="@+id/line1"
-        app:layout_constraintTop_toTopOf="@+id/line1" />
-
-
-    <View
-        android:id="@+id/line2"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="@color/gray"
-        app:layout_constraintBottom_toBottomOf="@+id/textDesign3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/textDesign3"
-        app:layout_constraintTop_toTopOf="@+id/textDesign3" />
-
-    <Button
-        android:id="@+id/googleBtn"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:alpha="0.8"
-        android:backgroundTint="@color/white"
-        android:drawableLeft="@drawable/logo_google"
-        android:text="@string/google"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        style="?attr/materialButtonOutlinedStyle"
-        app:cornerRadius="10dp"
-        app:strokeColor="@color/Orange"
-        app:strokeWidth="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/signupLayput"
-        app:layout_constraintEnd_toEndOf="@+id/loginBtn"
-        app:layout_constraintStart_toStartOf="@+id/loginBtn" />
+        app:layout_constraintBottom_toTopOf="@+id/loginLayput"
+        app:layout_constraintEnd_toEndOf="@+id/emailTxt"
+        app:layout_constraintStart_toStartOf="@+id/emailTxt" />
 
     <LinearLayout
-        android:id="@+id/signupLayput"
+        android:id="@+id/loginLayput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/loginBtn"
-        app:layout_constraintEnd_toEndOf="@+id/loginBtn">
+        app:layout_constraintStart_toStartOf="@+id/signupBtn"
+        app:layout_constraintEnd_toEndOf="@+id/signupBtn">
 
-    <Button
-        android:id="@+id/signupBtn1"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/orSignup"
-        android:textColor="@color/gray"
-        android:textSize="16sp"
-        android:textAllCaps="false"/>
+        <Button
+            android:id="@+id/loginBtn1"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/orLogin"
+            android:textColor="@color/gray"
+            android:gravity="end"
+            android:textSize="16sp"
+            android:textAllCaps="false"/>
 
-    <Button
-        android:id="@+id/signupBtn2"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/signup"
-        android:textColor="@color/black"
-        android:gravity="start"
-        android:textSize="16sp"
-        android:textStyle="bold"/>
+        <Button
+            android:id="@+id/loginBtn2"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:gravity="start"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
