@@ -155,7 +155,7 @@
         android:textSize="24sp"
         style="?attr/materialButtonOutlinedStyle"
         app:cornerRadius="10dp"
-        app:strokeColor="@color/Orange"
+        app:strokeColor="@color/orange"
         app:strokeWidth="2dp"
         app:layout_constraintBottom_toTopOf="@+id/signupLayput"
         app:layout_constraintEnd_toEndOf="@+id/loginBtn"
@@ -178,6 +178,7 @@
         android:layout_height="wrap_content"
         android:text="@string/orSignup"
         android:textColor="@color/gray"
+        android:gravity="end"
         android:textSize="16sp"
         android:textAllCaps="false"/>
 
