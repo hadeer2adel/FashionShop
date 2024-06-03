@@ -1,16 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CategoryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:hint="@string/search_categories"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:justifyContent="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_search">
+
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+            android:id="@+id/btn_all"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:toggle_backgroundColor="@color/white"
+            app:toggle_selectAnimation="horizontal_slide"
+            app:toggle_selectedBackgroundColor="@color/black"
+            app:toggle_selectedTextColor="@color/white"
+            app:toggle_text="@string/all" />
+
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+            android:id="@+id/btn_women"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:toggle_backgroundColor="@color/white"
+            app:toggle_selectAnimation="horizontal_slide"
+            app:toggle_selectedBackgroundColor="@color/black"
+            app:toggle_selectedTextColor="@color/white"
+            app:toggle_text="@string/women" />
+
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+            android:id="@+id/btn_kid"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:toggle_backgroundColor="@color/white"
+            app:toggle_selectAnimation="horizontal_slide"
+            app:toggle_selectedBackgroundColor="@color/black"
+            app:toggle_selectedTextColor="@color/white"
+            app:toggle_text="@string/kid" />
+
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+            android:id="@+id/btn_men"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:toggle_backgroundColor="@color/white"
+            app:toggle_selectAnimation="horizontal_slide"
+            app:toggle_selectedBackgroundColor="@color/black"
+            app:toggle_selectedTextColor="@color/white"
+            app:toggle_text="@string/men" />
+
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+            android:id="@+id/btn_sale"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:toggle_backgroundColor="@color/white"
+            app:toggle_selectAnimation="horizontal_slide"
+            app:toggle_selectedBackgroundColor="@color/black"
+            app:toggle_selectedTextColor="@color/white"
+            app:toggle_text="@string/sale" />
+    </nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_products"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/category"
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/card_brand" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="90dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        android:src="@drawable/ic_categories"
+        app:backgroundTint="@color/gray"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:pressedTranslationZ="12dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_shoes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:fabSize="normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/fab_category"
+        app:layout_constraintEnd_toEndOf="@+id/fab_category"
+        app:layout_constraintStart_toStartOf="@+id/fab_category"
+        app:pressedTranslationZ="12dp"
+        app:srcCompat="@drawable/sneakers" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_accessories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:fabSize="normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/fab_shoes"
+        app:layout_constraintEnd_toEndOf="@+id/fab_shoes"
+        app:layout_constraintStart_toStartOf="@+id/fab_shoes"
+        app:pressedTranslationZ="12dp"
+        app:srcCompat="@drawable/wedding_rings" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_shirt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        app:backgroundTint="#ffffff"
+        app:fabSize="normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/fab_accessories"
+        app:layout_constraintEnd_toEndOf="@+id/fab_accessories"
+        app:layout_constraintStart_toStartOf="@+id/fab_accessories"
+        app:pressedTranslationZ="12dp"
+        app:srcCompat="@drawable/shirt" />
+
+    <View
+        android:id="@+id/overlayView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="25sp"
-        android:text="CategoryFragment" />
+        android:background="#80000000"
+        android:visibility="gone" />
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

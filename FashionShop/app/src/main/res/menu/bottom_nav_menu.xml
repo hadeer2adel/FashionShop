@@ -10,11 +10,10 @@
         android:icon="@drawable/ic_categories"
         android:title="Category" />
 
-
     <item
-        android:id="@+id/settingsFragment"
-        android:icon="@drawable/ic_account"
-        android:title="Settings" />
+        android:id="@+id/cartFragment"
+        android:icon="@drawable/ic_cart"
+        android:title="Cart" />
 
     <item
         android:id="@+id/favoriteFragment"
@@ -22,7 +21,9 @@
         android:title="Favorite" />
 
     <item
-        android:id="@+id/cartFragment"
-        android:icon="@drawable/ic_cart"
-        android:title="Cart" />
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_account"
+        android:title="Settings" />
+
+
 </menu>

@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">FashionShop</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Home -->
+    <string name="coupons">Coupons</string>
+    <string name="brands">Brands</string>
+    <string name="category">Category</string>
+    <string name="search_categories">Search Categories</string>
+    <string name="all">All</string>
+    <string name="women">WOMEN</string>
+    <string name="kid">KID</string>
+    <string name="men">MEN</string>
+    <string name="sale">SALE</string>
 </resources>
