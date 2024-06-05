@@ -12,4 +12,27 @@
     <string name="kid">KID</string>
     <string name="men">MEN</string>
     <string name="sale">SALE</string>
+
+    //login page
+    <string name="login_title1">Welcome Back</string>
+    <string name="login_title2">Sign in to continue</string>
+    <string name="skip">Skip</string>
+    <string name="login">Enter</string>
+    <string name="orSignup">Don’t have a account?</string>
+    <string name="or">OR</string>
+    <string name="google">Login With Google</string>
+
+    //Sign up page
+    <string name="signup">Create</string>
+    <string name="signupTitle1">Create Account</string>
+    <string name="signupTitle2">Let\'s Get Started!</string>
+    <string name="orLogin1">Already have an account?</string>
+    <string name="orLogin2">LogIn</string>
+
+    //data field
+    <string name="name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirmPassword">Confirm Password</string>
+
 </resources>
