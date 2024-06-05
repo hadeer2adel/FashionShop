@@ -1,59 +1,86 @@
 package com.example.fashionshop
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import com.example.fashionshop.databinding.FragmentSettingsBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class SettingsFragment : Fragment() , OnBackPressedListener{
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SettingsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SettingsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+    ): View {
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SettingsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SettingsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = NavHostFragment.findNavController(this)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+
+        // Set up the toolbar
+        // Access your views using binding
+        binding.AddressButton.setOnClickListener {
+//            val secondFragment = AddressFragment()
+//            fragmentManager?.beginTransaction()?.apply {
+//                replace(R.id.fragmentContainerView, secondFragment)
+//                addToBackStack(null)
+//                commit()
+//            }
+            navController.navigate(R.id.action_profileFragment_to_addressFragment)
+
+        }
+
+        binding.CurrencyButton.setOnClickListener {
+            showCurrencyDialog()
+        }
+
+        binding.AboutUsButton.setOnClickListener {
+//            val secondFragment = AboutFragment()
+//            fragmentManager?.beginTransaction()?.apply {
+//                replace(R.id.fragmentContainerView, secondFragment)
+//                addToBackStack(null)
+//                commit()
+//            }
+            navController.navigate(R.id.action_profileFragment_to_AboutFragment)
+
+        }
+
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onBackPressed() {
+        parentFragmentManager.popBackStack()
+    }
+    private fun showCurrencyDialog() {
+        val options = arrayOf("EGY", "USD")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Choose Currency")
+            .setItems(options) { dialog, which ->
+                val selectedCurrency = options[which]
+                Toast.makeText(requireContext(), "Selected: $selectedCurrency", Toast.LENGTH_SHORT).show()
+                // Handle the selection (e.g., store the selected currency or update the UI)
             }
+        builder.create().show()
     }
 }

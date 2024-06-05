@@ -26,8 +26,51 @@
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" />
     <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.fashionshop.ProfileFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/orderFragment"
+        android:name="com.example.fashionshop.OrdersFragment"
+        android:label="Orders"
+        tools:layout="@layout/fragment_orders" />
+
+    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.fashionshop.SettingsFragment"
-        android:label="fragment_settings"
+        android:label="Setting"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.example.fashionshop.AddressFragment"
+        android:label="Setting"
+        tools:layout="@layout/fragment_address" />
+    <fragment
+        android:id="@+id/aboutusFragment"
+        android:name="com.example.fashionshop.AboutFragment"
+        android:label="Setting"
+        tools:layout="@layout/fragment_about" />
+    <action
+        android:id="@+id/action_profileFragment_to_ordersFragment"
+        app:destination="@id/orderFragment" />
+
+    <action
+        android:id="@+id/action_profileFragment_to_favoritesFragment"
+        app:destination="@id/favoriteFragment" />
+
+    <action
+        android:id="@+id/action_profileFragment_to_settingFragment"
+        app:destination="@id/settingsFragment" />
+
+
+
+
+    <action
+        android:id="@+id/action_profileFragment_to_addressFragment"
+        app:destination="@id/addressFragment" />
+
+    <action
+        android:id="@+id/action_profileFragment_to_AboutFragment"
+        app:destination="@id/aboutusFragment" />
 </navigation>

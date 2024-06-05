@@ -1,16 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="25sp"
-        android:text="SettingsFragment" />
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="190dp"
+        android:orientation="vertical"> <!-- Add margin top here -->
+
+
+        <Button
+            android:id="@+id/AddressButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/arrow_right"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:text="Address"
+            android:textAlignment="viewStart"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/CurrencyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/arrow_right"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:text="Currency"
+            android:textAlignment="viewStart"
+            android:textColor="@color/black" />
+
+
+        <Button
+            android:id="@+id/AboutUsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/arrow_right"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:text="AboutUs"
+            android:textAlignment="viewStart"
+            android:textColor="@color/black" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>
