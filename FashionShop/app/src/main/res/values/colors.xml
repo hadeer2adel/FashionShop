@@ -8,5 +8,5 @@
     <color name="red">#FF0000</color>
     <color name="favourite">#C80000</color>
     <color name="light">#EBF0FF</color>
-    <color name="star">"#FFEB3B"</color>
+    <color name="star">#FFEB3B</color>
 </resources>
