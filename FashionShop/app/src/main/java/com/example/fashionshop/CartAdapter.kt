@@ -18,7 +18,20 @@ class CartAdapter(private val items: List<CartItem>) : RecyclerView.Adapter<Cart
         val item = items[position]
         holder.binding.itemName.text = item.name
         holder.binding.itemPrice.text = item.price.toString()
+
+        holder.binding.decreaseButton.setOnClickListener {
+            if (item.quantity > 0) {
+                item.quantity--
+                holder.binding.quantityText.text = item.quantity.toString()
+            }
+        }
+
+        holder.binding.increaseButton.setOnClickListener {
+            item.quantity++
+            holder.binding.quantityText.text = item.quantity.toString()
+        }
     }
+
 
     override fun getItemCount() = items.size
 }

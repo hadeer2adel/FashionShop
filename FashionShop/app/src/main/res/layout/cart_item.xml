@@ -68,7 +68,7 @@
             tools:layout_editor_absoluteY="48dp">
 
             <TextView
-                android:id="@+id/t1"
+                android:id="@+id/decreaseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-"
@@ -77,7 +77,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/t2"
+                android:id="@+id/quantityText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -87,7 +87,7 @@
                 android:textSize="25sp" />
 
             <TextView
-                android:id="@+id/t3"
+                android:id="@+id/increaseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+"

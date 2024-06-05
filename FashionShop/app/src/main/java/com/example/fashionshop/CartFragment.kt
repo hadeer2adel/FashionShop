@@ -23,9 +23,9 @@ class CartFragment : Fragment() {
 
         // Sample cart items
         val cartItems = listOf(
-            CartItem(name = "Item 1", price = 19.99),
-            CartItem(name = "Item 2", price = 9.99),
-            CartItem(name = "Item 3", price = 14.99)
+            CartItem(name = "Item 1", price = 19.99, quantity = 1),
+            CartItem(name = "Item 2", price = 9.99,quantity = 1),
+            CartItem(name = "Item 3", price = 14.99,quantity = 1)
         )
 
         // Setup RecyclerView
