@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="800dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".CartFragment">
@@ -20,7 +21,8 @@
         android:id="@+id/buttonCheckout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/gray1"
+        app:backgroundTint="@color/LightGray"
+        app:cornerRadius="0dp"
         android:padding="16dp"
         android:text="Checkout"
         android:textColor="@android:color/black" />

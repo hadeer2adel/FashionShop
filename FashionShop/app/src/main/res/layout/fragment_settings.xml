@@ -6,10 +6,12 @@
 
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="190dp"
-        android:orientation="vertical"> <!-- Add margin top here -->
+        android:orientation="vertical"
+        android:padding="10dp"> <!-- Add margin top here -->
 
 
         <Button
@@ -34,7 +36,6 @@
             android:textAlignment="viewStart"
             android:textColor="@color/black" />
 
-
         <Button
             android:id="@+id/AboutUsButton"
             android:layout_width="match_parent"
@@ -48,5 +49,23 @@
 
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="1dp"
+        android:background="@color/LightGray"
+        android:backgroundTint="@color/LightGray"
+        android:padding="4dp"
+        android:paddingStart="4dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="4dp"
+        android:text="Settings"
+        android:textAlignment="viewStart"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

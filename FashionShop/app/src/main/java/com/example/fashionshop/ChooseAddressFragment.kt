@@ -28,9 +28,9 @@ class ChooseAddressFragment : Fragment() {
         )
 
         // Set up RecyclerView
-        val adapter = AddressAdapter(addressList)
+      //  val adapter = AddressAdapter(addressList)
         binding.recyclerChooseAddrees.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerChooseAddrees.adapter = adapter
+    //    binding.recyclerChooseAddrees.adapter = adapter
 binding.buttonContinueToPayment.setOnClickListener {
     findNavController().navigate(R.id.action_AdressFragment_to_paymentFragment)
 }
