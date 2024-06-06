@@ -17,7 +17,7 @@
     <string name="login_title1">Welcome Back</string>
     <string name="login_title2">Sign in to continue</string>
     <string name="skip">Skip</string>
-    <string name="login">Enter</string>
+    <string name="login">LogIn</string>
     <string name="orSignup">Don’t have a account?</string>
     <string name="or">OR</string>
     <string name="google">Login With Google</string>
@@ -34,5 +34,9 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="confirmPassword">Confirm Password</string>
+
+    //product info page
+    <string name="addToCart">Add To Cart</string>
+    <string name="product_description">Description</string>
 
 </resources>

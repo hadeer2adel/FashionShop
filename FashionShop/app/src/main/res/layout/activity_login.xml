@@ -146,13 +146,13 @@
     <Button
         android:id="@+id/googleBtn"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:alpha="0.8"
         android:backgroundTint="@color/white"
         android:drawableLeft="@drawable/logo_google"
         android:text="@string/google"
         android:textColor="@color/black"
-        android:textSize="24sp"
+        android:textSize="20sp"
         style="?attr/materialButtonOutlinedStyle"
         app:cornerRadius="10dp"
         app:strokeColor="@color/orange"
@@ -179,7 +179,7 @@
         android:text="@string/orSignup"
         android:textColor="@color/gray"
         android:gravity="end"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textAllCaps="false"/>
 
     <Button

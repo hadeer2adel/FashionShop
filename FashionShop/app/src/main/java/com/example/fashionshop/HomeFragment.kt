@@ -27,7 +27,7 @@ class HomeFragment : Fragment() {
         val imageResourceIds = listOf(R.drawable.coupone,
                                         R.drawable.coupon2,
                                         R.drawable.coupon3)
-        val sliderAdapter = SliderAdapter(requireContext(), imageResourceIds)
+        val sliderAdapter = SliderAdapter(requireContext(), imageResourceIds, true)
         sliderView.setSliderAdapter(sliderAdapter)
 
         // Dummy data for brands

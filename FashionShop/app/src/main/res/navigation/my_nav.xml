@@ -51,9 +51,19 @@
         android:name="com.example.fashionshop.AboutFragment"
         android:label="Setting"
         tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/productInfoFragment"
+        android:name="com.example.fashionshop.ProductInfoFragment"
+        android:label="fragment_product_info"
+        tools:layout="@layout/fragment_product_info" />
+
     <action
         android:id="@+id/action_profileFragment_to_ordersFragment"
         app:destination="@id/orderFragment" />
+
+    <action
+        android:id="@+id/action_favoriteFragment_to_productInfoFragment"
+        app:destination="@id/productInfoFragment" />
 
     <action
         android:id="@+id/action_profileFragment_to_favoritesFragment"
@@ -62,9 +72,6 @@
     <action
         android:id="@+id/action_profileFragment_to_settingFragment"
         app:destination="@id/settingsFragment" />
-
-
-
 
     <action
         android:id="@+id/action_profileFragment_to_addressFragment"
