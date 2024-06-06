@@ -1,13 +1,16 @@
 package com.example.fashionshop
 
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import com.example.fashionshop.databinding.FragmentCategoryBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class CategoryFragment : Fragment() {
 
@@ -40,6 +43,9 @@ class CategoryFragment : Fragment() {
             }
         }
 
+        binding.filterBtn.setOnClickListener {
+            showFilterMenu(requireContext())
+        }
 
     }
 
@@ -85,6 +91,22 @@ class CategoryFragment : Fragment() {
         animator.interpolator = AccelerateDecelerateInterpolator()
         animator.start()
     }
+
+    private fun showFilterMenu(context: Context) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_filter, null)
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle(context.getString(R.string.dialog_filter))
+            .setView(dialogView)
+            .setPositiveButton(context.getString(R.string.ok)) { dialog, which ->
+                // Handle OK
+            }
+            .setNegativeButton(context.getString(R.string.cancel)) { dialog, which ->
+                // Handle cancel
+            }
+            .show()
+    }
+
 
 
 }

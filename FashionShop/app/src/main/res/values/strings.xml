@@ -1,12 +1,11 @@
 <resources>
     <string name="app_name">FashionShop</string>
-    <!-- TODO: Remove or change this placeholder text -->
 
     <!-- Home -->
     <string name="coupons">Coupons</string>
     <string name="brands">Brands</string>
     <string name="category">Category</string>
-    <string name="search_categories">Search Categories</string>
+    <string name="search">Search</string>
     <string name="all">All</string>
     <string name="women">WOMEN</string>
     <string name="kid">KID</string>
@@ -38,5 +37,13 @@
     //product info page
     <string name="addToCart">Add To Cart</string>
     <string name="product_description">Description</string>
+
+    //category
+    <string name="price">Price Range</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="dialog_filter">Filtering</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
