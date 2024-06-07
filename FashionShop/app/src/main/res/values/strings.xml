@@ -1,12 +1,11 @@
 <resources>
     <string name="app_name">FashionShop</string>
-    <!-- TODO: Remove or change this placeholder text -->
 
     <!-- Home -->
     <string name="coupons">Coupons</string>
     <string name="brands">Brands</string>
     <string name="category">Category</string>
-    <string name="search_categories">Search Categories</string>
+    <string name="search">Search</string>
     <string name="all">All</string>
     <string name="women">WOMEN</string>
     <string name="kid">KID</string>
@@ -17,7 +16,7 @@
     <string name="login_title1">Welcome Back</string>
     <string name="login_title2">Sign in to continue</string>
     <string name="skip">Skip</string>
-    <string name="login">Enter</string>
+    <string name="login">LogIn</string>
     <string name="orSignup">Don’t have a account?</string>
     <string name="or">OR</string>
     <string name="google">Login With Google</string>
@@ -51,5 +50,17 @@
     <string name="order_number">Order number</string>
     <string name="order_total">Order total</string>
     <string name="items_number">Items number</string>
+
+    //product info page
+    <string name="addToCart">Add To Cart</string>
+    <string name="product_description">Description</string>
+
+    //category
+    <string name="price">Price Range</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="dialog_filter">Filtering</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

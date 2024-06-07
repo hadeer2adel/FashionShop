@@ -8,8 +8,8 @@
     <ImageView
         android:id="@+id/iv_discount"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:scaleType="fitXY"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
         tools:srcCompat="@drawable/coupone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
