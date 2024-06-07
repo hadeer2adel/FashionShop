@@ -1,8 +1,9 @@
-package com.example.fashionshop
+package com.example.fashionshop.Adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fashionshop.Model.CartItem
 import com.example.fashionshop.databinding.CartItemBinding
 
 class CartAdapter(private val items: List<CartItem>) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {

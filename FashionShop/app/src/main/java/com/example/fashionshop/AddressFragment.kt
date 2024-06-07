@@ -10,9 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fashionshop.model.Addresse
-import com.example.fashionshop.network.RemoteDataSourceImp
-import com.example.fashionshop.repository.RepositoryImp
+import com.example.fashionshop.Adapters.AddressAdapter
+import com.example.fashionshop.Service.Networking.NetworkManagerImp
+import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.viewModels.AddressFactory
 import com.example.fashionshop.viewModels.AddressViewModel
 
@@ -65,7 +65,7 @@ class AddressFragment : Fragment() ,OnBackPressedListener {
             layoutManager = mLayoutManager
         }
         allProductFactroy=AddressFactory(RepositoryImp.getInstance(
-            RemoteDataSourceImp.getInstance()))
+            NetworkManagerImp.getInstance()))
         allProductViewModel=ViewModelProvider(this,allProductFactroy).get(AddressViewModel::class.java)
         // Observe LiveData for address list updates
         allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->

@@ -1,10 +1,11 @@
-package com.example.fashionshop
+package com.example.fashionshop.Adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.example.fashionshop.R
 import com.smarteist.autoimageslider.SliderViewAdapter
 
 class SliderAdapter(private val context: Context, private val imageResourceIds: List<Int>, private val isAd: Boolean) : SliderViewAdapter<SliderAdapter.SliderViewHolder>() {

@@ -5,14 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fashionshop.model.Customer
-import com.example.fashionshop.model.customers
-import com.example.fashionshop.network.Api_Service
-import com.example.fashionshop.network.Api_State
-import com.example.fashionshop.repository.Repository
+import com.example.fashionshop.Model.customers
+import com.example.fashionshop.Repository.Repository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AddressViewModel (private val repo: Repository

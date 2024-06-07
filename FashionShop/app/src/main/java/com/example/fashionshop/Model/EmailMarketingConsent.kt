@@ -1,4 +1,4 @@
-package com.example.fashionshop.model
+package com.example.fashionshop.Model
 
 data class EmailMarketingConsent(
     val consent_updated_at: Any,

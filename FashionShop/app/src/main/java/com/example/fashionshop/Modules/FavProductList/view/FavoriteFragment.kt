@@ -1,7 +1,6 @@
-package com.example.fashionshop
+package com.example.fashionshop.Modules.FavProductList.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.fashionshop.Adapters.ProductAdapter
+import com.example.fashionshop.R
 import com.example.fashionshop.databinding.FragmentFavoriteBinding
 
 

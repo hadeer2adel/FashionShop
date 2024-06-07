@@ -1,9 +1,10 @@
-package com.example.fashionshop
+package com.example.fashionshop.Modules.Signup.view
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.fashionshop.databinding.ActivityLoginBinding
+import com.example.fashionshop.MainActivity
+import com.example.fashionshop.Modules.Login.view.LoginActivity
 import com.example.fashionshop.databinding.ActivitySignupBinding
 
 class SignupActivity : AppCompatActivity() {

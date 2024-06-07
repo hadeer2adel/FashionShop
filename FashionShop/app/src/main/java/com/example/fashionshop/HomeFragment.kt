@@ -4,6 +4,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.fashionshop.Adapters.Brand
+import com.example.fashionshop.Adapters.BrandAdapter
+import com.example.fashionshop.Adapters.SliderAdapter
 import com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
 import com.smarteist.autoimageslider.SliderView
 

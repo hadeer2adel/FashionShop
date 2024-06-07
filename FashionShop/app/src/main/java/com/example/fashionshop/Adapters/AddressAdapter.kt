@@ -1,10 +1,12 @@
-package com.example.fashionshop
+package com.example.fashionshop.Adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fashionshop.model.Addresse
+import com.example.fashionshop.Model.Addresse
+import com.example.fashionshop.R
+
 class AddressAdapter : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() {
 
     private var addressList: List<Addresse> = emptyList()

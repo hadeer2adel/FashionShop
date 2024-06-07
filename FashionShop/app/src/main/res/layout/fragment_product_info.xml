@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="80dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ProductInfoFragment">
+    tools:context=".Modules.ProductInfo.view.ProductInfoFragment">
 
     <ScrollView
         android:layout_width="match_parent"

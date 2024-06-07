@@ -1,4 +1,4 @@
-package com.example.fashionshop
+package com.example.fashionshop.Model
 
 data class CartItem(
     val name: String,

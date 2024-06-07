@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.fashionshop.Adapters.CartAdapter
+import com.example.fashionshop.Model.CartItem
 import com.example.fashionshop.databinding.FragmentCartBinding
 
 class CartFragment : Fragment() {

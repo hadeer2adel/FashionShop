@@ -1,4 +1,4 @@
-package com.example.fashionshop
+package com.example.fashionshop.Adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fashionshop.R
 import com.example.fashionshop.databinding.CardProductBinding
 
 class ProductAdapter (

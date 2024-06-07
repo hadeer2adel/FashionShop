@@ -1,4 +1,4 @@
-package com.example.fashionshop
+package com.example.fashionshop.Adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fashionshop.R
 
 data class Brand(val name: String, val logoResId: Int)
 

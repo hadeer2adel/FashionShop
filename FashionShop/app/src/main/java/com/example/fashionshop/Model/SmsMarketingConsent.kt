@@ -1,4 +1,4 @@
-package com.example.fashionshop.model
+package com.example.fashionshop.Model
 
 data class SmsMarketingConsent(
     val consent_collected_from: String,

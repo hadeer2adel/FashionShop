@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.example.fashionshop.FavoriteFragment"
+        android:name="com.example.fashionshop.Modules.FavProductList.view.FavoriteFragment"
         android:label="Favorites"
         tools:layout="@layout/fragment_favorite" />
 

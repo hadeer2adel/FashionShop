@@ -2,7 +2,7 @@ package com.example.fashionshop.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.fashionshop.repository.Repository
+import com.example.fashionshop.Repository.Repository
 
 class AddressFactory (private var repo: Repository) :
     ViewModelProvider.Factory

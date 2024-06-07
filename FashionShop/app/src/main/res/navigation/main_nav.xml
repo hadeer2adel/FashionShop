@@ -17,7 +17,7 @@
         tools:layout="@layout/fragment_category" />
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.example.fashionshop.FavoriteFragment"
+        android:name="com.example.fashionshop.Modules.FavProductList.view.FavoriteFragment"
         android:label="fragment_favorite"
         tools:layout="@layout/fragment_favorite" />
     <fragment
@@ -70,7 +70,7 @@
     
     <fragment
         android:id="@+id/productInfoFragment"
-        android:name="com.example.fashionshop.ProductInfoFragment"
+        android:name="com.example.fashionshop.Modules.ProductInfo.view.ProductInfoFragment"
         android:label="fragment_product_info"
         tools:layout="@layout/fragment_product_info" />
 
