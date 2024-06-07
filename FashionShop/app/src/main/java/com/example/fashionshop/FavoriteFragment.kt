@@ -1,32 +1,55 @@
 package com.example.fashionshop
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.fashionshop.databinding.FragmentFavoriteBinding
 
 
 class FavoriteFragment : Fragment() {
 
+    private lateinit var binding: FragmentFavoriteBinding
     private lateinit var navController: NavController
+    private lateinit var adapter: ProductAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = NavHostFragment.findNavController(this)
 
-        navController.navigate(R.id.action_favoriteFragment_to_productInfoFragment)
+        val onClick: () -> Unit = {}
+        val onCardClick: () -> Unit = {
+            navController.navigate(R.id.action_favoriteFragment_to_productInfoFragment)
+        }
+        adapter = ProductAdapter(requireContext(), true, onClick, onCardClick)
+        adapter.submitList(listOf(
+            "Product 1",
+            "Product 2",
+            "Product 3",
+            "Product 4",
+            "Product 5",
+            "Product 6",
+            "Product 7",
+            "Product 8",
+            "Product 9",
+            "Product 10"
+        ))
+        binding.recycleView.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recycleView.adapter = adapter
+
     }
+
 }
