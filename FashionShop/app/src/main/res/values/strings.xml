@@ -46,5 +46,8 @@
     <string name="currency_title">Currency Title</string>
     <string name="currency">Currency</string>
     <string name="place_order">Place Order</string>
+    <string name="order_number">Order number</string>
+    <string name="order_total">Order total</string>
+    <string name="items_number">Items number</string>
 
 </resources>
