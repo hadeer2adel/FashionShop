@@ -4,9 +4,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.jackandphantom.carouselrecyclerview.CarouselLayoutManager
 import com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
 import com.smarteist.autoimageslider.SliderView
 
@@ -42,7 +39,6 @@ class HomeFragment : Fragment() {
         )
 
         val recyclerView: CarouselRecyclerview = view.findViewById(R.id.rv_brands) // Assuming your RecyclerView is a CarouselRecyclerview
-
         val adapter = BrandAdapter(requireContext(), brands)
         recyclerView.adapter = adapter
     }
