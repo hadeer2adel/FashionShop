@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="800dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:layout_marginBottom="80dp"
     tools:context=".CartFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -21,11 +22,11 @@
         android:id="@+id/buttonCheckout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:backgroundTint="@color/LightGray"
-        app:cornerRadius="0dp"
         android:padding="16dp"
         android:text="Checkout"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        app:backgroundTint="@color/LightGray"
+        app:cornerRadius="0dp" />
 
 </LinearLayout>
 
