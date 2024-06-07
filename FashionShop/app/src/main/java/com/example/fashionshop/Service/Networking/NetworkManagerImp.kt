@@ -3,8 +3,8 @@ package com.example.fashionshop.Service.Networking
 import com.example.fashionshop.Model.customers
 
 class NetworkManagerImp private constructor(): NetworkManager {
-    private val shopify_services : Api_Service by lazy {
-        RetrofitHelper.retrofitInstance.create(Api_Service::class.java)
+    private val networkService : NetworkService by lazy {
+        RetrofitHelper.retrofitInstance.create(NetworkService::class.java)
     }
 
     companion object{
@@ -20,7 +20,7 @@ class NetworkManagerImp private constructor(): NetworkManager {
     }
 
     override suspend fun getcutomers(): customers {
-        val responce= shopify_services.getcustomers()
+        val responce= networkService.getcustomers()
         return responce
     }
 }
