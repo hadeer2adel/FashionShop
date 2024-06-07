@@ -62,6 +62,11 @@
         android:label="Payment"
         tools:layout="@layout/fragment_choose_address" />
 
+    <fragment
+        android:id="@+id/orderdetaile"
+        android:name="com.example.fashionshop.OrderDetailsFragment"
+        android:label="Payment"
+        tools:layout="@layout/fragment_order_details" />
 
     <action
         android:id="@+id/action_profileFragment_to_ordersFragment"
@@ -93,5 +98,10 @@
     <action
         android:id="@+id/action_AdressFragment_to_paymentFragment"
         app:destination="@id/paymentFragment" />
+
+
+    <action
+        android:id="@+id/action_Payment_to_orderDetailsFragment"
+        app:destination="@id/orderdetaile" />
 
 </navigation>
