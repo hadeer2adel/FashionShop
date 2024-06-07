@@ -51,6 +51,18 @@
         android:name="com.example.fashionshop.AboutFragment"
         android:label="Setting"
         tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.example.fashionshop.PaymentFragment"
+        android:label="Payment"
+        tools:layout="@layout/fragment_payment" />
+    <fragment
+        android:id="@+id/chooseAdress"
+        android:name="com.example.fashionshop.ChooseAddressFragment"
+        android:label="Payment"
+        tools:layout="@layout/fragment_choose_address" />
+
+
     <action
         android:id="@+id/action_profileFragment_to_ordersFragment"
         app:destination="@id/orderFragment" />
@@ -73,4 +85,13 @@
     <action
         android:id="@+id/action_profileFragment_to_AboutFragment"
         app:destination="@id/aboutusFragment" />
+
+    <action
+        android:id="@+id/action_cartFragment_to_paymentFragment"
+        app:destination="@id/chooseAdress" />
+
+    <action
+        android:id="@+id/action_AdressFragment_to_paymentFragment"
+        app:destination="@id/paymentFragment" />
+
 </navigation>

@@ -1,0 +1,55 @@
+package com.example.fashionshop
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.fashionshop.databinding.FragmentPaymentBinding
+
+class PaymentFragment : Fragment() {
+
+    private var _binding: FragmentPaymentBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentPaymentBinding.inflate(inflater, container, false)
+        val view = binding.root
+
+        binding.visaCardCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.cashOnDeliveryCheckBox.isChecked = false
+            }
+        }
+
+        binding.cashOnDeliveryCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.visaCardCheckBox.isChecked = false
+            }
+        }
+
+        binding.paymentButton.setOnClickListener {
+            when {
+                binding.visaCardCheckBox.isChecked -> {
+                    Toast.makeText(activity, "Visa Card selected", Toast.LENGTH_SHORT).show()
+                }
+                binding.cashOnDeliveryCheckBox.isChecked -> {
+                    Toast.makeText(activity, "Cash on Delivery selected", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Toast.makeText(activity, "Please select a payment method", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
