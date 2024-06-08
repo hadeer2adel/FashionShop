@@ -1,5 +1,7 @@
 package com.example.fashionshop.Service.Networking
 
+import com.example.fashionshop.Model.CustomerRequest
+import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.customers
 
 class NetworkManagerImp private constructor(): NetworkManager {
@@ -23,4 +25,11 @@ class NetworkManagerImp private constructor(): NetworkManager {
         val responce= networkService.getcustomers()
         return responce
     }
+
+    override suspend fun createCustomer(
+        customer: CustomerRequest
+    ): CustomerResponse {
+        return networkService.createCustomer(customer)
+    }
+
 }

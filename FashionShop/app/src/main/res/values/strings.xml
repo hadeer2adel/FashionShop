@@ -29,7 +29,8 @@
     <string name="orLogin2">LogIn</string>
 
     //data field
-    <string name="name">Full Name</string>
+    <string name="fname">First Name</string>
+    <string name="lname">Last Name</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="confirmPassword">Confirm Password</string>

@@ -1,5 +1,7 @@
 package com.example.fashionshop.Repository
 
+import com.example.fashionshop.Model.CustomerRequest
+import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.customers
 import com.example.fashionshop.Service.Networking.NetworkManager
 
@@ -22,5 +24,11 @@ class RepositoryImp constructor(
     override suspend fun getcustomers(): customers {
         return networkManager.getcutomers()
 
+    }
+
+    override suspend fun createCustomer(
+        customer: CustomerRequest
+    ): CustomerResponse {
+        return networkManager.createCustomer(customer)
     }
 }
