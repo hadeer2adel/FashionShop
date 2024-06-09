@@ -39,4 +39,8 @@ class RepositoryImp constructor(
     ): AddressUpdateRequest {
         return networkManager.editSingleCustomerAddress(id,addressRequest)
     }
+
+    override suspend fun deleteSingleCustomerAddress(id: Long) {
+        return networkManager.deleteSingleCustomerAddress(id)
+    }
 }

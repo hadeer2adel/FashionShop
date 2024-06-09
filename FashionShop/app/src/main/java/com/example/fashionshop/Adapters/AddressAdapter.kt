@@ -2,6 +2,8 @@ package com.example.fashionshop.Adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -22,15 +24,15 @@ class AddressAdapter(private val listener: AddressListener) : RecyclerView.Adapt
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.address_card, parent, false)
         return AddressViewHolder(itemView)
     }
-
+    fun getAddressList(): List<Addresse> {
+        return addressList
+    }
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
         val currentAddress = addressList[position]
         holder.countryTextView.text = "Country: ${currentAddress.country}"
         holder.addressTextView.text = "Address 1: ${currentAddress.address1}"
         holder.addressTextView2.text = "Address 2: ${currentAddress.address2}"
         holder.phoneTextView.text = "Phone: ${currentAddress.phone}"
-
-        // Set selected state based on position
         holder.itemView.isSelected = selectedItemPosition == position
         if (currentAddress.default) {
             holder.cardView.setCardBackgroundColor(holder.itemView.context.getColor(R.color.default_address_color))
@@ -44,6 +46,9 @@ class AddressAdapter(private val listener: AddressListener) : RecyclerView.Adapt
             notifyDataSetChanged() // Notify adapter that data set has changed
             true // Consume the long click
         }
+        holder.deleteIcon.setOnClickListener {
+            listener.deleteAddress(currentAddress.id)
+        }
     }
 
     override fun getItemCount() = addressList.size
@@ -54,5 +59,6 @@ class AddressAdapter(private val listener: AddressListener) : RecyclerView.Adapt
         val addressTextView2: TextView = itemView.findViewById(R.id.TextAddress2)
         val phoneTextView: TextView = itemView.findViewById(R.id.TextPhone)
         val cardView:CardView =itemView.findViewById(R.id.cardView)
+        val deleteIcon :ImageView = itemView.findViewById(R.id.deleteIcon)
     }
 }

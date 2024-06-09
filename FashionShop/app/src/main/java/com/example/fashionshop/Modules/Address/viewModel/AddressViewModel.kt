@@ -62,7 +62,14 @@ class AddressViewModel (private val repo: Repository
         editSingleCustomerAddress(id,addressRequest)
 
     }
-
+    fun senddeleteAddressRequest(id:Long
+    )  {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i("TAG", "Deleted Address: ViewMOdel")
+            repo.deleteSingleCustomerAddress(id)
+            getAllcustomer()
+        }
+    }
 
 }
 

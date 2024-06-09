@@ -14,5 +14,6 @@ interface Repository {
         id: Long,
         addressRequest: AddressDefultRequest
     ): AddressUpdateRequest
+    suspend fun deleteSingleCustomerAddress(id:Long)
 
 }

@@ -41,4 +41,8 @@ class NetworkManagerImp private constructor(): NetworkManager {
     ): AddressUpdateRequest {
         val responce= networkService.editSingleCustomerAddress(id,addressRequest)
         return responce    }
+
+    override suspend fun deleteSingleCustomerAddress(id: Long) {
+        networkService.deleteSingleCustomerAddress(id)
+    }
 }

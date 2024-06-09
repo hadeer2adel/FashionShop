@@ -1,5 +1,6 @@
 package com.example.fashionshop.Modules.Address.view
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -111,7 +112,22 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
     }
 
     override fun deleteAddress(addressId: Long) {
-      //  TODO("Not yet implemented")
+        val currentAddress = mAdapter.getAddressList().find { it.id == addressId }
+        if (currentAddress != null && currentAddress.default) {
+            val alertDialogBuilder = AlertDialog.Builder(requireContext())
+            alertDialogBuilder.apply {
+                setTitle("Cannot Delete Default Address")
+                setMessage("The default address cannot be deleted.")
+                setPositiveButton("OK") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                create().show()
+            }
+        } else {
+            // If address is not default, proceed with delete request
+            allProductViewModel.senddeleteAddressRequest(addressId)
+            refreshFragment()
+        }
     }
 
     override fun setAddressDefault(id:Long,default: Boolean) {
