@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.customers
 import com.example.fashionshop.Repository.Repository
 import kotlinx.coroutines.Dispatchers
@@ -12,8 +13,8 @@ import kotlinx.coroutines.launch
 
 class AddressViewModel (private val repo: Repository
 ): ViewModel() {
-    private  var _products:MutableLiveData<customers> = MutableLiveData<customers>()
-    val products :LiveData<customers> = _products
+    private  var _products:MutableLiveData<OneCustomer> = MutableLiveData<OneCustomer>()
+    val products :LiveData<OneCustomer> = _products
 
 
 

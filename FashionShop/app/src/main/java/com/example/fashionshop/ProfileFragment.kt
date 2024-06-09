@@ -1,17 +1,24 @@
 package com.example.fashionshop
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupWithNavController
+import com.example.fashionshop.Repository.RepositoryImp
+import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.FragmentProfileBinding
+import com.example.fashionshop.viewModels.AddressFactory
+import com.example.fashionshop.viewModels.AddressViewModel
 
 class ProfileFragment : Fragment() {
 
@@ -20,7 +27,8 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-
+    lateinit var allProductFactroy: AddressFactory
+    lateinit var allProductViewModel: AddressViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -39,12 +47,23 @@ class ProfileFragment : Fragment() {
         navController = NavHostFragment.findNavController(this)
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
-        // Set up the toolbar
-        val toolbar = binding.toolbar
-        setupWithNavController(toolbar, navController, appBarConfiguration)
+//        // Set up the toolbar
+//        val toolbar = binding.toolbar
+//        setupWithNavController(toolbar, navController, appBarConfiguration)
 
 
-
+        allProductFactroy=AddressFactory(
+            RepositoryImp.getInstance(
+            NetworkManagerImp.getInstance()))
+        allProductViewModel= ViewModelProvider(this,allProductFactroy).get(AddressViewModel::class.java)
+        // Observe LiveData for address list updates
+        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
+            value?.let {
+                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
+                binding.nameCustomer.text = value.customer.first_name + " " + value.customer.last_name
+                binding.emailCustomer.text = value.customer.email
+            }
+        })
         binding.ordersButton.setOnClickListener {
             Toast.makeText(requireContext(), "Orders!", Toast.LENGTH_SHORT).show()
             navController.navigate(R.id.action_profileFragment_to_ordersFragment)

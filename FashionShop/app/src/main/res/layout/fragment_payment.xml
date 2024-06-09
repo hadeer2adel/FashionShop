@@ -64,22 +64,41 @@
     <!-- Cash on Delivery CheckBox -->
 
     <!-- Payment Button -->
+<!--    <Button-->
+<!--        android:id="@+id/paymentButton"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:layout_marginRight="10dp"-->
+<!--        android:layout_marginBottom="232dp"-->
+<!--        android:padding="16dp"-->
+<!--        android:text="Continue To Payment"-->
+<!--        android:textColor="@android:color/black"-->
+<!--        app:backgroundTint="@color/LightGray"-->
+<!--        app:cornerRadius="0dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+
     <Button
         android:id="@+id/paymentButton"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="232dp"
-        android:padding="16dp"
-        android:text="Continue To Payment"
-        android:textColor="@android:color/black"
-        app:backgroundTint="@color/LightGray"
-        app:cornerRadius="0dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/black"
+        android:text="@string/payment"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:cornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
