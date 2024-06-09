@@ -65,6 +65,8 @@
 
     //Address
     <string name="newAddress">Add New Address</string>
+    <string name="newAddressAdded">Send Request</string>
+
     //payment
     <string name="payment">Continue To Payment</string>
     <string name="checkout">Checkout</string>

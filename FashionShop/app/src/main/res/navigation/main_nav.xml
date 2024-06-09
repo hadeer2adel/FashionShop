@@ -78,6 +78,12 @@
         android:name="com.example.fashionshop.AddNewAddressFragment"
         android:label="fragment_product_info"
         tools:layout="@layout/fragment_add_new_address" />
+
+    <fragment
+        android:id="@+id/mapsFrgment"
+        android:name="com.example.fashionshop.MapsFragment"
+        android:label="fragment_product_info"
+        tools:layout="@layout/fragment_maps" />
     <action
         android:id="@+id/action_profileFragment_to_ordersFragment"
         app:destination="@id/orderFragment" />
@@ -119,4 +125,14 @@
     <action
         android:id="@+id/Adress_to_AddAddressFragment"
         app:destination="@id/AddAddress" />
+    <action
+        android:id="@+id/action_from_AddnewAddress_to_Map"
+        app:destination="@id/mapsFrgment" />
+
+    <action
+        android:id="@+id/action_from_map_to_newAddresses"
+        app:destination="@id/addressFragment" />
+
+
+
 </navigation>

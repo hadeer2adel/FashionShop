@@ -35,7 +35,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:elevation="10dp"
-                android:text="Address: 24 Elgeash st"
+                android:text="Address 1: 24 Elgeash st"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/TextAddress2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:elevation="10dp"
+                android:text="Address 2: 24 Elgeash st"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 

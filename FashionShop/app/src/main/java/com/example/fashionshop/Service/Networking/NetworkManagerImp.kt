@@ -28,9 +28,7 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return responce
     }
 
-    override suspend fun AddSingleCustomerAdreess(address1: String, address2: String, city: String, company: String, firstName: String, lastName: String, phone: String, province: String, country: String, zip: String, name: String,province_code:String,country_code:String,
-                                                  country_name:String ): AddressRequest {
-        val responce= networkService.AddSingleCustomerAdreess(address1,address2,city,company,firstName,lastName,phone,province,country,zip,name,province_code,country_code,country_name)
-        return responce
-    }
+    override suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest {
+        val responce= networkService.AddSingleCustomerAdreess(addressRequest)
+        return responce    }
 }

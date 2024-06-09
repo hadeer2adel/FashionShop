@@ -1,12 +1,16 @@
 package com.example.fashionshop
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.fashionshop.Model.AddressRequest
+import com.example.fashionshop.Model.Addresse
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.FragmentAddNewAddressBinding
@@ -46,60 +50,37 @@ class AddNewAddressFragment : Fragment() {
         allProductFactory = AddNewAddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
         allProductViewModel = ViewModelProvider(this, allProductFactory).get(AddNewAddressViewModel::class.java)
 
-//        // Access views using binding
-//        binding.buttonSendRequest.setOnClickListener {
-//            // Trigger ViewModel method to add new address
-//            allProductViewModel.addSingleCustomerAddress(
-//                binding.etAddress1.text.toString(),
-//                binding.etAddress2.text.toString(),
-//                binding.etCity.text.toString(),
-//                binding.etCompany.text.toString(),
-//                binding.etFirstName.text.toString(),
-//                binding.etLastName.text.toString(),
-//                binding.etPhone.text.toString(),
-//                binding.etProvince.text.toString(),
-//                binding.etCountry.text.toString(),
-//                binding.etZip.text.toString(),
-//                binding.etName.text.toString()
-//            )
-//        }
-// Trigger ViewModel method to add new address
         binding.buttonSendRequest.setOnClickListener {
-            allProductViewModel.addSingleCustomerAddress(
-//                binding.etAddress1.text.toString(),
-//                binding.etAddress2.text.toString(),
-//                binding.etCity.text.toString(),
-//                binding.etCompany.text.toString(),
-//                binding.etFirstName.text.toString(),
-//                binding.etLastName.text.toString(),
-//                binding.etPhone.text.toString(),
-//                binding.etProvince.text.toString(),
-//                binding.etCountry.text.toString(),
-//                binding.etZip.text.toString(),
-//                binding.etName.text.toString()
-
-                 "123 Nile Street",
-             "Apartment 456",
-             "Giza",
-             "Fashion Co.",
-             "Ahmed",
-             "Saleh",
-             "123-456-7890",
-             "Giza Province",
-             "Egypt",
-             "12345",
-             "Ahmed Saleh",
-            "GZ",
-             "EG",
-            "Egypt"
-
-
-
-
+            allProductViewModel.sendAddressRequest(
+                address1 = "1 Mahada St",
+                address2 = "34 building",
+                city = "Cairo",
+                company = "Fancy Co.",
+                first_name = "John",
+                last_name = "Doe",
+                phone = "819-555-5555",
+                province = "",
+                country = "Egypt",
+                zip = "G1R 4P5",
+                name = "John Doe",
+                province_code = "", // Adjust if needed
+                country_code = "EG", // Adjust if needed
+                country_name = "Egypt", // Adjust if needed
+                id = 3 ,
+                customer_id = 7371713577180 ,
+                default = false
             )
         }
 
+        binding.mapIcon.setOnClickListener {
+
+            findNavController().navigate(R.id.action_from_AddnewAddress_to_Map)
+
+
+        }
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

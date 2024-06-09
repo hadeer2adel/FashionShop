@@ -27,7 +27,8 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
         val currentAddress = addressList[position]
         holder.countryTextView.text = "Country: ${currentAddress.country}"
-        holder.addressTextView.text = "Address: ${currentAddress.city}"
+        holder.addressTextView.text = "Address 1: ${currentAddress.address1}"
+        holder.addressTextView2.text = "Address 2: ${currentAddress.address2}"
         holder.phoneTextView.text = "Phone: ${currentAddress.phone}"
     }
 
@@ -36,6 +37,7 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() 
     inner class AddressViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val countryTextView: TextView = itemView.findViewById(R.id.TextCountry)
         val addressTextView: TextView = itemView.findViewById(R.id.TextAddress)
+        val addressTextView2: TextView = itemView.findViewById(R.id.TextAddress2)
         val phoneTextView: TextView = itemView.findViewById(R.id.TextPhone)
     }
 }

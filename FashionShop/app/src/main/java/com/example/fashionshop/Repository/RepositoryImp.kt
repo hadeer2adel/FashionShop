@@ -26,9 +26,7 @@ class RepositoryImp constructor(
 
     }
 
-    override suspend fun AddSingleCustomerAdreess(address1: String, address2: String, city: String, company: String, firstName: String, lastName: String, phone: String, province: String, country: String, zip: String,
-                                                  name: String,province_code:String,country_code:String,
-                                                  country_name:String): AddressRequest {
-        return networkManager.AddSingleCustomerAdreess(address1,address2,city,company,firstName,lastName,phone,province,country,zip,name, province_code,country_code,country_name)
+    override suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest {
+        return networkManager.AddSingleCustomerAdreess(addressRequest)
     }
 }
