@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_favorite" />
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.example.fashionshop.CartFragment"
+        android:name="com.example.fashionshop.Modules.ShoppingCard.view.CartFragment"
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" />
     <fragment

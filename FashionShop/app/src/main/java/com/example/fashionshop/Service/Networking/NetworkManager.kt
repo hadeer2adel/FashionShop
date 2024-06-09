@@ -4,6 +4,7 @@ import com.example.fashionshop.Model.AddressDefault
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
+import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.customers
 import retrofit2.http.Body
@@ -15,5 +16,6 @@ interface NetworkManager {
     suspend fun editSingleCustomerAddress(id:Long,addressRequest: AddressDefultRequest): AddressUpdateRequest
 
     suspend fun deleteSingleCustomerAddress(id:Long)
+    suspend fun getDraftOrders():DraftOrders
 
 }

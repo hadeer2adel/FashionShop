@@ -4,6 +4,7 @@ import com.example.fashionshop.Model.AddressDefault
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
+import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.customers
 import com.example.fashionshop.network.NetworkService
@@ -45,4 +46,8 @@ class NetworkManagerImp private constructor(): NetworkManager {
     override suspend fun deleteSingleCustomerAddress(id: Long) {
         networkService.deleteSingleCustomerAddress(id)
     }
+
+    override suspend fun getDraftOrders(): DraftOrders {
+        val responce= networkService.getDraftOrders()
+        return responce        }
 }

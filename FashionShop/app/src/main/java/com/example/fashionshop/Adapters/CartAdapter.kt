@@ -4,12 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Model.CartItem
+import com.example.fashionshop.Model.DraftOrder
 import com.example.fashionshop.databinding.CartItemBinding
 
-class CartAdapter(private val items: List<CartItem>) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+class CartAdapter : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     class CartViewHolder(val binding: CartItemBinding) : RecyclerView.ViewHolder(binding.root)
+    private var items: List<DraftOrder> = emptyList()
 
+    fun setCartList(cartItems: List<DraftOrder>) {
+        items = cartItems
+        notifyDataSetChanged()
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val binding = CartItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CartViewHolder(binding)
@@ -17,20 +23,27 @@ class CartAdapter(private val items: List<CartItem>) : RecyclerView.Adapter<Cart
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val item = items[position]
-        holder.binding.itemName.text = item.name
-        holder.binding.itemPrice.text = item.price.toString()
+        val lineItems = item.line_items
 
-        holder.binding.decreaseButton.setOnClickListener {
-            if (item.quantity > 0) {
-                item.quantity--
-                holder.binding.quantityText.text = item.quantity.toString()
+        for (lineItem in lineItems) {
+            holder.binding.itemName.text = lineItem.title
+            holder.binding.itemPrice.text = lineItem.price.toString()
+            holder.binding.decreaseButton.setOnClickListener {
+                if (lineItem.quantity> 0) {
+                    lineItem.quantity--
+                    holder.binding.quantityText.text = lineItem.quantity.toString()
+                }
+            }
+
+            holder.binding.increaseButton.setOnClickListener {
+                lineItem.quantity++
+                holder.binding.quantityText.text = lineItem.quantity.toString()
             }
         }
+//        holder.binding.itemName.text = lineItems.title
+//        holder.binding.itemPrice.text = item.line_items[0].price.toString()
 
-        holder.binding.increaseButton.setOnClickListener {
-            item.quantity++
-            holder.binding.quantityText.text = item.quantity.toString()
-        }
+
     }
 
 
