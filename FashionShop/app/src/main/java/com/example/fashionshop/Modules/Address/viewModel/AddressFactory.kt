@@ -1,4 +1,4 @@
-package com.example.fashionshop.viewModels
+package com.example.fashionshop.Modules.Address.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,7 +10,7 @@ class AddressFactory (private var repo: Repository) :
 {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(AddressViewModel::class.java)){
-            AddressViewModel(repo)as T
+            AddressViewModel(repo) as T
         }else{
             throw IllegalArgumentException("ViewModel Class Not Found")
         }

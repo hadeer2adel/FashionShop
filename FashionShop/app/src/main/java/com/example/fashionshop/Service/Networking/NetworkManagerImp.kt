@@ -1,6 +1,9 @@
 package com.example.fashionshop.Service.Networking
 
+import com.example.fashionshop.Model.AddressDefault
+import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
+import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.customers
 import com.example.fashionshop.network.NetworkService
@@ -30,5 +33,12 @@ class NetworkManagerImp private constructor(): NetworkManager {
 
     override suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest {
         val responce= networkService.AddSingleCustomerAdreess(addressRequest)
+        return responce    }
+
+    override suspend fun editSingleCustomerAddress(
+        id: Long,
+        addressRequest: AddressDefultRequest
+    ): AddressUpdateRequest {
+        val responce= networkService.editSingleCustomerAddress(id,addressRequest)
         return responce    }
 }

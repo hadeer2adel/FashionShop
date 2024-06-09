@@ -11,14 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.FragmentProfileBinding
-import com.example.fashionshop.viewModels.AddressFactory
-import com.example.fashionshop.viewModels.AddressViewModel
+import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
+import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
 
 class ProfileFragment : Fragment() {
 
@@ -52,7 +50,7 @@ class ProfileFragment : Fragment() {
 //        setupWithNavController(toolbar, navController, appBarConfiguration)
 
 
-        allProductFactroy=AddressFactory(
+        allProductFactroy= AddressFactory(
             RepositoryImp.getInstance(
             NetworkManagerImp.getInstance()))
         allProductViewModel= ViewModelProvider(this,allProductFactroy).get(AddressViewModel::class.java)

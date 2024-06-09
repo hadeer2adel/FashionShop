@@ -11,13 +11,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.AddressAdapter
+import com.example.fashionshop.Modules.Address.view.AddressListener
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.FragmentChooseAddressBinding
-import com.example.fashionshop.viewModels.AddressFactory
-import com.example.fashionshop.viewModels.AddressViewModel
+import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
+import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
 
-class ChooseAddressFragment : Fragment() {
+class ChooseAddressFragment : Fragment() , AddressListener{
     lateinit var allProductFactroy: AddressFactory
     lateinit var allProductViewModel: AddressViewModel
     private var _binding: FragmentChooseAddressBinding? = null
@@ -31,7 +32,7 @@ class ChooseAddressFragment : Fragment() {
         _binding = FragmentChooseAddressBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.recyclerChooseAddrees.layoutManager = LinearLayoutManager(requireContext())
-        mAdapter = AddressAdapter()
+        mAdapter = AddressAdapter(this)
         mLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.recyclerChooseAddrees.apply {
             adapter = mAdapter
@@ -57,6 +58,14 @@ class ChooseAddressFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun deleteAddress(addressId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setAddressDefault(id:Long,default: Boolean) {
+        TODO("Not yet implemented")
     }
 }
 

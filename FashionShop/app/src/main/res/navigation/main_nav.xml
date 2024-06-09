@@ -43,7 +43,7 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/addressFragment"
-        android:name="com.example.fashionshop.AddressFragment"
+        android:name="com.example.fashionshop.Modules.Address.view.AddressFragment"
         android:label="Setting"
         tools:layout="@layout/fragment_address" />
     <fragment
