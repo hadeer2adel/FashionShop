@@ -1,8 +1,11 @@
 package com.example.fashionshop.Service.Networking
 
+import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
+import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.customers
+import retrofit2.Response
 
 class NetworkManagerImp private constructor(): NetworkManager {
     private val networkService : NetworkService by lazy {
@@ -31,5 +34,18 @@ class NetworkManagerImp private constructor(): NetworkManager {
     ): CustomerResponse {
         return networkService.createCustomer(customer)
     }
+
+    override suspend fun getBrands(): Response<BrandResponse> {
+        return networkService.getBrands()
+    }
+
+    override suspend fun getProducts(): Response<ProductResponse> {
+        return networkService.getProducts()
+    }
+
+    override suspend fun getBrandProducts(vendor: String): Response<ProductResponse> {
+        return  networkService.getBrandProducts(vendor)
+    }
+
 
 }

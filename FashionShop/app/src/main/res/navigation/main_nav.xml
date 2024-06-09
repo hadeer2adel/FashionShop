@@ -7,12 +7,21 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.fashionshop.HomeFragment"
+        android:name="com.example.fashionshop.Modules.Home.view.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_homeFragment_to_productsFragment4"
+            app:destination="@id/productsFragment" >
+            <argument
+                android:name="brandName"
+                app:argType="string" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="com.example.fashionshop.CategoryFragment"
+        android:name="com.example.fashionshop.Modules.Category.view.CategoryFragment"
         android:label="fragment_category"
         tools:layout="@layout/fragment_category" />
     <fragment
@@ -110,5 +119,14 @@
     <action
         android:id="@+id/action_Payment_to_orderDetailsFragment"
         app:destination="@id/orderdetaile" />
+    <fragment
+        android:id="@+id/productsFragment"
+        android:name="com.example.fashionshop.Modules.Products.view.ProductsFragment"
+        android:label="fragment_products"
+        tools:layout="@layout/fragment_products" >
+        <argument
+            android:name="brandName"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

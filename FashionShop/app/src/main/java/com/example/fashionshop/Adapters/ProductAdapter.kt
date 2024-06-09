@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fashionshop.Model.Product
 import com.example.fashionshop.R
 import com.example.fashionshop.databinding.CardProductBinding
 

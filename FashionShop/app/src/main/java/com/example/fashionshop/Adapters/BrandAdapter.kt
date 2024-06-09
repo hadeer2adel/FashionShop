@@ -6,46 +6,66 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.fashionshop.Model.SmartCollection
 import com.example.fashionshop.R
+import com.example.fashionshop.databinding.CardBrandBinding
 
-data class Brand(val name: String, val logoResId: Int)
+interface BrandClickListener {
+    fun onItemClicked(brand: SmartCollection)
+}
 
-class BrandAdapter(private val mContext: Context, brandList: List<Brand>) :
-    RecyclerView.Adapter<BrandAdapter.BrandViewHolder>() {
-    private val mBrandList: List<Brand>
-
-    init {
-        mBrandList = brandList
-    }
+class BrandAdapter(private val clickListener: BrandClickListener) :
+    ListAdapter<SmartCollection, BrandAdapter.BrandViewHolder>(BrandDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BrandViewHolder {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.card_brand, parent, false)
-        return BrandViewHolder(view)
+        return BrandViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: BrandViewHolder, position: Int) {
-        val brand: Brand = mBrandList[position]
-        holder.bind(brand)
+        holder.bind(getItem(position), clickListener)
     }
 
-    override fun getItemCount(): Int {
-        return mBrandList.size
-    }
-
-    inner class BrandViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val mNameTextView: TextView
-        private val mLogoImageView: ImageView
-
-        init {
-            mNameTextView = itemView.findViewById(R.id.tv_brand_name)
-            mLogoImageView = itemView.findViewById<ImageView>(R.id.iv_brand)
+    class BrandDiffUtil : DiffUtil.ItemCallback<SmartCollection>() {
+        override fun areItemsTheSame(oldItem: SmartCollection, newItem: SmartCollection): Boolean {
+            return oldItem.id == newItem.id // Assuming Brand has an id property
         }
 
-        fun bind(brand: Brand) {
-            mNameTextView.setText(brand.name)
-            mLogoImageView.setImageResource(brand.logoResId)
+        override fun areContentsTheSame(oldItem: SmartCollection, newItem: SmartCollection): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+     class BrandViewHolder(private val binding: CardBrandBinding) : RecyclerView.ViewHolder(binding.root){
+
+        fun bind(brand: SmartCollection, clickListener: BrandClickListener) {
+            binding.apply {
+                tvBrandName.text = brand.title
+                Glide
+                    .with(binding.root)
+                    .load(brand.image?.src)
+                    .into(ivBrand)
+
+                cvLayout.setOnClickListener {
+                    clickListener.onItemClicked(brand)
+                }
+            }
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): BrandViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = CardBrandBinding.inflate(layoutInflater, parent, false)
+                return BrandViewHolder(binding)
+            }
         }
     }
 }
+
+
+
 
