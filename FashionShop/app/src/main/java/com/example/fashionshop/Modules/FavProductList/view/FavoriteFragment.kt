@@ -31,25 +31,25 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = NavHostFragment.findNavController(this)
 
-        val onClick: () -> Unit = {}
-        val onCardClick: () -> Unit = {
-            navController.navigate(R.id.action_favoriteFragment_to_productInfoFragment)
-        }
-        adapter = ProductAdapter(requireContext(), true, onClick, onCardClick)
-        adapter.submitList(listOf(
-            "Product 1",
-            "Product 2",
-            "Product 3",
-            "Product 4",
-            "Product 5",
-            "Product 6",
-            "Product 7",
-            "Product 8",
-            "Product 9",
-            "Product 10"
-        ))
-        binding.recycleView.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.recycleView.adapter = adapter
+//        val onClick: () -> Unit = {}
+//        val onCardClick: () -> Unit = {
+//            navController.navigate(R.id.action_favoriteFragment_to_productInfoFragment)
+//        }
+//        adapter = ProductAdapter(requireContext(), true, onClick, onCardClick)
+//        adapter.submitList(listOf(
+//            "Product 1",
+//            "Product 2",
+//            "Product 3",
+//            "Product 4",
+//            "Product 5",
+//            "Product 6",
+//            "Product 7",
+//            "Product 8",
+//            "Product 9",
+//            "Product 10"
+//        ))
+//        binding.recycleView.layoutManager = GridLayoutManager(requireContext(), 2)
+//        binding.recycleView.adapter = adapter
 
     }
 

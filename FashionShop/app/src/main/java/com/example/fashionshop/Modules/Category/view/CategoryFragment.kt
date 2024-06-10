@@ -10,17 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.fashionshop.Adapters.ProductClickListener
-import com.example.fashionshop.Adapters.ProductsAdapterNew
+import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
-import com.example.fashionshop.Modules.Products.viewModel.ProductsFactory
-import com.example.fashionshop.Modules.Products.viewModel.ProductsViewModel
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
@@ -33,13 +31,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
 
-class CategoryFragment : Fragment() , ProductClickListener{
+class CategoryFragment : Fragment() {
 
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
     var isAllFabsVisible: Boolean? = null
-    private lateinit var adapter: ProductsAdapterNew
+    private lateinit var adapter: ProductAdapter
     private lateinit var viewModel: CategoryViewModel
+    private var mainCategory = ""
+    private var subCategory = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,14 +56,17 @@ class CategoryFragment : Fragment() , ProductClickListener{
             isAllFabsVisible = if (isAllFabsVisible == false) {
                 showAllFabButtons()
                 binding.fabCategory.setImageResource(R.drawable.ic_close)
+                binding.fabCategory.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
                 decreaseBrightness()
                 true
             } else {
                 increaseBrightness()
                 binding.fabCategory.setImageResource(R.drawable.ic_categories)
                 hideAllFabButtons()
+                binding.fabCategory.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
                 false
             }
+
         }
 
         binding.filterBtn.setOnClickListener {
@@ -71,10 +74,13 @@ class CategoryFragment : Fragment() , ProductClickListener{
         }
         setUpRV()
         initViewModel()
+        binding.category.selectButton(binding.btnAll)
         observeButtonsGroup()
+        observeFloatingActionButton()
+        changeFabColors()
+
+
     }
-
-
 
     private fun hideAllFabButtons() {
         binding.apply {
@@ -137,7 +143,7 @@ class CategoryFragment : Fragment() , ProductClickListener{
         val onCardClick: () -> Unit = {
 
         }
-        adapter = ProductsAdapterNew(this)
+        adapter = ProductAdapter(requireContext(), false, onClick, onCardClick)
         binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvProducts.adapter = adapter
     }
@@ -149,7 +155,7 @@ class CategoryFragment : Fragment() , ProductClickListener{
         viewModel = ViewModelProvider(this, factory).get(CategoryViewModel::class.java)
         viewModel.getProducts()
         lifecycleScope.launch {
-            viewModel.product.collectLatest { response ->
+            viewModel.products.collectLatest { response ->
                 when(response){
                     is NetworkState.Loading -> showLoading()
                     is NetworkState.Success -> response.data.products?.let { showSuccess(it) }
@@ -178,9 +184,6 @@ class CategoryFragment : Fragment() , ProductClickListener{
         showAlertDialog(title, message)
     }
 
-    override fun onItemClicked(product: Product) {
-        Toast.makeText(requireContext(), "Clicked on ${product.title}", Toast.LENGTH_SHORT).show()
-    }
 
     private fun showAlertDialog(title: String, message: String) {
         AlertDialog.Builder(requireContext()).apply {
@@ -199,21 +202,93 @@ class CategoryFragment : Fragment() , ProductClickListener{
             when (button.id) {
                 R.id.btn_women -> {
                     Log.d("setOnSelectListener", "btn_women")
+                    mainCategory = WOMEN
+                    viewModel.filterProducts(mainCategory, subCategory)
                 }
                 R.id.btn_kid -> {
                     Log.d("setOnSelectListener", "btn_kid")
+                    mainCategory = KID
+                    viewModel.filterProducts(mainCategory, subCategory)
                 }
                 R.id.btn_men -> {
                     Log.d("setOnSelectListener", "btn_men")
+                    mainCategory = MEN
+                    viewModel.filterProducts(mainCategory, subCategory)
                 }
                 R.id.btn_sale -> {
                     Log.d("setOnSelectListener", "btn_sale")
+                    mainCategory = SALE
+                    viewModel.filterProducts(mainCategory, subCategory)
                 }
                 R.id.btn_all -> {
                     Log.d("setOnSelectListener", "btn_all")
+                    mainCategory = ALL
+                    viewModel.filterProducts(mainCategory, subCategory)
                 }
             }
         }
+    }
+    private fun observeFloatingActionButton() {
+        binding.fabShoes.setOnClickListener {
+            Log.d("setOnSelectListener", "fabShoes")
+            subCategory = SHOES
+            viewModel.filterProducts(mainCategory, subCategory)
+            changeFabColors()
+            changeSelectedFabColor()
+        }
+
+        binding.fabShirt.setOnClickListener {
+            Log.d("setOnSelectListener", "fabShirt")
+            subCategory = T_SHIRTS
+            viewModel.filterProducts(mainCategory, subCategory)
+            changeFabColors()
+            changeSelectedFabColor()
+        }
+
+        binding.fabAccessories.setOnClickListener {
+            Log.d("setOnSelectListener", "fabAccessories")
+            subCategory = ACCESSORIES
+            viewModel.filterProducts(mainCategory, subCategory)
+            changeFabColors()
+            changeSelectedFabColor() 
+        }
+    }
+
+
+    private fun changeFabColors() {
+        binding.apply {
+            fabAccessories.backgroundTintList = resources.getColorStateList(R.color.white)
+            fabShirt.backgroundTintList = resources.getColorStateList(R.color.white)
+            fabShoes.backgroundTintList = resources.getColorStateList(R.color.white)
+        }
+    }
+
+    private fun changeSelectedFabColor() {
+        binding.apply {
+            when (subCategory) {
+                ACCESSORIES -> {
+                    fabAccessories.backgroundTintList =
+                        resources.getColorStateList(R.color.LightGray)
+                }
+                T_SHIRTS -> {
+                    fabShirt.backgroundTintList = resources.getColorStateList(R.color.LightGray)
+                }
+                SHOES -> {
+                    fabShoes.backgroundTintList = resources.getColorStateList(R.color.LightGray)
+                }
+            }
+        }
+    }
+
+    companion object {
+        const val WOMEN = "WOMEN"
+        const val KID = "KID"
+        const val MEN = "MEN"
+        const val SALE = "SALE"
+        const val ALL = " "
+        const val SHOES = "SHOES"
+        const val T_SHIRTS = "T-SHIRTS"
+        const val ACCESSORIES = "ACCESSORIES"
     }
 
 

@@ -6,16 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.R
 import com.example.fashionshop.databinding.CardProductBinding
+import kotlin.random.Random
 
 class ProductAdapter (
     private val context: Context,
     private val isFav: Boolean,
     private val onClick: ()->Unit,
     private val onCardClick: ()->Unit
-        ):ListAdapter<String, ProductAdapter.ProductViewHolder>(ProductDiffUtil()){
+        ):ListAdapter<Product, ProductAdapter.ProductViewHolder>(ProductDiffUtil()){
 
     lateinit var binding: CardProductBinding
     class ProductViewHolder (var binding: CardProductBinding) : RecyclerView.ViewHolder(binding.root)
@@ -29,7 +31,16 @@ class ProductAdapter (
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val data = getItem(position)
         holder.binding.apply {
-            title.text = data
+            title.text = data.title
+            price.text = data.variants?.get(0)?.price
+            Glide
+                .with(binding.root)
+                .load(data.image?.src)
+                .into(image)
+            val randomRatings = FloatArray(10) { Random.nextFloat() * 5 }
+            val randomValue = randomRatings[Random.nextInt(randomRatings.size)]
+            ratingBar.rating = randomValue
+
             if(isFav){
                 favBtn.setImageResource(R.drawable.ic_favorite_true)
             }
@@ -42,12 +53,12 @@ class ProductAdapter (
     }
 }
 
-class ProductDiffUtil : DiffUtil.ItemCallback<String>(){
-    override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
-        return oldItem.last() == newItem.last()
+class ProductDiffUtil : DiffUtil.ItemCallback<Product>(){
+    override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
+    override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
         return oldItem == newItem
     }
 }

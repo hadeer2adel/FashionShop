@@ -6,10 +6,10 @@
     android:id="@+id/card"
     android:layout_width="180dp"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
     app:strokeWidth="2dp"
     app:strokeColor="@color/light"
     app:cardElevation="5dp"
+    android:layout_margin="3dp"
     android:backgroundTint="@color/white"
     app:cardCornerRadius="10dp">
 
