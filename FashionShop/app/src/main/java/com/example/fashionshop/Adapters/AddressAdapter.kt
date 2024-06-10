@@ -65,6 +65,24 @@ class AddressAdapter(private val listener: AddressListener) : RecyclerView.Adapt
         holder.itemView.setOnLongClickListener {
             // Set the current item as selected
             selectedItemPosition = holder.adapterPosition
+            listener.sendeditChoosenAddressRequest(
+                currentAddress.id,
+                currentAddress.address1,
+                currentAddress.address2.toString(),
+                currentAddress.city,
+                currentAddress.company?.toString() ?: "", // If company can be null, provide a default value
+                currentAddress.country,
+                currentAddress.country_code ?: "", // If country_code can be null, provide a default value
+                currentAddress.first_name,
+                currentAddress.last_name,
+                0.0,
+                0.0,
+                currentAddress.name,
+                currentAddress.phone,
+                currentAddress.province?.toString() ?: "", // If province can be null, provide a default value
+                currentAddress.province_code ?: "", // If province_code can be null, provide a default value
+                currentAddress.zip
+            )
             listener.setAddressDefault(currentAddress.id, true)
             notifyDataSetChanged() // Notify adapter that data set has changed
             true // Consume the long click
