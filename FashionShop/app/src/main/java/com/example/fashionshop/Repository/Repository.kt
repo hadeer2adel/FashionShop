@@ -7,6 +7,7 @@ import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.customers
+import com.example.fashionshop.Model.editAddressBody
 
 interface Repository {
     suspend fun getcustomers(): OneCustomer
@@ -17,5 +18,9 @@ interface Repository {
     ): AddressUpdateRequest
     suspend fun deleteSingleCustomerAddress(id:Long)
     suspend fun getDraftOrders(): DraftOrders
+    suspend fun deleteSingleCustomerDrafOrder(id:Long)
+    suspend fun editSingleCustomerAddressDraftOrder(id:Long,addressRequest: editAddressBody): DraftOrders
+
+
 
 }

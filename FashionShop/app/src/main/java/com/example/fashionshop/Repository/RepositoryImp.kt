@@ -1,12 +1,11 @@
 package com.example.fashionshop.Repository
 
-import com.example.fashionshop.Model.AddressDefault
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
-import com.example.fashionshop.Model.customers
+import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Service.Networking.NetworkManager
 
 class RepositoryImp constructor(
@@ -47,5 +46,16 @@ class RepositoryImp constructor(
 
     override suspend fun getDraftOrders(): DraftOrders {
         return  networkManager.getDraftOrders()
+    }
+
+    override suspend fun deleteSingleCustomerDrafOrder(id: Long) {
+        return networkManager.deleteSingleCustomerDrafOrder(id)
+    }
+
+    override suspend fun editSingleCustomerAddressDraftOrder(
+        id: Long,
+        addressRequest: editAddressBody
+    ): DraftOrders {
+        return networkManager.editSingleCustomerAddressDraftOrder(id,addressRequest)
     }
 }

@@ -58,7 +58,7 @@
         tools:layout="@layout/fragment_payment" />
     <fragment
         android:id="@+id/chooseAdress"
-        android:name="com.example.fashionshop.ChooseAddressFragment"
+        android:name="com.example.fashionshop.Modules.Address.view.ChooseAddressFragment"
         android:label="Payment"
         tools:layout="@layout/fragment_choose_address" />
 

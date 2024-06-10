@@ -29,7 +29,18 @@ class CartViewModel (private val repo: Repository
             _products.postValue(ProductList)
 
         }
-    }}
+    }
+    fun senddeleteDrafOrderRequest(id:Long
+    )  {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i("TAG", "deleteSingleCustomerDrafOrder : ViewMOdel")
+            repo.deleteSingleCustomerDrafOrder(id)
+            getAllDraftOrders()
+        }
+    }
+
+
+}
 
 
 

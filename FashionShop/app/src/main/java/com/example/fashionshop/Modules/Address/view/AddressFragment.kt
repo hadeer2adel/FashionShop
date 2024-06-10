@@ -79,6 +79,7 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
                 // Split addresses into two lists: defaultAddresses and nonDefaultAddresses
                 val (defaultAddresses, nonDefaultAddresses) = value.customer.addresses.partition { it.default }
                 // Concatenate the lists with defaultAddresses first
+
                 val filteredAddresses = defaultAddresses + nonDefaultAddresses
                 mAdapter.setAddressList(filteredAddresses)
                 mAdapter.notifyDataSetChanged()
@@ -135,5 +136,26 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
         Toast.makeText(requireContext(), "Address Preeesed Successfully", Toast.LENGTH_LONG).show()
         refreshFragment()
 
+    }
+
+    override fun sendeditChoosenAddressRequest(
+        id: Long,
+        address1: String,
+        address2: String,
+        city: String,
+        company: String,
+        country: String,
+        country_code: String,
+        first_name: String,
+        last_name: String,
+        latitude: Any,
+        longitude: Any,
+        name: String,
+        phone: String,
+        province: String,
+        province_code: Any,
+        zip: String
+    ) {
+        TODO("Not yet implemented")
     }
 }

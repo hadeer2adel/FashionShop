@@ -1,12 +1,11 @@
 package com.example.fashionshop.Service.Networking
 
-import com.example.fashionshop.Model.AddressDefault
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
-import com.example.fashionshop.Model.customers
+import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.network.NetworkService
 import com.example.fashionshop.network.RetrofitHelper
 
@@ -47,7 +46,21 @@ class NetworkManagerImp private constructor(): NetworkManager {
         networkService.deleteSingleCustomerAddress(id)
     }
 
+    override suspend fun deleteSingleCustomerDrafOrder(id: Long)
+    {
+        networkService.deleteSingleCustomerDrafOrder(id)
+
+    }
+
     override suspend fun getDraftOrders(): DraftOrders {
         val responce= networkService.getDraftOrders()
         return responce        }
+
+    override suspend fun editSingleCustomerAddressDraftOrder(
+        id: Long,
+        addressRequest: editAddressBody
+    ): DraftOrders {
+        val responce= networkService.editSingleCustomerAddressDraftOrder(id,addressRequest)
+        return responce
+    }
 }

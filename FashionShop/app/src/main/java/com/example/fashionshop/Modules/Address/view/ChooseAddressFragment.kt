@@ -1,9 +1,11 @@
-package com.example.fashionshop
+package com.example.fashionshop.Modules.Address.view
+import CartFragmentArgs
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -11,12 +13,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.AddressAdapter
-import com.example.fashionshop.Modules.Address.view.AddressListener
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.FragmentChooseAddressBinding
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
 import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
+import com.example.fashionshop.R
 
 class ChooseAddressFragment : Fragment() , AddressListener{
     lateinit var allProductFactroy: AddressFactory
@@ -25,10 +27,13 @@ class ChooseAddressFragment : Fragment() , AddressListener{
     private val binding get() = _binding!!
     private lateinit var mAdapter: AddressAdapter
     private lateinit var mLayoutManager: LinearLayoutManager
+    private lateinit var draftOrderIds: List<Long>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val args = ChooseAddressFragmentArgs.fromBundle(requireArguments())
+         draftOrderIds = args.draftOrderIds
         _binding = FragmentChooseAddressBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.recyclerChooseAddrees.layoutManager = LinearLayoutManager(requireContext())
@@ -54,7 +59,17 @@ class ChooseAddressFragment : Fragment() , AddressListener{
 }
         return view
     }
-
+    private fun refreshFragment() {
+        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
+            value?.let {
+                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
+                val (defaultAddresses, nonDefaultAddresses) = value.customer.addresses.partition { it.default }
+                val filteredAddresses = defaultAddresses + nonDefaultAddresses
+                mAdapter.setAddressList(filteredAddresses)
+             //   mAdapter.notifyDataSetChanged()
+            }
+        })
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -65,7 +80,53 @@ class ChooseAddressFragment : Fragment() , AddressListener{
     }
 
     override fun setAddressDefault(id:Long,default: Boolean) {
-        TODO("Not yet implemented")
+        allProductViewModel.sendeditAddressRequest(id,default)
+        Toast.makeText(requireContext(), "Address Preeesed Successfully", Toast.LENGTH_LONG).show()
+        refreshFragment()
+    }
+
+    override fun sendeditChoosenAddressRequest(
+        idd: Long,
+        address1: String,
+        address2: String,
+        city: String,
+        company: String,
+        country: String,
+        country_code: String,
+        first_name: String,
+        last_name: String,
+        latitude: Any,
+        longitude: Any,
+        name: String,
+        phone: String,
+        province: String,
+        province_code: Any,
+        zip: String
+    ) {
+        draftOrderIds.forEach { id ->
+            Log.i("gggg", "sendeditChoosenAddressRequest:  ${id} ")
+            allProductViewModel.sendeditChoosenAddressRequest(
+                id,
+                address1,
+                address2,
+                city,
+                company,
+                country,
+                country_code,
+                first_name,
+                last_name,
+                latitude,
+                longitude,
+                name,
+                phone,
+                province,
+                province_code,
+                zip
+            )
+        }
+
+        Toast.makeText(requireContext(), "Address Preeesed Successfully", Toast.LENGTH_LONG).show()
+        refreshFragment()
     }
 }
 
