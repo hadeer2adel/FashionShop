@@ -32,7 +32,8 @@ class ProductAdapter (
         val data = getItem(position)
         holder.binding.apply {
             title.text = data.title
-            price.text = data.variants?.get(0)?.price
+            var currency = "USD"
+            price.text = "${data.variants?.get(0)?.price} $currency"
             Glide
                 .with(binding.root)
                 .load(data.image?.src)

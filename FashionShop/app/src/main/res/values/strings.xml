@@ -63,5 +63,6 @@
     <string name="dialog_filter">Filtering</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
+    <string name="validate">Validate</string>
 
 </resources>

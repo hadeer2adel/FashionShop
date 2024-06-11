@@ -250,7 +250,7 @@ class CategoryFragment : Fragment() {
             subCategory = ACCESSORIES
             viewModel.filterProducts(mainCategory, subCategory)
             changeFabColors()
-            changeSelectedFabColor() 
+            changeSelectedFabColor()
         }
     }
 
@@ -268,13 +268,13 @@ class CategoryFragment : Fragment() {
             when (subCategory) {
                 ACCESSORIES -> {
                     fabAccessories.backgroundTintList =
-                        resources.getColorStateList(R.color.LightGray)
+                        resources.getColorStateList(R.color.gray1)
                 }
                 T_SHIRTS -> {
-                    fabShirt.backgroundTintList = resources.getColorStateList(R.color.LightGray)
+                    fabShirt.backgroundTintList = resources.getColorStateList(R.color.gray1)
                 }
                 SHOES -> {
-                    fabShoes.backgroundTintList = resources.getColorStateList(R.color.LightGray)
+                    fabShoes.backgroundTintList = resources.getColorStateList(R.color.gray1)
                 }
             }
         }
