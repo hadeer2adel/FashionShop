@@ -31,7 +31,7 @@
         tools:layout="@layout/fragment_favorite" />
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.example.fashionshop.CartFragment"
+        android:name="com.example.fashionshop.Modules.ShoppingCard.view.CartFragment"
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" />
     <fragment
@@ -52,7 +52,7 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/addressFragment"
-        android:name="com.example.fashionshop.AddressFragment"
+        android:name="com.example.fashionshop.Modules.Address.view.AddressFragment"
         android:label="Setting"
         tools:layout="@layout/fragment_address" />
     <fragment
@@ -67,7 +67,7 @@
         tools:layout="@layout/fragment_payment" />
     <fragment
         android:id="@+id/chooseAdress"
-        android:name="com.example.fashionshop.ChooseAddressFragment"
+        android:name="com.example.fashionshop.Modules.Address.view.ChooseAddressFragment"
         android:label="Payment"
         tools:layout="@layout/fragment_choose_address" />
 
@@ -82,7 +82,17 @@
         android:name="com.example.fashionshop.Modules.ProductInfo.view.ProductInfoFragment"
         android:label="fragment_product_info"
         tools:layout="@layout/fragment_product_info" />
+    <fragment
+        android:id="@+id/AddAddress"
+        android:name="com.example.fashionshop.AddNewAddressFragment"
+        android:label="fragment_product_info"
+        tools:layout="@layout/fragment_add_new_address" />
 
+    <fragment
+        android:id="@+id/mapsFrgment"
+        android:name="com.example.fashionshop.MapsFragment"
+        android:label="fragment_product_info"
+        tools:layout="@layout/fragment_maps" />
     <action
         android:id="@+id/action_profileFragment_to_ordersFragment"
         app:destination="@id/orderFragment" />
@@ -128,5 +138,19 @@
             android:name="brandName"
             app:argType="string" />
     </fragment>
+
+
+    <action
+        android:id="@+id/Adress_to_AddAddressFragment"
+        app:destination="@id/AddAddress" />
+    <action
+        android:id="@+id/action_from_AddnewAddress_to_Map"
+        app:destination="@id/mapsFrgment" />
+
+    <action
+        android:id="@+id/action_from_map_to_newAddresses"
+        app:destination="@id/addressFragment" />
+
+
 
 </navigation>
