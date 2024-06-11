@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="80dp"
     tools:context=".Modules.ProductInfo.view.ReviewFragment"
     android:orientation="vertical">
 
@@ -24,11 +23,4 @@
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
         tools:listitem="@layout/card_review" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="32dp"
-        android:alpha="0.3"
-        android:background="@color/gray"/>
 </LinearLayout>

@@ -56,7 +56,8 @@
     //product info page
     <string name="addToCart">Add To Cart</string>
     <string name="product_description">Description</string>
-    <string name="show_more">Show More</string>
+    <string name="show_reviews">Show Reviews</string>
+    <string name="hide_reviews">Hide Reviews</string>
     <string name="review">Reviews</string>
     <string name="suggest">Product Suggestions</string>
 

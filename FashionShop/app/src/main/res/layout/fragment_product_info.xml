@@ -81,18 +81,13 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:layout_marginHorizontal="16dp">
-
             <RatingBar
                 android:id="@+id/ratingBar"
                 android:layout_width="230dp"
                 android:layout_height="40dp"
                 android:isIndicator="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="16dp"
                 android:numStars="5"
                 android:progressTint="@color/star"
                 android:stepSize="0.1"
@@ -100,19 +95,6 @@
                 android:scaleY="0.5"
                 android:transformPivotX="0dp"
                 android:rating="3.5"/>
-
-            <Button
-                android:id="@+id/signupBtn1"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/show_more"
-                android:textColor="@color/black"
-                android:alpha="0.7"
-                android:gravity="end|top"
-                android:textSize="16sp"
-                android:textAllCaps="false"/>
-        </LinearLayout>
 
             <TextView
                 android:id="@+id/price"
@@ -123,11 +105,6 @@
                 android:textColor="@color/red"
                 android:textSize="24sp"
                 android:textStyle="bold"/>
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/reviewFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
 
             <View
                 android:layout_width="match_parent"
@@ -156,6 +133,29 @@
                 android:textColor="@color/black"
                 android:alpha="0.7"
                 android:textSize="18sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="32dp"
+                android:alpha="0.3"
+                android:background="@color/gray"/>
+
+            <Button
+                android:id="@+id/showReviews"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/show_reviews"
+                android:textColor="@color/gray"
+                android:layout_gravity="center"
+                android:textSize="16sp"
+                android:textAllCaps="false"/>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/reviewFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <View
                 android:layout_width="match_parent"

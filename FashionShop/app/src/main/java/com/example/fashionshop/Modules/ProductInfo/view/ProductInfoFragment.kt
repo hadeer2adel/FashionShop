@@ -34,6 +34,8 @@ class ProductInfoFragment : Fragment() {
     private lateinit var binding: FragmentProductInfoBinding
     private lateinit var viewModel: ProductInfoViewModel
     private val args: ProductInfoFragmentArgs by navArgs()
+    private var isReviewsVisible = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +50,24 @@ class ProductInfoFragment : Fragment() {
 
         initViewModel()
         viewModel.getProductInfo(args.productId)
+
+        binding.showReviews.setOnClickListener {
+            isReviewsVisible = ! isReviewsVisible
+            if (isReviewsVisible) {
+                binding.showReviews.text = requireContext().getString(R.string.hide_reviews)
+                childFragmentManager.beginTransaction()
+                    .add(R.id.reviewFragment, ReviewFragment())
+                    .commit()
+            } else {
+                binding.showReviews.text = requireContext().getString(R.string.show_reviews)
+                val childFragment = childFragmentManager.findFragmentById(R.id.reviewFragment)
+                if (childFragment != null) {
+                    childFragmentManager.beginTransaction()
+                        .remove(childFragment)
+                        .commit()
+                }
+            }
+        }
     }
 
     private fun initViewModel() {

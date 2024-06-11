@@ -4,10 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.fashionshop.Adapters.ReviewAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductResponse
+import com.example.fashionshop.Model.Review
+import com.example.fashionshop.Model.Reviews
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +24,8 @@ class ProductInfoViewModel(private var repository: Repository) : ViewModel(){
     private var _product = MutableStateFlow<NetworkState<ProductResponse>>(NetworkState.Loading)
     var product: StateFlow<NetworkState<ProductResponse>> = _product
 
-    private var _reviews = MutableStateFlow<NetworkState<Product>>(NetworkState.Loading)
-    var reviews: StateFlow<NetworkState<Product>> = _reviews
+    private var _reviews = MutableStateFlow<NetworkState<List<Review>>>(NetworkState.Loading)
+    var reviews: StateFlow<NetworkState<List<Review>>> = _reviews
 
     private var _productSuggestions = MutableStateFlow<NetworkState<Product>>(NetworkState.Loading)
     var productSuggestions: StateFlow<NetworkState<Product>> = _productSuggestions
@@ -41,7 +44,8 @@ class ProductInfoViewModel(private var repository: Repository) : ViewModel(){
     }
 
     fun getReviews(){
-
+        val reviewList = Reviews()
+        _reviews.value = NetworkState.Success(reviewList.getReviews())
     }
 
     fun getProductSuggestions(){

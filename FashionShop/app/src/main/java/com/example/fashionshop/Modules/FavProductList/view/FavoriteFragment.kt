@@ -30,26 +30,15 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val onClick: () -> Unit = {}
-        val onCardClick: () -> Unit = {
+        val onCardClick: (id: Long) -> Unit = {
             val navController = NavHostFragment.findNavController(this)
-            val action = FavoriteFragmentDirections.actionToProductInfoFragment(8589879312604)
+            val action = FavoriteFragmentDirections.actionToProductInfoFragment(it)
             navController.navigate(action)
         }
 
 
         adapter = ProductAdapter(requireContext(), true, onClick, onCardClick)
-        adapter.submitList(listOf(
-            "Product 1",
-            "Product 2",
-            "Product 3",
-            "Product 4",
-            "Product 5",
-            "Product 6",
-            "Product 7",
-            "Product 8",
-            "Product 9",
-            "Product 10"
-        ))
+        adapter.submitList(emptyList())
         binding.recycleView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recycleView.adapter = adapter
 

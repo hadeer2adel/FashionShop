@@ -16,7 +16,7 @@ class ProductAdapter (
     private val context: Context,
     private val isFav: Boolean,
     private val onClick: ()->Unit,
-    private val onCardClick: ()->Unit
+    private val onCardClick: (id: Long)->Unit
         ):ListAdapter<Product, ProductAdapter.ProductViewHolder>(ProductDiffUtil()){
 
     lateinit var binding: CardProductBinding
@@ -49,7 +49,9 @@ class ProductAdapter (
                 favBtn.setImageResource(R.drawable.ic_favorite_false)
             }
             favBtn.setOnClickListener { onClick() }
-            card.setOnClickListener { onCardClick() }
+            card.setOnClickListener {
+                data.id?.let { it1 -> onCardClick(it1) }
+            }
         }
     }
 }
