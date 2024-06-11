@@ -5,6 +5,7 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:statusBarColor">@color/black</item>
+
     </style>
 
     <style name="Theme.FashionShop" parent="Base.Theme.FashionShop" />
@@ -17,5 +18,6 @@
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
     </style>
+
 
 </resources>

@@ -123,7 +123,7 @@
         android:id="@+id/rv_products"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginVertical="8dp"
+        android:layout_marginBottom="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -166,7 +166,8 @@
         app:layout_constraintEnd_toEndOf="@+id/fab_category"
         app:layout_constraintStart_toStartOf="@+id/fab_category"
         app:pressedTranslationZ="12dp"
-        app:srcCompat="@drawable/sneakers" />
+        app:srcCompat="@drawable/sneakers"
+        app:tint="@color/black"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_accessories"
@@ -184,7 +185,8 @@
         app:layout_constraintEnd_toEndOf="@+id/fab_shoes"
         app:layout_constraintStart_toStartOf="@+id/fab_shoes"
         app:pressedTranslationZ="12dp"
-        app:srcCompat="@drawable/wedding_rings" />
+        app:srcCompat="@drawable/wedding_rings"
+        app:tint="@color/black"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_shirt"
@@ -202,7 +204,8 @@
         app:layout_constraintEnd_toEndOf="@+id/fab_accessories"
         app:layout_constraintStart_toStartOf="@+id/fab_accessories"
         app:pressedTranslationZ="12dp"
-        app:srcCompat="@drawable/shirt" />
+        app:srcCompat="@drawable/shirt"
+        app:tint="@color/black"/>
 
     <View
         android:id="@+id/overlayView"
