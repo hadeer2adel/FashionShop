@@ -48,4 +48,8 @@ class NetworkManagerImp private constructor(): NetworkManager {
     }
 
 
+    override suspend fun getCustomerByEmail(email: String): customers {
+        return networkService.getCustomerByEmail(email)
+    }
+
 }

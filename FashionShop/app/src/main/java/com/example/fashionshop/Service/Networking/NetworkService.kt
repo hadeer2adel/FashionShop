@@ -32,5 +32,9 @@ interface NetworkService {
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
     @GET("products.json")
     suspend fun getProducts(): Response<ProductResponse>
+    @GET("customers/search.json")
+    suspend fun getCustomerByEmail(
+        @Query("email") email: String
+    ): customers
 
 }

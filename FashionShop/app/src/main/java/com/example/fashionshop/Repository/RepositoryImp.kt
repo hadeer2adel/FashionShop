@@ -48,4 +48,7 @@ class RepositoryImp constructor(
     }
 
 
+    override suspend fun getCustomerByEmail(email: String): customers {
+        return networkManager.getCustomerByEmail(email)
+    }
 }
