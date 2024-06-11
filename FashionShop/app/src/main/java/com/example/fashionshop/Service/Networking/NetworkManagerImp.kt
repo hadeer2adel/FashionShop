@@ -6,6 +6,7 @@ import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.editAddressBody
+import com.example.fashionshop.Model.editOrderQuantityBody
 import com.example.fashionshop.network.NetworkService
 import com.example.fashionshop.network.RetrofitHelper
 
@@ -61,6 +62,14 @@ class NetworkManagerImp private constructor(): NetworkManager {
         addressRequest: editAddressBody
     ): DraftOrders {
         val responce= networkService.editSingleCustomerAddressDraftOrder(id,addressRequest)
+        return responce
+    }
+
+    override suspend fun editSingleCustomerAddressDraftOrderQuantity(
+        id: Long,
+        quantityRequest: editOrderQuantityBody
+    ): DraftOrders {
+        val responce =networkService.editSingleCustomerAddressDraftOrderQuantity(id,quantityRequest)
         return responce
     }
 }

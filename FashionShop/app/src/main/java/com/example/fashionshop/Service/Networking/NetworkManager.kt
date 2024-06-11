@@ -6,6 +6,7 @@ import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.editAddressBody
+import com.example.fashionshop.Model.editOrderQuantityBody
 
 interface NetworkManager {
     suspend fun getcutomers(): OneCustomer
@@ -17,5 +18,6 @@ interface NetworkManager {
     suspend fun deleteSingleCustomerDrafOrder(id:Long)
     suspend fun getDraftOrders():DraftOrders
     suspend fun editSingleCustomerAddressDraftOrder(id:Long,addressRequest: editAddressBody): DraftOrders
+    suspend fun editSingleCustomerAddressDraftOrderQuantity(id:Long,quantityRequest: editOrderQuantityBody): DraftOrders
 
 }

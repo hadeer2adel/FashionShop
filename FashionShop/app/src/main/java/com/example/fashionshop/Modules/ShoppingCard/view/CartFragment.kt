@@ -13,11 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fashionshop.Adapters.AddressAdapter
 import com.example.fashionshop.Adapters.CartAdapter
-import com.example.fashionshop.Model.CartItem
-import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
-import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
+import com.example.fashionshop.Model.TaxLineX
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartViewModel
 import com.example.fashionshop.R
@@ -94,5 +91,44 @@ class CartFragment : Fragment() ,CartListener {
         Toast.makeText(requireContext(), "Deleted Successfully", Toast.LENGTH_LONG).show()
         refreshFragment()
 
+    }
+
+    override fun sendeditChoosenQuantityRequest(
+        id: Long,
+        admin_graphql_api_id: String,
+        applied_discount: Any?,
+        custom: Boolean,
+        fulfillment_service: String,
+        gift_card: Boolean,
+        grams: Int,
+        lineItemId: Long,
+        name: String,
+        price: String,
+        product_id: Any?,
+        properties: List<Any>,
+        quantity: Int,
+        requires_shipping: Boolean,
+        sku: Any?,
+        tax_lines: List<TaxLineX>,
+        taxable: Boolean,
+        title: String,
+        variant_id: Any?,
+        variant_title: Any?,
+        vendor: Any?
+    ) {
+
+        draftOrderIds.forEach { id ->
+            Log.i("dddd", "${id} ")
+            Log.i("dddd", "$applied_discount ")
+            allProductViewModel.sendeditChoosenQuantityRequest(id,admin_graphql_api_id,applied_discount,custom,fulfillment_service,gift_card,
+            grams,lineItemId,name,price,product_id,properties,quantity
+                ,requires_shipping,sku,tax_lines,taxable,title,variant_id.toString(),variant_title,vendor)
+
+        }
+
+
+
+
+        Toast.makeText(requireContext(), "Deleted Successfully", Toast.LENGTH_LONG).show()
     }
 }

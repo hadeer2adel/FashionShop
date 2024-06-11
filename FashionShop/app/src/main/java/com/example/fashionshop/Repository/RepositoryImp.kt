@@ -6,6 +6,7 @@ import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.editAddressBody
+import com.example.fashionshop.Model.editOrderQuantityBody
 import com.example.fashionshop.Service.Networking.NetworkManager
 
 class RepositoryImp constructor(
@@ -57,5 +58,12 @@ class RepositoryImp constructor(
         addressRequest: editAddressBody
     ): DraftOrders {
         return networkManager.editSingleCustomerAddressDraftOrder(id,addressRequest)
+    }
+
+    override suspend fun editSingleCustomerAddressDraftOrderQuantity(
+        id: Long,
+        quantityRequest: editOrderQuantityBody
+    ): DraftOrders {
+        return  networkManager.editSingleCustomerAddressDraftOrderQuantity(id,quantityRequest)
     }
 }
