@@ -1,19 +1,38 @@
 package com.example.fashionshop.Repository
-
 import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.customers
 import retrofit2.Response
+import retrofit2.http.GET
 import retrofit2.http.Query
-
+import com.example.fashionshop.Model.AddressDefault
+import com.example.fashionshop.Model.AddressDefultRequest
+import com.example.fashionshop.Model.AddressRequest
+import com.example.fashionshop.Model.AddressUpdateRequest
+import com.example.fashionshop.Model.DraftOrders
+import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.editAddressBody
+import com.example.fashionshop.Model.editOrderQuantityBody
 interface Repository {
-    suspend fun getcustomers():customers
+    suspend fun getcustomers(): OneCustomer
     suspend fun createCustomer(customer: CustomerRequest): CustomerResponse
     suspend fun getBrands(): Response<BrandResponse>
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
-
     suspend fun getProducts(): Response<ProductResponse>
+    suspend fun getCustomerByEmail(email: String): customers
+    suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest
+    suspend fun editSingleCustomerAddress(
+        id: Long,
+        addressRequest: AddressDefultRequest
+    ): AddressUpdateRequest
+    suspend fun deleteSingleCustomerAddress(id:Long)
+    suspend fun getDraftOrders(): DraftOrders
+    suspend fun deleteSingleCustomerDrafOrder(id:Long)
+    suspend fun editSingleCustomerAddressDraftOrder(id:Long,addressRequest: editAddressBody): DraftOrders
+    suspend fun editSingleCustomerAddressDraftOrderQuantity(id:Long,quantityRequest: editOrderQuantityBody): DraftOrders
+
+
 
 }

@@ -20,6 +20,7 @@
     <string name="orSignup">Don’t have a account?</string>
     <string name="or">OR</string>
     <string name="google">Login With Google</string>
+    <string name="client_id">546301706385-3ha2dk9gtudv5q6gheem5uh3tmc0kppq.apps.googleusercontent.com</string>
 
     //Sign up page
     <string name="signup">Create</string>
@@ -64,5 +65,13 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="validate">Validate</string>
+
+    //Address
+    <string name="newAddress">Add New Address</string>
+    <string name="newAddressAdded">Send Request</string>
+
+    //payment
+    <string name="payment">Continue To Payment</string>
+    <string name="checkout">Checkout</string>
 
 </resources>

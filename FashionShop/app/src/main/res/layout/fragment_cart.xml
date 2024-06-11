@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:layout_marginBottom="80dp"
-    tools:context=".CartFragment">
+    tools:context=".Modules.ShoppingCard.view.CartFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCartItems"
@@ -18,15 +18,30 @@
         android:paddingBottom="16dp"
         tools:listitem="@layout/cart_item" />
 
-    <Button
-        android:id="@+id/buttonCheckout"
+    <TextView
+        android:id="@+id/textViewSubtotal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Checkout"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp"
+        android:text="Subtotal: $0.00"
         android:textColor="@android:color/black"
-        app:backgroundTint="@color/LightGray"
-        app:cornerRadius="0dp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/buttonCheckout"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/black"
+        android:text="@string/checkout"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:cornerRadius="10dp" />
 
 </LinearLayout>
-

@@ -34,7 +34,8 @@ class SettingsFragment : Fragment() , OnBackPressedListener{
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
         // Set up the toolbar
-        // Access your views using binding
+        val toolbar = binding.toolbar
+        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
         binding.AddressButton.setOnClickListener {
 //            val secondFragment = AddressFragment()
 //            fragmentManager?.beginTransaction()?.apply {
