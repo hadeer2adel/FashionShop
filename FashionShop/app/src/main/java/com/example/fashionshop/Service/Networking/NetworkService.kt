@@ -8,6 +8,7 @@ import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.customers
 import com.example.fashionshop.Model.editAddressBody
@@ -89,6 +90,8 @@ interface NetworkService {
     ): DraftOrders
 
 
+    @GET("products/{id}.json")
+    suspend fun getProductById(@Path("id") id: Long): ProductResponse
 
 }
 

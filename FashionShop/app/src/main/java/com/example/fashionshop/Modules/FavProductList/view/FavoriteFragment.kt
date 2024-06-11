@@ -16,7 +16,6 @@ import com.example.fashionshop.databinding.FragmentFavoriteBinding
 class FavoriteFragment : Fragment() {
 
     private lateinit var binding: FragmentFavoriteBinding
-    private lateinit var navController: NavController
     private lateinit var adapter: ProductAdapter
 
     override fun onCreateView(
@@ -29,12 +28,15 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navController = NavHostFragment.findNavController(this)
 
         val onClick: () -> Unit = {}
         val onCardClick: () -> Unit = {
-            navController.navigate(R.id.action_favoriteFragment_to_productInfoFragment)
+            val navController = NavHostFragment.findNavController(this)
+            val action = FavoriteFragmentDirections.actionToProductInfoFragment(8589879312604)
+            navController.navigate(action)
         }
+
+
         adapter = ProductAdapter(requireContext(), true, onClick, onCardClick)
         adapter.submitList(listOf(
             "Product 1",

@@ -13,8 +13,10 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
+import retrofit2.http.Path
 
 interface NetworkManager {
     suspend fun getcutomers(): OneCustomer
@@ -34,5 +36,8 @@ interface NetworkManager {
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
 
     suspend fun getCustomerByEmail(email: String): customers
+
+    suspend fun getProductById(id: Long): ProductResponse
+
 
 }

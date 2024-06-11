@@ -9,6 +9,7 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
 import com.example.fashionshop.Service.Networking.NetworkManager
@@ -94,5 +95,9 @@ class RepositoryImp constructor(
     ): DraftOrders {
         return networkManager.editSingleCustomerAddressDraftOrderQuantity(id, quantityRequest)
 
+    }
+
+    override suspend fun getProductById(id: Long): ProductResponse {
+        return networkManager.getProductById(id)
     }
 }

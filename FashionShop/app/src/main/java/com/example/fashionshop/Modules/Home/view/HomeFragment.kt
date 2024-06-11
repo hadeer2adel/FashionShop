@@ -67,7 +67,7 @@ class HomeFragment : Fragment() , BrandClickListener {
             R.drawable.coupon2,
             R.drawable.coupon3
         )
-        val sliderAdapter = SliderAdapter(requireContext(), imageResourceIds, true)
+        val sliderAdapter = SliderAdapter(requireContext(), imageResourceIds)
         sliderView.setSliderAdapter(sliderAdapter)
         sliderView.startAutoCycle()
 
