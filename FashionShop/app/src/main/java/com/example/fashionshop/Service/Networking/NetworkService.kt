@@ -11,6 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface NetworkService {
     @GET("customers.json")
@@ -20,5 +21,10 @@ interface NetworkService {
     suspend fun createCustomer(
         @Body customer: CustomerRequest
     ): CustomerResponse
+
+    @GET("customers/search.json")
+    suspend fun getCustomerByEmail(
+        @Query("email") email: String
+    ): customers
 
 }

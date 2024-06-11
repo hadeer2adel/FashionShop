@@ -32,4 +32,8 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return networkService.createCustomer(customer)
     }
 
+    override suspend fun getCustomerByEmail(email: String): customers {
+        return networkService.getCustomerByEmail(email)
+    }
+
 }
