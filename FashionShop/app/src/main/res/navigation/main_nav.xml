@@ -80,7 +80,7 @@
     <fragment
         android:id="@+id/productInfoFragment"
         android:name="com.example.fashionshop.Modules.ProductInfo.view.ProductInfoFragment"
-        android:label="fragment_product_info"
+        android:label="@string/product_info_title"
         tools:layout="@layout/fragment_product_info" >
         <argument
             android:name="product_id"

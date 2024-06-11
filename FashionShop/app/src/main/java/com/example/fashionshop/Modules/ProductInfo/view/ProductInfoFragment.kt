@@ -10,12 +10,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.OnlineSliderAdapter
+import com.example.fashionshop.Adapters.ProductAdapter
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModel
 import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModelFactory
 import com.example.fashionshop.Modules.Products.view.ProductsFragmentArgs
+import com.example.fashionshop.Modules.Products.view.ProductsFragmentDirections
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
@@ -35,7 +44,7 @@ class ProductInfoFragment : Fragment() {
     private lateinit var viewModel: ProductInfoViewModel
     private val args: ProductInfoFragmentArgs by navArgs()
     private var isReviewsVisible = false
-
+    private lateinit var adapter: ProductAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +57,12 @@ class ProductInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val navController = NavHostFragment.findNavController(this)
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val toolbar = binding.toolbar
+        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
+
+        setUpRecycleView()
         initViewModel()
         viewModel.getProductInfo(args.productId)
 
@@ -70,6 +85,19 @@ class ProductInfoFragment : Fragment() {
         }
     }
 
+    private fun setUpRecycleView(){
+        val onClick: () -> Unit = {}
+        val onCardClick: (id: Long) -> Unit = {
+            val navController = NavHostFragment.findNavController(this)
+            val action = ProductInfoFragmentDirections.actionToProductInfoFragment(it)
+            navController.navigate(action)
+        }
+        adapter = ProductAdapter(requireContext(), false, onClick, onCardClick)
+        adapter.submitList(emptyList())
+        binding.recycleView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        binding.recycleView.adapter = adapter
+    }
+
     private fun initViewModel() {
         val networkManager: NetworkManager = NetworkManagerImp.getInstance()
         val repository: Repository = RepositoryImp(networkManager)
@@ -88,6 +116,19 @@ class ProductInfoFragment : Fragment() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.productSuggestions.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> onLoading()
+                    is NetworkState.Success -> {
+                        onSuccess()
+                        adapter.submitList(response.data.products?.take(5))
+                    }
+                    is NetworkState.Failure -> onFailure(response.error.message)
+                }
+            }
+        }
     }
 
     private fun setData(product: Product) {
@@ -95,6 +136,8 @@ class ProductInfoFragment : Fragment() {
         binding.apply {
             name.text = product.title
             price.text = product.variants?.get(0)?.price
+            val customer = CustomerData.getInstance(requireContext())
+            currency.text = customer.currency
             description.text = product.body_html
 
             val randomRatings = FloatArray(10) { Random.nextFloat() * 5 }
@@ -109,6 +152,8 @@ class ProductInfoFragment : Fragment() {
             sliderView.setIndicatorUnselectedColor(Color.LTGRAY)
             sliderView.scrollTimeInSec = 2
             sliderView.startAutoCycle()
+
+            product.vendor?.let { viewModel.getProductSuggestions(it) }
         }
     }
 
@@ -123,6 +168,5 @@ class ProductInfoFragment : Fragment() {
     private fun onFailure(message: String?){
         binding.progressBar.visibility = View.GONE
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-        message?.let { Log.i("TAG", it) }
     }
 }

@@ -27,8 +27,8 @@ class ProductInfoViewModel(private var repository: Repository) : ViewModel(){
     private var _reviews = MutableStateFlow<NetworkState<List<Review>>>(NetworkState.Loading)
     var reviews: StateFlow<NetworkState<List<Review>>> = _reviews
 
-    private var _productSuggestions = MutableStateFlow<NetworkState<Product>>(NetworkState.Loading)
-    var productSuggestions: StateFlow<NetworkState<Product>> = _productSuggestions
+    private var _productSuggestions = MutableStateFlow<NetworkState<ProductResponse>>(NetworkState.Loading)
+    var productSuggestions: StateFlow<NetworkState<ProductResponse>> = _productSuggestions
 
     fun getProductInfo(id: Long){
         viewModelScope.launch(Dispatchers.IO){
@@ -48,8 +48,17 @@ class ProductInfoViewModel(private var repository: Repository) : ViewModel(){
         _reviews.value = NetworkState.Success(reviewList.getReviews())
     }
 
-    fun getProductSuggestions(){
-
+    fun getProductSuggestions(vendor : String){
+        viewModelScope.launch(Dispatchers.IO){
+            try {
+                val response =repository.getBrandProducts(vendor)
+                _productSuggestions.value = NetworkState.Success(response.body()!!)
+            } catch (e: HttpException) {
+                _productSuggestions.value = NetworkState.Failure(e)
+            }catch (e: Exception) {
+                _productSuggestions.value = NetworkState.Failure(e)
+            }
+        }
     }
 
     override fun onCleared() {

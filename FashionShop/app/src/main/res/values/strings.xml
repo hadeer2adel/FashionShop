@@ -60,6 +60,7 @@
     <string name="hide_reviews">Hide Reviews</string>
     <string name="review">Reviews</string>
     <string name="suggest">Product Suggestions</string>
+    <string name="product_info_title">Product Details</string>
 
     //category
     <string name="price">Price Range</string>
