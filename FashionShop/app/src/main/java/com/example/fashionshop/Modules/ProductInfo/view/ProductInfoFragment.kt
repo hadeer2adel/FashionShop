@@ -21,6 +21,7 @@ import com.example.fashionshop.Adapters.OnlineSliderAdapter
 import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
+import com.example.fashionshop.Model.ProductDetails
 import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModel
 import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModelFactory
 import com.example.fashionshop.Modules.Products.view.ProductsFragmentArgs
@@ -131,7 +132,7 @@ class ProductInfoFragment : Fragment() {
         }
     }
 
-    private fun setData(product: Product) {
+    private fun setData(product: ProductDetails) {
 
         binding.apply {
             name.text = product.title

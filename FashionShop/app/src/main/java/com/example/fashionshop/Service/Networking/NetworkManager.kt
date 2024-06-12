@@ -6,14 +6,15 @@ import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.customers
 import retrofit2.Response
-import retrofit2.http.GET
 import retrofit2.http.Query
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
+import com.example.fashionshop.Model.DraftOrdersRequest
+import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.OneCustomer
-import com.example.fashionshop.Model.Product
+import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
 import retrofit2.http.Path
@@ -39,5 +40,10 @@ interface NetworkManager {
 
     suspend fun getProductById(id: Long): ProductResponse
 
+    suspend fun createDraftOrders(draftOrders: DraftOrdersRequest): DraftOrderResponse
+    suspend fun updateDraftOrder(@Path("id") id: Long): DraftOrderResponse
+    suspend fun getDraftOrder(@Path("id") id: Long): DraftOrderResponse
+
+    suspend fun updateCustomer(id: Long, customer: UpdateCustomerRequest): CustomerResponse
 
 }

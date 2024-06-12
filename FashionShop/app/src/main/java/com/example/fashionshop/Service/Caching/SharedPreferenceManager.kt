@@ -10,7 +10,9 @@ class SharedPreferenceManager(private val context: Context) {
         NAME,
         EMAIL,
         PHONE,
-        CURRENCY
+        CURRENCY,
+        FavListID,
+        CartListID
     }
 
     fun save(key: Key, value: String) {

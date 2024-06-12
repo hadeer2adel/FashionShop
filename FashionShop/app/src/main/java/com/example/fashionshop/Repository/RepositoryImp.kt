@@ -8,8 +8,10 @@ import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
+import com.example.fashionshop.Model.DraftOrdersRequest
+import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.OneCustomer
-import com.example.fashionshop.Model.Product
+import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
 import com.example.fashionshop.Service.Networking.NetworkManager
@@ -99,5 +101,24 @@ class RepositoryImp constructor(
 
     override suspend fun getProductById(id: Long): ProductResponse {
         return networkManager.getProductById(id)
+    }
+
+    override suspend fun createDraftOrders(draftOrders: DraftOrdersRequest): DraftOrderResponse {
+        return networkManager.createDraftOrders(draftOrders)
+    }
+
+    override suspend fun updateDraftOrder(id: Long): DraftOrderResponse {
+        return networkManager.updateDraftOrder(id)
+    }
+
+    override suspend fun getDraftOrder(id: Long): DraftOrderResponse {
+        return networkManager.getDraftOrder(id)
+    }
+
+    override suspend fun updateCustomer(
+        id: Long,
+        customer: UpdateCustomerRequest
+    ): CustomerResponse {
+        return networkManager.updateCustomer(id, customer)
     }
 }

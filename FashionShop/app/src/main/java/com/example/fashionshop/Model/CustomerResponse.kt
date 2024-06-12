@@ -8,6 +8,13 @@ data class CustomerRequest(val customer: Customer) {
         )
 }
 
+data class UpdateCustomerRequest(val customer: Customer) {
+    data class Customer(
+        val note: Long?,
+        val multipass_identifier: Long?,
+    )
+}
+
 data class CustomerResponse(val customer: Customer) {
     data class Customer(
         val id: Long,
@@ -16,5 +23,7 @@ data class CustomerResponse(val customer: Customer) {
         val email: String,
         val phone: String,
         val currency: String,
+        val note: Long,
+        val multipass_identifier: Long,
     )
 }
