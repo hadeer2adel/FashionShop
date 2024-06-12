@@ -10,6 +10,7 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
 
@@ -99,5 +100,10 @@ class NetworkManagerImp private constructor(): NetworkManager {
     override suspend fun getCustomerByEmail(email: String): customers {
         return networkService.getCustomerByEmail(email)
     }
+
+    override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
+        return networkService.getCustomerOrders(userId)
+    }
+
 
 }

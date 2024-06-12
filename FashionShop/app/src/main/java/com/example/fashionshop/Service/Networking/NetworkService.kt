@@ -8,6 +8,7 @@ import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.customers
 import com.example.fashionshop.Model.editAddressBody
@@ -87,6 +88,9 @@ interface NetworkService {
         @Path("id") id: Long,
         @Body QuantityRequest: editOrderQuantityBody
     ): DraftOrders
+
+    @GET("customers/{id}/orders.json")
+    suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
 
 
 

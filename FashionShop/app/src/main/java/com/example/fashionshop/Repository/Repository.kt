@@ -13,8 +13,11 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
+import retrofit2.http.Path
+
 interface Repository {
     suspend fun getcustomers(): OneCustomer
     suspend fun createCustomer(customer: CustomerRequest): CustomerResponse
@@ -32,7 +35,7 @@ interface Repository {
     suspend fun deleteSingleCustomerDrafOrder(id:Long)
     suspend fun editSingleCustomerAddressDraftOrder(id:Long,addressRequest: editAddressBody): DraftOrders
     suspend fun editSingleCustomerAddressDraftOrderQuantity(id:Long,quantityRequest: editOrderQuantityBody): DraftOrders
-
+    suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
 
 
 }
