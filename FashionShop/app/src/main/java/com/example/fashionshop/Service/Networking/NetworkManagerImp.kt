@@ -1,4 +1,5 @@
 package com.example.fashionshop.Service.Networking
+import android.util.Log
 import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
@@ -12,6 +13,7 @@ import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
+import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
 
@@ -108,6 +110,9 @@ class NetworkManagerImp private constructor(): NetworkManager {
 
     override suspend fun getDiscountCodes(): PriceRule {
         return networkService.getDiscountCodes()
+        }
+    override suspend fun getProductById(id: Long): ProductResponse {
+        return networkService.getProductById(id)
     }
 
 }

@@ -15,8 +15,10 @@ import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
+import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
+import retrofit2.http.Path
 
 interface NetworkManager {
     suspend fun getcutomers(): OneCustomer
@@ -29,13 +31,12 @@ interface NetworkManager {
     suspend fun getDraftOrders():DraftOrders
     suspend fun editSingleCustomerAddressDraftOrder(id:Long,addressRequest: editAddressBody): DraftOrders
     suspend fun editSingleCustomerAddressDraftOrderQuantity(id:Long,quantityRequest: editOrderQuantityBody): DraftOrders
-
     suspend fun createCustomer(customer: CustomerRequest): CustomerResponse
     suspend fun getBrands(): Response<BrandResponse>
     suspend fun getProducts(): Response<ProductResponse>
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
-
     suspend fun getCustomerByEmail(email: String): customers
     suspend fun getDiscountCodesCount(): PriceRuleCount
     suspend fun getDiscountCodes(): PriceRule
+    suspend fun getProductById(id: Long): ProductResponse
 }

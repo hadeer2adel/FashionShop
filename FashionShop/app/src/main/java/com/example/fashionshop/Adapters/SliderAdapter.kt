@@ -19,6 +19,7 @@ class SliderAdapter(private val context: Context, private val countt:Int, privat
         DiscountCodeList = cartItems
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(parent: ViewGroup?): SliderViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.card_ad, parent, false)
         return SliderViewHolder(view)
@@ -51,9 +52,7 @@ class SliderAdapter(private val context: Context, private val countt:Int, privat
         fun bind(imageResourceId: Int) {
             // Load image from drawable resource
             imageView.setImageResource(imageResourceId)
-            if(isAd) {
-                imageView.scaleType = ImageView.ScaleType.FIT_XY
-            }
+            imageView.scaleType = ImageView.ScaleType.FIT_XY
         }
     }
 }

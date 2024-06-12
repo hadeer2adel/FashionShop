@@ -9,14 +9,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.fashionshop.Adapters.BrandAdapter
 import com.example.fashionshop.Adapters.ProductAdapter
-import com.example.fashionshop.Adapters.ProductClickListener
-import com.example.fashionshop.Adapters.ProductsAdapterNew
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.SmartCollection
+import com.example.fashionshop.Modules.FavProductList.view.FavoriteFragmentDirections
 import com.example.fashionshop.Modules.Home.viewModel.HomeFactory
 import com.example.fashionshop.Modules.Home.viewModel.HomeViewModel
 import com.example.fashionshop.Modules.Products.viewModel.ProductsFactory
@@ -31,11 +31,11 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
-class ProductsFragment : Fragment() , ProductClickListener {
+class ProductsFragment : Fragment()  {
     private var _binding: FragmentProductsBinding? = null
     private val binding get() = _binding!!
     private val args: ProductsFragmentArgs by navArgs()
-    private lateinit var adapter: ProductsAdapterNew
+    private lateinit var adapter: ProductAdapter
     private lateinit var viewModel: ProductsViewModel
 
     override fun onCreateView(
@@ -62,10 +62,12 @@ class ProductsFragment : Fragment() , ProductClickListener {
 
     private fun setUpRV(){
         val onClick: () -> Unit = {}
-        val onCardClick: () -> Unit = {
-
+        val onCardClick: (id: Long) -> Unit = {
+            val navController = NavHostFragment.findNavController(this)
+            val action = ProductsFragmentDirections.actionToProductInfoFragment(it)
+            navController.navigate(action)
         }
-        adapter = ProductsAdapterNew(this)
+        adapter = ProductAdapter(requireContext(), false, onClick, onCardClick)
         binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvProducts.adapter = adapter
     }
@@ -82,7 +84,6 @@ class ProductsFragment : Fragment() , ProductClickListener {
                     is NetworkState.Loading -> showLoading()
                     is NetworkState.Success -> response.data.products?.let { showSuccess(it) }
                     is NetworkState.Failure -> showError("Network Error", "Failed to load data. Please try again.")
-                    else -> { }
                 }
             }
         }
@@ -91,7 +92,6 @@ class ProductsFragment : Fragment() , ProductClickListener {
     private fun showLoading() {
         binding.progressBar2.visibility = View.VISIBLE
         binding.rvProducts.visibility = View.INVISIBLE
-
     }
 
     private fun showSuccess(products: List<Product>) {
@@ -104,10 +104,6 @@ class ProductsFragment : Fragment() , ProductClickListener {
         binding.progressBar2.visibility = View.INVISIBLE
         binding.rvProducts.visibility = View.INVISIBLE
         showAlertDialog(title, message)
-    }
-
-    override fun onItemClicked(product: Product) {
-        Toast.makeText(requireContext(), "Clicked on ${product.title}", Toast.LENGTH_SHORT).show()
     }
 
     private fun showAlertDialog(title: String, message: String) {

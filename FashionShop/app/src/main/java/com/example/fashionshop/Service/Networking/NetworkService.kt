@@ -10,6 +10,7 @@ import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
+import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.customers
 import com.example.fashionshop.Model.editAddressBody
@@ -93,6 +94,8 @@ interface NetworkService {
 
     @GET("price_rules.json")
     suspend fun getDiscountCodes(): PriceRule
+    @GET("products/{id}.json")
+    suspend fun getProductById(@Path("id") id: Long): ProductResponse
 
 
     @GET("price_rules/count.json")
