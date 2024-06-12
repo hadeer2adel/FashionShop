@@ -8,37 +8,37 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.R
 import com.example.fashionshop.databinding.CardProductBinding
 import kotlin.random.Random
 
-class ProductAdapter (
+class FavProductAdapter (
     private val context: Context,
     private val isFav: Boolean,
     private val onClick: ()->Unit,
     private val onCardClick: (id: Long)->Unit
-        ):ListAdapter<Product, ProductAdapter.ProductViewHolder>(ProductDiffUtil()){
+        ):ListAdapter<DraftOrderResponse.DraftOrder.LineItem, ProductAdapter.ProductViewHolder>(FavProductDiffUtil()){
 
     lateinit var binding: CardProductBinding
-    class ProductViewHolder (var binding: CardProductBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductAdapter.ProductViewHolder {
         val inflater: LayoutInflater = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = CardProductBinding.inflate(inflater, parent, false)
-        return ProductViewHolder(binding)
+        return ProductAdapter.ProductViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProductAdapter.ProductViewHolder, position: Int) {
         val data = getItem(position)
         holder.binding.apply {
             title.text = data.title
-            price.text = "${data.variants?.get(0)?.price}"
+            price.text = "${data.price}"
             val customer = CustomerData.getInstance(context)
             currency.text = customer.currency
             Glide
                 .with(binding.root)
-                .load(data.image?.src)
+                .load(data.sku)
                 .into(image)
             val randomRatings = FloatArray(10) { Random.nextFloat() * 5 }
             val randomValue = randomRatings[Random.nextInt(randomRatings.size)]
@@ -52,18 +52,18 @@ class ProductAdapter (
             }
             favBtn.setOnClickListener { onClick() }
             card.setOnClickListener {
-                data.id?.let { it1 -> onCardClick(it1) }
+                data.product_id?.let { it1 -> onCardClick(it1) }
             }
         }
     }
 }
 
-class ProductDiffUtil : DiffUtil.ItemCallback<Product>(){
-    override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
-        return oldItem.id == newItem.id
+class FavProductDiffUtil : DiffUtil.ItemCallback<DraftOrderResponse.DraftOrder.LineItem>(){
+    override fun areItemsTheSame(oldItem: DraftOrderResponse.DraftOrder.LineItem, newItem: DraftOrderResponse.DraftOrder.LineItem): Boolean {
+        return oldItem.product_id == newItem.product_id
     }
 
-    override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+    override fun areContentsTheSame(oldItem: DraftOrderResponse.DraftOrder.LineItem, newItem: DraftOrderResponse.DraftOrder.LineItem): Boolean {
         return oldItem == newItem
     }
 }

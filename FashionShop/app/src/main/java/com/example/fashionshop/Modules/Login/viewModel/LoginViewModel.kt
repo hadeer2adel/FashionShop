@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.fashionshop.Model.Customer
 import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.customers
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Service.Networking.NetworkState
@@ -41,6 +42,8 @@ class LoginViewModel(private var repository: Repository) : ViewModel(){
         customer.name = data.first_name + " " + data.last_name
         customer.email = data.email
         customer.currency = data.currency
+        customer.favListId = data.note as Long
+        customer.cartListId = data.multipass_identifier as Long
     }
 
     override fun onCleared() {

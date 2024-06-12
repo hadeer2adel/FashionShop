@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
+import com.example.fashionshop.Model.DraftOrdersRequest
+import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import kotlin.math.log
 
 class SignupViewModel(private var repository: Repository) : ViewModel(){
 
@@ -23,9 +26,23 @@ class SignupViewModel(private var repository: Repository) : ViewModel(){
 
 
     fun createCustomer(customer: CustomerRequest){
+
         viewModelScope.launch(Dispatchers.IO){
             try {
-                val response = repository.createCustomer(customer)
+                val createResponse = repository.createCustomer(customer)
+                val id = createResponse.customer.id
+
+                val draftOrdersRequest = DraftOrdersRequest(DraftOrdersRequest.DraftOrder(DraftOrdersRequest.DraftOrder.Customer(id)))
+                val favList = repository.createDraftOrders(draftOrdersRequest)
+                val cart = repository.createDraftOrders(draftOrdersRequest)
+
+                val updateCustomerRequest = UpdateCustomerRequest(
+                    UpdateCustomerRequest.Customer(
+                        favList.draft_order?.id,
+                        cart.draft_order?.id
+                    ))
+                val response = repository.updateCustomer(id, updateCustomerRequest)
+
                 _customer.value = NetworkState.Success(response)
             } catch (e: HttpException) {
                 _customer.value = NetworkState.Failure(e)
@@ -41,6 +58,8 @@ class SignupViewModel(private var repository: Repository) : ViewModel(){
         customer.name = data.first_name + " " + data.last_name
         customer.email = data.email
         customer.currency = data.currency
+        customer.favListId = data.note
+        customer.cartListId = data.multipass_identifier
     }
 
     override fun onCleared() {

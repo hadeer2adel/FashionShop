@@ -11,8 +11,9 @@ class SharedPreferenceManager(private val context: Context) {
         EMAIL,
         PHONE,
         CURRENCY,
-        IS_LOGGED_IN
-
+        IS_LOGGED_IN,
+        FavListID,
+        CartListID
     }
 
     fun save(key: Key, value: String) {

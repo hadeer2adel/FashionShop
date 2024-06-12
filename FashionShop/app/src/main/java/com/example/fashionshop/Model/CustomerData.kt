@@ -36,6 +36,18 @@ class CustomerData private constructor(_context: Context) {
             field = value
             manager.save(SharedPreferenceManager.Key.CURRENCY, value)
         }
+    var favListId: Long = 0
+        get() = field
+        set(value) {
+            field = value
+            manager.save(SharedPreferenceManager.Key.FavListID, value.toString())
+        }
+    var cartListId: Long = 0
+        get() = field
+        set(value) {
+            field = value
+            manager.save(SharedPreferenceManager.Key.CartListID, value.toString())
+        }
 
     init {
         manager = SharedPreferenceManager(_context)
@@ -44,6 +56,8 @@ class CustomerData private constructor(_context: Context) {
         email = manager.retrieve(SharedPreferenceManager.Key.EMAIL, "")
         phone = manager.retrieve(SharedPreferenceManager.Key.PHONE, "")
         currency = manager.retrieve(SharedPreferenceManager.Key.CURRENCY, "")
+        favListId = manager.retrieve(SharedPreferenceManager.Key.FavListID, "0").toLong()
+        cartListId = manager.retrieve(SharedPreferenceManager.Key.CartListID, "0").toLong()
     }
 
     companion object {
