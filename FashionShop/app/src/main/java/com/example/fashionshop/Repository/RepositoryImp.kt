@@ -9,6 +9,8 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.PriceRule
+import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
 import com.example.fashionshop.Service.Networking.NetworkManager
@@ -93,6 +95,16 @@ class RepositoryImp constructor(
         quantityRequest: editOrderQuantityBody
     ): DraftOrders {
         return networkManager.editSingleCustomerAddressDraftOrderQuantity(id, quantityRequest)
+
+    }
+
+    override suspend fun getDiscountCodesCount(): PriceRuleCount {
+        return networkManager.getDiscountCodesCount()
+
+    }
+
+    override suspend fun getDiscountCodes(): PriceRule {
+        return networkManager.getDiscountCodes()
 
     }
 }

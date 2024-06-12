@@ -13,6 +13,8 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.PriceRule
+import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
 
@@ -34,5 +36,6 @@ interface NetworkManager {
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
 
     suspend fun getCustomerByEmail(email: String): customers
-
+    suspend fun getDiscountCodesCount(): PriceRuleCount
+    suspend fun getDiscountCodes(): PriceRule
 }

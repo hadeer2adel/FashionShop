@@ -13,6 +13,8 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.PriceRule
+import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
 interface Repository {
@@ -32,7 +34,8 @@ interface Repository {
     suspend fun deleteSingleCustomerDrafOrder(id:Long)
     suspend fun editSingleCustomerAddressDraftOrder(id:Long,addressRequest: editAddressBody): DraftOrders
     suspend fun editSingleCustomerAddressDraftOrderQuantity(id:Long,quantityRequest: editOrderQuantityBody): DraftOrders
-
+    suspend fun getDiscountCodesCount(): PriceRuleCount
+    suspend fun getDiscountCodes(): PriceRule
 
 
 }

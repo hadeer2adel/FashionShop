@@ -10,7 +10,9 @@ class SharedPreferenceManager(private val context: Context) {
         NAME,
         EMAIL,
         PHONE,
-        CURRENCY
+        CURRENCY,
+        IS_LOGGED_IN
+
     }
 
     fun save(key: Key, value: String) {
@@ -29,5 +31,19 @@ class SharedPreferenceManager(private val context: Context) {
     fun isContains(key: Key): Boolean {
         val sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
         return sharedPreferences.contains(key.name)
+    }
+
+
+    fun saveBoolean(key: Key, value: Boolean) {
+        val sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putBoolean(key.name, value)
+            apply()
+        }
+    }
+
+    fun retrieveBoolean(key: Key, defaultValue: Boolean): Boolean {
+        val sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getBoolean(key.name, defaultValue)
     }
 }

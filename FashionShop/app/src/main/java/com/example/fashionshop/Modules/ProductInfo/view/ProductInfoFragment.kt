@@ -31,14 +31,14 @@ class ProductInfoFragment : Fragment() {
             R.drawable.img_product
         )
 
-        val sliderAdapter = SliderAdapter(requireContext(), imageResourceIds, false)
-        sliderView.setSliderAdapter(sliderAdapter)
-        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
-        sliderView.autoCycleDirection = SliderView.AUTO_CYCLE_DIRECTION_RIGHT
-        sliderView.setIndicatorSelectedColor(Color.BLACK)
-        sliderView.setIndicatorUnselectedColor(Color.LTGRAY)
-        sliderView.scrollTimeInSec = 2
-        sliderView.startAutoCycle()
+//        val sliderAdapter = SliderAdapter(requireContext(),3, imageResourceIds, false)
+//        sliderView.setSliderAdapter(sliderAdapter)
+//        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
+//        sliderView.autoCycleDirection = SliderView.AUTO_CYCLE_DIRECTION_RIGHT
+//        sliderView.setIndicatorSelectedColor(Color.BLACK)
+//        sliderView.setIndicatorUnselectedColor(Color.LTGRAY)
+//        sliderView.scrollTimeInSec = 2
+//        sliderView.startAutoCycle()
     }
 
 }

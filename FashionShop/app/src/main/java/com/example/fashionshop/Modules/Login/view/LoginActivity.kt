@@ -18,6 +18,7 @@ import com.example.fashionshop.Modules.Signup.viewModel.SignupViewModelFactory
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
+import com.example.fashionshop.Service.Caching.SharedPreferenceManager
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
@@ -43,6 +44,13 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val sharedPreferenceManager = SharedPreferenceManager(this)
+        if (!sharedPreferenceManager.retrieveBoolean(SharedPreferenceManager.Key.IS_LOGGED_IN, false)) {
+            val loginIntent = Intent(this, MainActivity::class.java)
+            startActivity(loginIntent)
+            finish()
+            return
+        }
 
         mAuth = FirebaseAuth.getInstance()
         initViewModel()
@@ -65,6 +73,11 @@ class LoginActivity : AppCompatActivity() {
                 mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            val sharedPreferenceManager = SharedPreferenceManager(this)
+                            sharedPreferenceManager.saveBoolean(SharedPreferenceManager.Key.IS_LOGGED_IN, true)
+                            val mainIntent = Intent(this, MainActivity::class.java)
+                            startActivity(mainIntent)
+                            finish()
                             val user = FirebaseAuth.getInstance().currentUser
                             user?.let {
                                 binding.progressBar.visibility = View.VISIBLE

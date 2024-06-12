@@ -8,6 +8,8 @@ import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.PriceRule
+import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.customers
 import com.example.fashionshop.Model.editAddressBody
@@ -89,7 +91,12 @@ interface NetworkService {
     ): DraftOrders
 
 
+    @GET("price_rules.json")
+    suspend fun getDiscountCodes(): PriceRule
 
+
+    @GET("price_rules/count.json")
+    suspend fun getDiscountCodesCount(): PriceRuleCount
 }
 
 
