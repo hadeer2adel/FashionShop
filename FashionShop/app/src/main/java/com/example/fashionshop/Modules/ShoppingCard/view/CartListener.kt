@@ -28,4 +28,7 @@ interface CartListener {
         vendor: Any?
     )
 
+
+    fun getSubTotal(total:String)
+
 }

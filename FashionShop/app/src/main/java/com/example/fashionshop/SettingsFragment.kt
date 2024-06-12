@@ -1,6 +1,9 @@
 package com.example.fashionshop
 
 import android.app.AlertDialog
+import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,11 +14,14 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.example.fashionshop.Service.Caching.SharedPreferenceManager
 import com.example.fashionshop.databinding.FragmentSettingsBinding
+import java.util.Locale
 
 class SettingsFragment : Fragment() , OnBackPressedListener{
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private var isLanguageChanging = false
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
@@ -62,6 +68,21 @@ class SettingsFragment : Fragment() , OnBackPressedListener{
 
         }
 
+        binding.switchLanguageArabic.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                SharedPreferenceManager.getInstance(requireContext()).saveLanguageUnit("ar")
+                setAppLanguage("ar")
+                startActivity(Intent(requireContext(), MainActivity::class.java))
+            }
+        }
+        binding.switchLanguageEnglish.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                SharedPreferenceManager.getInstance(requireContext()).saveLanguageUnit("en")
+                setAppLanguage("en")
+                startActivity(Intent(requireContext(), MainActivity::class.java))
+            }
+        }
+
 
     }
 
@@ -84,4 +105,20 @@ class SettingsFragment : Fragment() , OnBackPressedListener{
             }
         builder.create().show()
     }
+    private fun setAppLanguage(languageCode: String) {
+        val currentLocale = Locale.getDefault()
+        val newLocale = Locale(languageCode)
+        val sharedPreferencesManager = SharedPreferenceManager.getInstance(requireContext())
+        sharedPreferencesManager.saveLanguage(languageCode)
+        if (currentLocale != newLocale && !isLanguageChanging) {
+            isLanguageChanging = true
+            Locale.setDefault(newLocale)
+            val configuration = Configuration()
+            configuration.locale = newLocale
+            val resources: Resources = requireContext().resources
+            resources.updateConfiguration(configuration, resources.displayMetrics)
+            requireActivity().recreate()
+        }
+    }
+
 }

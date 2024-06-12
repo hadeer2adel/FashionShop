@@ -1,4 +1,4 @@
-package com.example.fashionshop
+package com.example.fashionshop.Modules.Address.view
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -13,13 +13,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.fashionshop.Model.customers
+import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.viewModels.AddNewAddressFactory
 import com.example.fashionshop.viewModels.AddNewAddressViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -79,13 +78,27 @@ class MapsFragment : Fragment() {
                 company = addresses[0].featureName
                 name = addresses[0].adminArea
                 country_name = addresses[0].countryName
-                showPhoneNumberDialog()
+//                showPhoneNumberDialog()
                 val cityName = addresses[0].getAddressLine(0)
                 val lat = addresses[0].latitude
                 val lon = addresses[0].longitude
                 Toast.makeText(requireContext(), "City: $cityName, Longitude: $lat", Toast.LENGTH_LONG).show()
             }
-
+            val bundle = Bundle().apply {
+                putString("address1", address1)
+                putString("address2", address2)
+                putString("city", city)
+                putString("zip", zip)
+                putString("country", country)
+                putString("country_code", country_code)
+                putBoolean("default", default)
+                putString("first_name", first_name)
+                putString("last_name", last_name)
+                putString("company", company)
+                putString("name", name)
+                putString("country_name", country_name)
+            }
+            findNavController().navigate(R.id.action_from_map_to_addnewAddresses,bundle)
         //    Toast.makeText(requireContext(), "Address Added Successfully", Toast.LENGTH_LONG).show()
         }
     }

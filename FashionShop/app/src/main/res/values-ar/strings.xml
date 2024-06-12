@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">FashionShop</string>
 
@@ -70,30 +71,30 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="validate">Validate</string>
-
     //Address
-    <string name="newAddress">Add New Address</string>
-    <string name="newAddressAdded">Send Request</string>
-    <string name="chooseAddressOrder">Choose Address for Your Order</string>
-    <string name="Address">Address</string>
+    <string name="newAddress">أضف عنوان جديد</string>
+    <string name="newAddressAdded">قم بإرسال الطلب</string>
+    <string name="chooseAddressOrder">أختر عنوان لإتمام الطلب</string>
+    <string name="Address">العنوان</string>
 
 
 
     //payment
-    <string name="payment">Continue To Payment</string>
-    <string name="checkout">Checkout</string>
+    <string name="payment">الاستمرار في الطلب</string>
+    <string name="checkout">ارسال الطلب</string>
 
     //settings
-    <string name="language">Language</string>
-    <string name="arabic">Arabic</string>
-    <string name="english">English</string>
-    <string name="setting">Setting</string>
-    <string name="Currency">Currency</string>
-    <string name="AboutUs">AboutUs</string>
+    <string name="language">اللغة</string>
+    <string name="arabic">العربية</string>
+    <string name="english">الانجليزية</string>
+    <string name="setting">الإعدادات</string>
+    <string name="Currency">العملة</string>
+    <string name="AboutUs">معلومات عنا</string>
 
     //profile
-    <string name="Orders">Orders</string>
-    <string name="Logout">Logout</string>
-    <string name="Settings">Settings</string>
+    <string name="Orders">الطلبات</string>
+    <string name="Logout">تسجيل الخروج</string>
+    <string name="Settings">الإعدادات</string>
+
 
 </resources>

@@ -62,7 +62,7 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
         mLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
         // Initialize RecyclerView and LayoutManager
-        mAdapter = AddressAdapter(this) // Initialize adapter without any arguments
+        mAdapter = AddressAdapter(this,true) // Initialize adapter without any arguments
         binding.recyclerViewAddresses.apply {
             adapter = mAdapter
             layoutManager = mLayoutManager
@@ -113,22 +113,29 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
     }
 
     override fun deleteAddress(addressId: Long) {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+
         val currentAddress = mAdapter.getAddressList().find { it.id == addressId }
         if (currentAddress != null && currentAddress.default) {
-            val alertDialogBuilder = AlertDialog.Builder(requireContext())
             alertDialogBuilder.apply {
                 setTitle("Cannot Delete Default Address")
                 setMessage("The default address cannot be deleted.")
                 setPositiveButton("OK") { dialog, _ ->
                     dialog.dismiss()
                 }
-                create().show()
             }
         } else {
-            // If address is not default, proceed with delete request
-            allProductViewModel.senddeleteAddressRequest(addressId)
-            refreshFragment()
+            alertDialogBuilder.apply {
+                setTitle("Delete Address")
+                setMessage("Are you sure you want to delete this address?")
+                setPositiveButton("Delete") { dialog, _ ->
+                    dialog.dismiss()
+                allProductViewModel.senddeleteAddressRequest(addressId)
+                refreshFragment()
+                }
+            }
         }
+        alertDialogBuilder.create().show()
     }
 
     override fun setAddressDefault(id:Long,default: Boolean) {

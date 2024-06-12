@@ -48,17 +48,17 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.fashionshop.SettingsFragment"
-        android:label="Setting"
+        android:label="@string/setting"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/addressFragment"
         android:name="com.example.fashionshop.Modules.Address.view.AddressFragment"
-        android:label="Setting"
+        android:label="@string/setting"
         tools:layout="@layout/fragment_address" />
     <fragment
         android:id="@+id/aboutusFragment"
         android:name="com.example.fashionshop.AboutFragment"
-        android:label="Setting"
+        android:label="@string/setting"
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/paymentFragment"
@@ -73,7 +73,7 @@
 
     <fragment
         android:id="@+id/orderdetaile"
-        android:name="com.example.fashionshop.OrderDetailsFragment"
+        android:name="com.example.fashionshop.Modules.OrderDetails.view.OrderDetailsFragment"
         android:label="Payment"
         tools:layout="@layout/fragment_order_details" />
     
@@ -88,13 +88,13 @@
     </fragment>
     <fragment
         android:id="@+id/AddAddress"
-        android:name="com.example.fashionshop.AddNewAddressFragment"
+        android:name="com.example.fashionshop.Modules.Address.view.AddNewAddressFragment"
         android:label="fragment_product_info"
         tools:layout="@layout/fragment_add_new_address" />
 
     <fragment
         android:id="@+id/mapsFrgment"
-        android:name="com.example.fashionshop.MapsFragment"
+        android:name="com.example.fashionshop.Modules.Address.view.MapsFragment"
         android:label="fragment_product_info"
         tools:layout="@layout/fragment_maps" />
     <action
@@ -156,5 +156,7 @@
         app:destination="@id/addressFragment" />
 
 
-
+    <action
+        android:id="@+id/action_from_map_to_addnewAddresses"
+        app:destination="@id/AddAddress" />
 </navigation>
