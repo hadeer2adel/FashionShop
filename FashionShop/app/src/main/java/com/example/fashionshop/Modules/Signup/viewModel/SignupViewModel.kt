@@ -1,14 +1,13 @@
 package com.example.fashionshop.Modules.Signup.viewModel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
-import com.example.fashionshop.Model.DraftOrdersRequest
+import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Service.Networking.NetworkState
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import kotlin.math.log
 
 class SignupViewModel(private var repository: Repository) : ViewModel(){
 
@@ -32,9 +30,9 @@ class SignupViewModel(private var repository: Repository) : ViewModel(){
                 val createResponse = repository.createCustomer(customer)
                 val id = createResponse.customer.id
 
-                val draftOrdersRequest = DraftOrdersRequest(DraftOrdersRequest.DraftOrder(DraftOrdersRequest.DraftOrder.Customer(id)))
-                val favList = repository.createDraftOrders(draftOrdersRequest)
-                val cart = repository.createDraftOrders(draftOrdersRequest)
+                val draftOrderResponse = DraftOrderResponse(DraftOrderResponse.DraftOrder())
+                val favList = repository.createDraftOrders(draftOrderResponse)
+                val cart = repository.createDraftOrders(draftOrderResponse)
 
                 val updateCustomerRequest = UpdateCustomerRequest(
                     UpdateCustomerRequest.Customer(

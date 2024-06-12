@@ -1,15 +1,14 @@
 package com.example.fashionshop.Adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.DraftOrderResponse
-import com.example.fashionshop.Model.Product
 import com.example.fashionshop.R
 import com.example.fashionshop.databinding.CardProductBinding
 import kotlin.random.Random
@@ -17,7 +16,7 @@ import kotlin.random.Random
 class FavProductAdapter (
     private val context: Context,
     private val isFav: Boolean,
-    private val onClick: ()->Unit,
+    private val onClick: (id: Long)->Unit,
     private val onCardClick: (id: Long)->Unit
         ):ListAdapter<DraftOrderResponse.DraftOrder.LineItem, ProductAdapter.ProductViewHolder>(FavProductDiffUtil()){
 
@@ -50,9 +49,11 @@ class FavProductAdapter (
             else{
                 favBtn.setImageResource(R.drawable.ic_favorite_false)
             }
-            favBtn.setOnClickListener { onClick() }
+            favBtn.setOnClickListener {
+                data.id?.let { it1 -> onClick(it1) }
+            }
             card.setOnClickListener {
-                data.product_id?.let { it1 -> onCardClick(it1) }
+                data.id?.let { it1 -> onCardClick(it1) }
             }
         }
     }
@@ -60,7 +61,7 @@ class FavProductAdapter (
 
 class FavProductDiffUtil : DiffUtil.ItemCallback<DraftOrderResponse.DraftOrder.LineItem>(){
     override fun areItemsTheSame(oldItem: DraftOrderResponse.DraftOrder.LineItem, newItem: DraftOrderResponse.DraftOrder.LineItem): Boolean {
-        return oldItem.product_id == newItem.product_id
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: DraftOrderResponse.DraftOrder.LineItem, newItem: DraftOrderResponse.DraftOrder.LineItem): Boolean {

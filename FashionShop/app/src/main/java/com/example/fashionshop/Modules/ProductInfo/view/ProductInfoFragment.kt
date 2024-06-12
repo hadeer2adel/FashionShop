@@ -22,6 +22,8 @@ import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductDetails
+import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
+import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModelFactory
 import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModel
 import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModelFactory
 import com.example.fashionshop.Modules.Products.view.ProductsFragmentArgs
@@ -88,7 +90,14 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun setUpRecycleView(){
-        val onClick: () -> Unit = {}
+        val onClick: (product: Product) -> Unit = {
+            val networkManager: NetworkManager = NetworkManagerImp.getInstance()
+            val repository: Repository = RepositoryImp(networkManager)
+            val factory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
+            val favViewModel = ViewModelProvider(this, factory).get(FavViewModel::class.java)
+
+            favViewModel.insertFavProduct(it)
+        }
         val onCardClick: (id: Long) -> Unit = {
             val navController = NavHostFragment.findNavController(this)
             val action = ProductInfoFragmentDirections.actionToProductInfoFragment(it)

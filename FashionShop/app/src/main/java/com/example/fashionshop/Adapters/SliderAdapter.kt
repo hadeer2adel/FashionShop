@@ -33,7 +33,6 @@ class SliderAdapter(private val context: Context, private val countt:Int, privat
         )
 
         val currentCode = DiscountCodeList[position]
-        Log.i("TAG", "onBindViewHolder: ${currentCode}")
         viewHolder?.itemView?.setOnLongClickListener {
             listener.getDiscountCodeLongPreesed(currentCode.title)
             true // Consume the long click event
@@ -42,7 +41,6 @@ class SliderAdapter(private val context: Context, private val countt:Int, privat
     }
 
     override fun getCount(): Int {
-        Log.i("\n", "getCount: ${countt}")
         return countt
     }
 

@@ -15,8 +15,8 @@ import kotlin.random.Random
 
 class ProductAdapter (
     private val context: Context,
-    private val isFav: Boolean,
-    private val onClick: ()->Unit,
+    private var isFav: Boolean,
+    private val onClick: (product: Product)->Unit,
     private val onCardClick: (id: Long)->Unit
         ):ListAdapter<Product, ProductAdapter.ProductViewHolder>(ProductDiffUtil()){
 
@@ -50,7 +50,16 @@ class ProductAdapter (
             else{
                 favBtn.setImageResource(R.drawable.ic_favorite_false)
             }
-            favBtn.setOnClickListener { onClick() }
+            favBtn.setOnClickListener {
+                isFav = ! isFav
+                onClick(data)
+                if(isFav){
+                    favBtn.setImageResource(R.drawable.ic_favorite_true)
+                }
+                else{
+                    favBtn.setImageResource(R.drawable.ic_favorite_false)
+                }
+            }
             card.setOnClickListener {
                 data.id?.let { it1 -> onCardClick(it1) }
             }

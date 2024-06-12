@@ -1,18 +1,18 @@
 package com.example.fashionshop.Model
 
 data class DraftOrderResponse(
-    val draft_order: DraftOrder? = null
+    val draft_order: DraftOrder
 ) {
-
     data class DraftOrder(
-        val id: Long? = null,
-        val line_items: List<LineItem>? = null
+        val id: Long = 0,
+        val line_items: List<LineItem> = listOf(LineItem(null, quantity = 1))
     ) {
-
         data class LineItem(
-            val product_id: Long? = null,
-            val title: String? = null,
-            val price: String? = null,
+            val variant_id: Long?,
+            val quantity: Int?,
+            val id: Long? = null,
+            val title: String? = "dummy",
+            val price: String? = "1",
             val sku: String? = null,
         )
     }

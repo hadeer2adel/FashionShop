@@ -7,12 +7,10 @@ import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DraftOrders
-import com.example.fashionshop.Model.DraftOrdersRequest
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
-import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Model.customers
@@ -99,11 +97,14 @@ interface NetworkService {
     suspend fun getDiscountCodesCount(): PriceRuleCount
     @POST("draft_orders.json")
     suspend fun createDraftOrders(
-        @Body draftOrders: DraftOrdersRequest
+        @Body draftOrder: DraftOrderResponse
     ): DraftOrderResponse
 
     @PUT("draft_orders/{id}.json")
-    suspend fun updateDraftOrder(@Path("id") id: Long): DraftOrderResponse
+    suspend fun updateDraftOrder(
+        @Path("id") id: Long,
+        @Body draftOrder: DraftOrderResponse
+    ): DraftOrderResponse
 
     @GET("draft_orders/{id}.json")
     suspend fun getDraftOrder(@Path("id") id: Long): DraftOrderResponse

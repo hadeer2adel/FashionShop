@@ -9,12 +9,10 @@ import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
-import com.example.fashionshop.Model.DraftOrdersRequest
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
-import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
@@ -117,12 +115,12 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return networkService.getProductById(id)
     }
 
-    override suspend fun createDraftOrders(draftOrders: DraftOrdersRequest): DraftOrderResponse {
-        return networkService.createDraftOrders(draftOrders)
+    override suspend fun createDraftOrders(draftOrder: DraftOrderResponse): DraftOrderResponse {
+        return networkService.createDraftOrders(draftOrder)
     }
 
-    override suspend fun updateDraftOrder(id: Long): DraftOrderResponse {
-        return networkService.updateDraftOrder(id)
+    override suspend fun updateDraftOrder(id: Long, draftOrder: DraftOrderResponse): DraftOrderResponse{
+        return networkService.updateDraftOrder(id, draftOrder)
     }
 
     override suspend fun getDraftOrder(id: Long): DraftOrderResponse {

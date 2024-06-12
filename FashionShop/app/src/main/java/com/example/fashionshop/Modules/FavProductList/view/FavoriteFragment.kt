@@ -1,6 +1,7 @@
 package com.example.fashionshop.Modules.FavProductList.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.fashionshop.Adapters.FavProductAdapter
 import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModelFactory
 import com.example.fashionshop.Modules.Products.view.ProductsFragmentDirections
@@ -28,6 +30,7 @@ import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentFavoriteBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 
 class FavoriteFragment : Fragment() {
@@ -47,14 +50,16 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViewModel()
         setUpRecycleView()
+        initViewModel()
 
         viewModel.getFavProducts()
     }
 
     private fun setUpRecycleView(){
-        val onClick: () -> Unit = {}
+        val onClick: (id: Long) -> Unit = {
+            viewModel.deleteFavProduct(it)
+        }
         val onCardClick: (id: Long) -> Unit = {
             val navController = NavHostFragment.findNavController(this)
             val action = FavoriteFragmentDirections.actionToProductInfoFragment(it)
@@ -83,7 +88,7 @@ class FavoriteFragment : Fragment() {
                     is NetworkState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         binding.recycleView.visibility = View.VISIBLE
-                        adapter.submitList(response.data.draft_order?.line_items?.drop(1))
+                        adapter.submitList(response.data.draft_order.line_items.drop(1))
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
