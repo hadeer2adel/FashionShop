@@ -1,7 +1,6 @@
 package com.example.fashionshop.Adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -35,9 +34,10 @@ class FavProductAdapter (
             price.text = "${data.price}"
             val customer = CustomerData.getInstance(context)
             currency.text = customer.currency
+            val values = data.sku?.split("*")
             Glide
                 .with(binding.root)
-                .load(data.sku)
+                .load(values?.get(1))
                 .into(image)
             val randomRatings = FloatArray(10) { Random.nextFloat() * 5 }
             val randomValue = randomRatings[Random.nextInt(randomRatings.size)]
@@ -50,10 +50,10 @@ class FavProductAdapter (
                 favBtn.setImageResource(R.drawable.ic_favorite_false)
             }
             favBtn.setOnClickListener {
-                data.id?.let { it1 -> onClick(it1) }
+                values?.get(0)?.toLong()?.let { it1 -> onClick(it1) }
             }
             card.setOnClickListener {
-                data.id?.let { it1 -> onCardClick(it1) }
+                values?.get(0)?.toLong()?.let { it1 -> onCardClick(it1) }
             }
         }
     }

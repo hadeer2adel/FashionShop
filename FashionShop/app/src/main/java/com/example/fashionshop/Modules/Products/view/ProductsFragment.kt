@@ -16,6 +16,7 @@ import com.example.fashionshop.Adapters.BrandAdapter
 import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
+import com.example.fashionshop.Model.ProductDetails
 import com.example.fashionshop.Model.SmartCollection
 import com.example.fashionshop.Modules.FavProductList.view.FavoriteFragmentDirections
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
@@ -24,6 +25,7 @@ import com.example.fashionshop.Modules.Home.viewModel.HomeFactory
 import com.example.fashionshop.Modules.Home.viewModel.HomeViewModel
 import com.example.fashionshop.Modules.Products.viewModel.ProductsFactory
 import com.example.fashionshop.Modules.Products.viewModel.ProductsViewModel
+import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
@@ -40,6 +42,7 @@ class ProductsFragment : Fragment()  {
     private val args: ProductsFragmentArgs by navArgs()
     private lateinit var adapter: ProductAdapter
     private lateinit var viewModel: ProductsViewModel
+    private lateinit var favViewModel: FavViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,20 +67,24 @@ class ProductsFragment : Fragment()  {
     }
 
     private fun setUpRV(){
-        val onClick: (product: Product) -> Unit = {
-            val networkManager: NetworkManager = NetworkManagerImp.getInstance()
-            val repository: Repository = RepositoryImp(networkManager)
-            val factory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
-            val favViewModel = ViewModelProvider(this, factory).get(FavViewModel::class.java)
-
-            favViewModel.insertFavProduct(it)
+        val onClick: (isFav: Boolean, product: Product) -> Unit = { isFav, product ->
+            if (isFav) {
+                favViewModel.insertFavProduct(product)
+            } else {
+                product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+            }
         }
         val onCardClick: (id: Long) -> Unit = {
             val navController = NavHostFragment.findNavController(this)
             val action = ProductsFragmentDirections.actionToProductInfoFragment(it)
             navController.navigate(action)
         }
-        adapter = ProductAdapter(requireContext(), false, onClick, onCardClick)
+        val onStart: (id: Long, onTrue: ()->Unit, onFalse: ()->Unit) ->Unit = { id, onTrue, onFalse ->
+            favViewModel.isFavProduct(id, onTrue, onFalse)
+        }
+
+        adapter = ProductAdapter(requireContext(), onStart, onClick, onCardClick)
+
         binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvProducts.adapter = adapter
     }
@@ -87,6 +94,10 @@ class ProductsFragment : Fragment()  {
         val repository: Repository = RepositoryImp(networkManager)
         val factory = ProductsFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(ProductsViewModel::class.java)
+
+        val favFactory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
+        favViewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
+
         viewModel.getProducts(args.brandName)
         lifecycleScope.launch {
             viewModel.product.collectLatest { response ->

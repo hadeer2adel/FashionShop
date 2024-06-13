@@ -34,6 +34,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentProductInfoBinding
 import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
@@ -45,9 +46,11 @@ class ProductInfoFragment : Fragment() {
 
     private lateinit var binding: FragmentProductInfoBinding
     private lateinit var viewModel: ProductInfoViewModel
+    private lateinit var favViewModel: FavViewModel
     private val args: ProductInfoFragmentArgs by navArgs()
     private var isReviewsVisible = false
     private lateinit var adapter: ProductAdapter
+    private var isFav = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,6 +71,7 @@ class ProductInfoFragment : Fragment() {
         setUpRecycleView()
         initViewModel()
         viewModel.getProductInfo(args.productId)
+
 
         binding.showReviews.setOnClickListener {
             isReviewsVisible = ! isReviewsVisible
@@ -106,20 +110,23 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun setUpRecycleView(){
-        val onClick: (product: Product) -> Unit = {
-            val networkManager: NetworkManager = NetworkManagerImp.getInstance()
-            val repository: Repository = RepositoryImp(networkManager)
-            val factory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
-            val favViewModel = ViewModelProvider(this, factory).get(FavViewModel::class.java)
-
-            favViewModel.insertFavProduct(it)
+        val onClick: (isFav: Boolean, product: Product) -> Unit = { isFav, product ->
+            if (isFav) {
+                favViewModel.insertFavProduct(product)
+            } else {
+                product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+            }
         }
         val onCardClick: (id: Long) -> Unit = {
             val navController = NavHostFragment.findNavController(this)
             val action = ProductInfoFragmentDirections.actionToProductInfoFragment(it)
             navController.navigate(action)
         }
-        adapter = ProductAdapter(requireContext(), false, onClick, onCardClick)
+        val onStart: (id: Long, onTrue: ()->Unit, onFalse: ()->Unit) ->Unit = { id, onTrue, onFalse ->
+            favViewModel.isFavProduct(id, onTrue, onFalse)
+        }
+        adapter = ProductAdapter(requireContext(), onStart, onClick, onCardClick)
+
         adapter.submitList(emptyList())
         binding.recycleView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.recycleView.adapter = adapter
@@ -130,6 +137,9 @@ class ProductInfoFragment : Fragment() {
         val repository: Repository = RepositoryImp(networkManager)
         val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
         viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
+
+        val favFactory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
+        favViewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
 
         lifecycleScope.launch {
             viewModel.product.collectLatest { response ->
@@ -184,6 +194,46 @@ class ProductInfoFragment : Fragment() {
             sliderView.startAutoCycle()
 
             product.vendor?.let { viewModel.getProductSuggestions(it) }
+
+            handleFavBtn(product)
+        }
+    }
+
+    private fun handleFavBtn(product: ProductDetails) {
+
+        val onTrue: () -> Unit = {
+            binding.favBtn.setImageResource(R.drawable.ic_favorite_true)
+            isFav = true
+        }
+        val onFalse: () -> Unit = {
+            binding.favBtn.setImageResource(R.drawable.ic_favorite_false)
+            isFav = false
+        }
+        product.id?.let { favViewModel.isFavProduct(it, onTrue, onFalse) }
+
+        binding.favBtn.setOnClickListener {
+            isFav = !isFav
+            if (isFav) {
+                binding.favBtn.setImageResource(R.drawable.ic_favorite_true)
+                val newProduct = Product(
+                    product.id,
+                    product.title,
+                    product.image,
+                    product.variants,
+                )
+                favViewModel.insertFavProduct(newProduct)
+            } else {
+                val onAllow: () -> Unit = {
+                    binding.favBtn.setImageResource(R.drawable.ic_favorite_false)
+                    product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+                }
+                showDialog(
+                    requireContext(),
+                    R.string.delete_title,
+                    R.string.delete_body,
+                    onAllow
+                )
+            }
         }
     }
 
