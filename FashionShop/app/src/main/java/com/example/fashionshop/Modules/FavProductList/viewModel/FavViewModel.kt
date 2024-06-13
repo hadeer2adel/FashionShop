@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import kotlin.math.log
 
@@ -42,9 +43,15 @@ class FavViewModel(private var repository: Repository, private var listId: Long)
                     values?.get(0)?.equals(id.toString()) ?: false
                 }
 
-                if (isFav) {
-                    favTrue()
-                } else {
+                withContext(Dispatchers.Main) {
+                    if (isFav) {
+                        favTrue()
+                    } else {
+                        favFalse()
+                    }
+                }
+            }else {
+                withContext(Dispatchers.Main) {
                     favFalse()
                 }
             }

@@ -93,15 +93,23 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun setUpRecycleView(){
-        val onClick: (product: Product) -> Unit = {
-            favViewModel.insertFavProduct(it)
+        val onClick: (isFav: Boolean, product: Product) -> Unit = { isFav, product ->
+            if (isFav) {
+                favViewModel.insertFavProduct(product)
+            } else {
+                product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+            }
         }
         val onCardClick: (id: Long) -> Unit = {
             val navController = NavHostFragment.findNavController(this)
             val action = ProductInfoFragmentDirections.actionToProductInfoFragment(it)
             navController.navigate(action)
         }
-        adapter = ProductAdapter(requireContext(), false, onClick, onCardClick)
+        val onStart: (id: Long, onTrue: ()->Unit, onFalse: ()->Unit) ->Unit = { id, onTrue, onFalse ->
+            favViewModel.isFavProduct(id, onTrue, onFalse)
+        }
+        adapter = ProductAdapter(requireContext(), onStart, onClick, onCardClick)
+
         adapter.submitList(emptyList())
         binding.recycleView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.recycleView.adapter = adapter
