@@ -9,8 +9,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.example.fashionshop.ARG_PARAM1
-import com.example.fashionshop.ARG_PARAM2
 import com.example.fashionshop.OnBackPressedListener
 import com.example.fashionshop.databinding.FragmentAboutBinding
 
@@ -52,8 +50,7 @@ class AboutFragment : Fragment(), OnBackPressedListener {
         fun newInstance(param1: String, param2: String) =
             AboutFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
                 }
             }
     }
