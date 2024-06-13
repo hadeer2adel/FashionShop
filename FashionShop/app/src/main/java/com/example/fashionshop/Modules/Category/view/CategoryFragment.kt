@@ -14,11 +14,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.fashionshop.Adapters.ProductAdapter
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
+import com.example.fashionshop.Modules.FavProductList.view.FavoriteFragmentDirections
+import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
+import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModelFactory
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
@@ -139,9 +144,18 @@ class CategoryFragment : Fragment() {
     }
 
     private fun setUpRV(){
-        val onClick: () -> Unit = {}
-        val onCardClick: () -> Unit = {
+        val onClick: (product: Product) -> Unit = {
+            val networkManager: NetworkManager = NetworkManagerImp.getInstance()
+            val repository: Repository = RepositoryImp(networkManager)
+            val factory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
+            val favViewModel = ViewModelProvider(this, factory).get(FavViewModel::class.java)
 
+            favViewModel.insertFavProduct(it)
+        }
+        val onCardClick: (id: Long) -> Unit = {
+            val navController = NavHostFragment.findNavController(this)
+            val action = CategoryFragmentDirections.actionToProductInfoFragment(it)
+            navController.navigate(action)
         }
         adapter = ProductAdapter(requireContext(), false, onClick, onCardClick)
         binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)

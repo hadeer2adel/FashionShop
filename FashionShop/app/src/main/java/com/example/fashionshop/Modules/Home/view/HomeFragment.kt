@@ -1,18 +1,26 @@
 package com.example.fashionshop.Modules.Home.view
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.fashionshop.Adapters.BrandAdapter
 import com.example.fashionshop.Adapters.BrandClickListener
 import com.example.fashionshop.Adapters.SliderAdapter
+import com.example.fashionshop.Model.PriceRuleX
 import com.example.fashionshop.Model.SmartCollection
+import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
+import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
 import com.example.fashionshop.Modules.Home.viewModel.HomeFactory
 import com.example.fashionshop.Modules.Home.viewModel.HomeViewModel
 import com.example.fashionshop.R
@@ -26,12 +34,15 @@ import com.smarteist.autoimageslider.SliderView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment() , BrandClickListener {
+class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
     private lateinit var brandAdapter: BrandAdapter
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeViewModel
+    private lateinit var sliderView: SliderView
+    private lateinit var allProductFactory: HomeFactory
+    private lateinit var allProductViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,14 +54,30 @@ class HomeFragment : Fragment() , BrandClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sliderView: SliderView = view.findViewById(R.id.imageSlider)
+      sliderView = view.findViewById(R.id.imageSlider)
         setUpRV()
         initViewModel()
-        setUpSlider(sliderView)
+     //   setUpSlider(sliderView)
+        allProductFactory =
+            HomeFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allProductViewModel = ViewModelProvider(this, allProductFactory).get(HomeViewModel::class.java)
+
+//        viewModel.getAdsCount()
+//        viewModel.products.observe(viewLifecycleOwner, Observer { value ->
+//            value?.let {
+//                val count = value.count
+//                setUpSlider(sliderView,count)
+//            }
+//        })
 
 
-
-
+        viewModel.getAdsCode()
+        viewModel.products2.observe(viewLifecycleOwner, Observer { value ->
+            value?.let {
+                val count = value.price_rules
+                setUpSlider(sliderView, count.size,count)
+            }
+        })
 
     }
 
@@ -61,14 +88,18 @@ class HomeFragment : Fragment() , BrandClickListener {
         }
     }
 
-    private fun setUpSlider(sliderView: SliderView) {
+    private fun setUpSlider(sliderView: SliderView ,count:Int , list:List<PriceRuleX> ) {
         val imageResourceIds = listOf(
             R.drawable.coupone,
             R.drawable.coupon2,
+            R.drawable.coupon3  ,
             R.drawable.coupon3
         )
-        val sliderAdapter = SliderAdapter(requireContext(), imageResourceIds, true)
+
+        val sliderAdapter = SliderAdapter(requireContext(),count, imageResourceIds, true,this)
+        sliderAdapter.setCartList(list)
         sliderView.setSliderAdapter(sliderAdapter)
+
         sliderView.startAutoCycle()
 
     }
@@ -89,6 +120,7 @@ class HomeFragment : Fragment() , BrandClickListener {
                 }
             }
         }
+
     }
 
 
@@ -137,4 +169,18 @@ class HomeFragment : Fragment() , BrandClickListener {
         showAlertDialog(title, message)
     }
 
+    override fun getDiscountCodeLongPreesed(discount: String) {
+
+        val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+        // Create a ClipData object to hold the discount code
+        val clip = ClipData.newPlainText("Discount Code", discount)
+
+        // Set the ClipData object to the clipboard
+        clipboardManager.setPrimaryClip(clip)
+
+        // Notify the user that the discount code has been copied
+        Toast.makeText(context, "Discount code copied to clipboard", Toast.LENGTH_SHORT).show()
+
 }
+    }

@@ -109,7 +109,10 @@ class SignupActivity : AppCompatActivity() {
                         startActivity(Intent(this@SignupActivity, MainActivity::class.java))
                     }
                     is NetworkState.Failure ->{
+                        binding.progressBar.visibility = View.GONE
+                        binding.screen.visibility = View.VISIBLE
                         Toast.makeText(this@SignupActivity, response.error.message.toString(), Toast.LENGTH_SHORT).show()
+                        Log.i("TAG", "Failure: "+ response.error.message.toString())
                     }
                 }
             }

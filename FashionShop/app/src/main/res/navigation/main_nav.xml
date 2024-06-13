@@ -80,8 +80,12 @@
     <fragment
         android:id="@+id/productInfoFragment"
         android:name="com.example.fashionshop.Modules.ProductInfo.view.ProductInfoFragment"
-        android:label="fragment_product_info"
-        tools:layout="@layout/fragment_product_info" />
+        android:label="@string/product_info_title"
+        tools:layout="@layout/fragment_product_info" >
+        <argument
+            android:name="product_id"
+            app:argType="long" />
+    </fragment>
     <fragment
         android:id="@+id/AddAddress"
         android:name="com.example.fashionshop.AddNewAddressFragment"
@@ -98,7 +102,7 @@
         app:destination="@id/orderFragment" />
 
     <action
-        android:id="@+id/action_favoriteFragment_to_productInfoFragment"
+        android:id="@+id/action_to_productInfoFragment"
         app:destination="@id/productInfoFragment" />
 
     <action

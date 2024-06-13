@@ -9,12 +9,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.fashionshop.Adapters.BrandAdapter
 import com.example.fashionshop.Adapters.ProductAdapter
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.SmartCollection
+import com.example.fashionshop.Modules.FavProductList.view.FavoriteFragmentDirections
+import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
+import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModelFactory
 import com.example.fashionshop.Modules.Home.viewModel.HomeFactory
 import com.example.fashionshop.Modules.Home.viewModel.HomeViewModel
 import com.example.fashionshop.Modules.Products.viewModel.ProductsFactory
@@ -59,9 +64,18 @@ class ProductsFragment : Fragment()  {
     }
 
     private fun setUpRV(){
-        val onClick: () -> Unit = {}
-        val onCardClick: () -> Unit = {
+        val onClick: (product: Product) -> Unit = {
+            val networkManager: NetworkManager = NetworkManagerImp.getInstance()
+            val repository: Repository = RepositoryImp(networkManager)
+            val factory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
+            val favViewModel = ViewModelProvider(this, factory).get(FavViewModel::class.java)
 
+            favViewModel.insertFavProduct(it)
+        }
+        val onCardClick: (id: Long) -> Unit = {
+            val navController = NavHostFragment.findNavController(this)
+            val action = ProductsFragmentDirections.actionToProductInfoFragment(it)
+            navController.navigate(action)
         }
         adapter = ProductAdapter(requireContext(), false, onClick, onCardClick)
         binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)

@@ -7,22 +7,20 @@ import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DraftOrders
+import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderResponse
+import com.example.fashionshop.Model.PriceRule
+import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.ProductResponse
+import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Model.customers
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
-import okhttp3.Credentials
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -93,6 +91,33 @@ interface NetworkService {
     suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
 
 
+    @GET("price_rules.json")
+    suspend fun getDiscountCodes(): PriceRule
+    @GET("products/{id}.json")
+    suspend fun getProductById(@Path("id") id: Long): ProductResponse
+
+
+    @GET("price_rules/count.json")
+    suspend fun getDiscountCodesCount(): PriceRuleCount
+    @POST("draft_orders.json")
+    suspend fun createDraftOrders(
+        @Body draftOrder: DraftOrderResponse
+    ): DraftOrderResponse
+
+    @PUT("draft_orders/{id}.json")
+    suspend fun updateDraftOrder(
+        @Path("id") id: Long,
+        @Body draftOrder: DraftOrderResponse
+    ): DraftOrderResponse
+
+    @GET("draft_orders/{id}.json")
+    suspend fun getDraftOrder(@Path("id") id: Long): DraftOrderResponse
+
+    @PUT("customers/{id}.json")
+    suspend fun updateCustomer(
+        @Path("id") id: Long,
+        @Body customer: UpdateCustomerRequest
+    ): CustomerResponse
 
 }
 
