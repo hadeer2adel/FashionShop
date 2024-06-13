@@ -1,24 +1,27 @@
-package com.example.fashionshop
+package com.example.fashionshop.Modules.Profile.view
 
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.example.fashionshop.MainActivity
+import com.example.fashionshop.OnBackPressedListener
+import com.example.fashionshop.R
 import com.example.fashionshop.Service.Caching.SharedPreferenceManager
 import com.example.fashionshop.databinding.FragmentSettingsBinding
 import java.util.Locale
 
-class SettingsFragment : Fragment() , OnBackPressedListener{
+class SettingsFragment : Fragment() , OnBackPressedListener {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var isLanguageChanging = false

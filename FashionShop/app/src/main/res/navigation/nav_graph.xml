@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.fashionshop.ProfileFragment"
+        android:name="com.example.fashionshop.Modules.Profile.view.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
 
@@ -26,7 +26,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.fashionshop.SettingsFragment"
+        android:name="com.example.fashionshop.Modules.Profile.view.SettingsFragment"
         android:label="Setting"
         tools:layout="@layout/fragment_settings" />
 

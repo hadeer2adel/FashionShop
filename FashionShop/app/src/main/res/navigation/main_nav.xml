@@ -36,7 +36,7 @@
         tools:layout="@layout/fragment_cart" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.fashionshop.ProfileFragment"
+        android:name="com.example.fashionshop.Modules.Profile.view.ProfileFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_profile" />
     <fragment
@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.fashionshop.SettingsFragment"
+        android:name="com.example.fashionshop.Modules.Profile.view.SettingsFragment"
         android:label="@string/setting"
         tools:layout="@layout/fragment_settings" />
     <fragment
@@ -57,7 +57,7 @@
         tools:layout="@layout/fragment_address" />
     <fragment
         android:id="@+id/aboutusFragment"
-        android:name="com.example.fashionshop.AboutFragment"
+        android:name="com.example.fashionshop.Modules.Profile.view.AboutFragment"
         android:label="@string/setting"
         tools:layout="@layout/fragment_about" />
     <fragment
