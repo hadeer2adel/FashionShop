@@ -63,14 +63,11 @@ class ProfileFragment : Fragment() {
             }
         })
         binding.ordersButton.setOnClickListener {
+//            binding.ordersButton.
             Toast.makeText(requireContext(), "Orders!", Toast.LENGTH_SHORT).show()
             navController.navigate(R.id.action_profileFragment_to_ordersFragment)
         }
 
-        binding.favoriteButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Favorites!", Toast.LENGTH_SHORT).show()
-            navController.navigate(R.id.action_profileFragment_to_favoritesFragment)
-        }
 
         binding.settings.setOnClickListener {
             navController.navigate(R.id.action_profileFragment_to_settingFragment)
@@ -78,7 +75,6 @@ class ProfileFragment : Fragment() {
 
         binding.logout.setOnClickListener {
             Toast.makeText(requireContext(), "Logout!", Toast.LENGTH_SHORT).show()
-            // Perform logout action
         }
     }
 

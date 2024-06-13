@@ -9,6 +9,19 @@
     android:padding="16dp"
     tools:context=".Modules.Address.view.ChooseAddressFragment">
 
+    <!-- Title TextView -->
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/chooseAddressOrder"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerChooseAddrees"
         android:layout_width="match_parent"
@@ -18,9 +31,7 @@
         android:paddingBottom="16dp"
         tools:listitem="@layout/address_card" />
 
-
-
-
+    <!-- Continue to Payment Button -->
     <Button
         android:id="@+id/buttonContinueToPayment"
         style="?attr/materialButtonOutlinedStyle"
@@ -33,12 +44,6 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="visible"
-        app:cornerRadius="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintVertical_bias="0.0" />
-
-
+        app:cornerRadius="10dp" />
 
 </LinearLayout>

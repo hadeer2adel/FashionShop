@@ -64,20 +64,20 @@
             android:background="@android:color/transparent"
             android:drawableEnd="@drawable/arrow_right"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="Orders"
+            android:text="@string/Orders"
             android:textAlignment="viewStart"
             android:textColor="@color/black" />
 
-        <Button
-            android:id="@+id/favoriteButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableEnd="@drawable/arrow_right"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:text="Favorite"
-            android:textAlignment="viewStart"
-            android:textColor="@color/black" />
+<!--        <Button-->
+<!--            android:id="@+id/favoriteButton"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:drawableEnd="@drawable/arrow_right"-->
+<!--            android:foreground="?android:attr/selectableItemBackground"-->
+<!--            android:text="Favorite"-->
+<!--            android:textAlignment="viewStart"-->
+<!--            android:textColor="@color/black" />-->
 
         <Button
             android:id="@+id/settings"
@@ -86,7 +86,7 @@
             android:background="@android:color/transparent"
             android:drawableEnd="@drawable/arrow_right"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="Settings"
+            android:text="@string/Settings"
             android:textAlignment="viewStart"
             android:textColor="@color/black" />
 
@@ -97,9 +97,10 @@
             android:background="@android:color/transparent"
             android:drawableEnd="@drawable/logout"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="Logout"
+            android:text="@string/Logout"
             android:textAlignment="viewStart"
             android:textColor="@color/black" />
+
 
     </LinearLayout>
 

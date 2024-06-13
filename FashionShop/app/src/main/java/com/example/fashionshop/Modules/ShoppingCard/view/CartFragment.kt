@@ -56,6 +56,8 @@ class CartFragment : Fragment() ,CartListener {
                 }
 
                 binding.textViewSubtotal.text = "Subtotal: $${String.format("%.2f", subtotal)}"
+
+
                 mAdapter.setCartList(value.draft_orders)
                 mAdapter.notifyDataSetChanged()
             }
@@ -65,6 +67,12 @@ class CartFragment : Fragment() ,CartListener {
             val args = CartFragmentArgs(draftOrderIds).toBundle() // Convert CartFragmentArgs to Bundle
 
             findNavController().navigate(R.id.action_cartFragment_to_paymentFragment, args)
+
+
+
+
+
+
         }
 
 
@@ -130,5 +138,9 @@ class CartFragment : Fragment() ,CartListener {
 
 
         Toast.makeText(requireContext(), "Deleted Successfully", Toast.LENGTH_LONG).show()
+    }
+
+    override fun getSubTotal(total: String) {
+         binding.textViewSubtotal.text =total
     }
 }

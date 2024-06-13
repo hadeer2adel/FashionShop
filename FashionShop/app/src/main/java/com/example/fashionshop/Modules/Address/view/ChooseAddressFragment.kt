@@ -37,7 +37,7 @@ class ChooseAddressFragment : Fragment() , AddressListener{
         _binding = FragmentChooseAddressBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.recyclerChooseAddrees.layoutManager = LinearLayoutManager(requireContext())
-        mAdapter = AddressAdapter(this)
+        mAdapter = AddressAdapter(this,false)
         mLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.recyclerChooseAddrees.apply {
             adapter = mAdapter
