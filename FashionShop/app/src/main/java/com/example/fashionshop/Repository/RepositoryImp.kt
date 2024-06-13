@@ -9,6 +9,7 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
@@ -131,5 +132,9 @@ class RepositoryImp constructor(
         customer: UpdateCustomerRequest
     ): CustomerResponse {
         return networkManager.updateCustomer(id, customer)
+    }
+
+    override suspend fun getProductImage(id: Long): Images {
+        return networkManager.getProductImage(id)
     }
 }

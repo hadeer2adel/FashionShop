@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.fashionshop.Adapters.BrandAdapter
 import com.example.fashionshop.Adapters.BrandClickListener
 import com.example.fashionshop.Adapters.SliderAdapter
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.PriceRuleX
 import com.example.fashionshop.Model.SmartCollection
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
@@ -61,7 +62,11 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
         allProductFactory =
             HomeFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
         allProductViewModel = ViewModelProvider(this, allProductFactory).get(HomeViewModel::class.java)
+        Log.i(
 
+            "onViewCreated", "onViewCreated: ${CustomerData.getInstance(requireContext()).cartListId}"
+
+        )
 //        viewModel.getAdsCount()
 //        viewModel.products.observe(viewLifecycleOwner, Observer { value ->
 //            value?.let {

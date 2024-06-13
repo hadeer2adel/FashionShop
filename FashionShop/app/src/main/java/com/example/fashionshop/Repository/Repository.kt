@@ -11,12 +11,14 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
+import retrofit2.http.Path
 
 interface Repository {
     suspend fun getcustomers(): OneCustomer
@@ -38,12 +40,11 @@ interface Repository {
     suspend fun getDiscountCodesCount(): PriceRuleCount
     suspend fun getDiscountCodes(): PriceRule
     suspend fun getProductById(id: Long): ProductResponse
-
     suspend fun createDraftOrders(draftOrder: DraftOrderResponse): DraftOrderResponse
     suspend fun updateDraftOrder(id: Long, draftOrder: DraftOrderResponse): DraftOrderResponse
     suspend fun getDraftOrder(id: Long): DraftOrderResponse
-
     suspend fun updateCustomer(id: Long, customer: UpdateCustomerRequest): CustomerResponse
+    suspend fun getProductImage(@Path("id") id: Long): Images
 
 
 }

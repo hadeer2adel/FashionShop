@@ -1,6 +1,7 @@
 package com.example.fashionshop.Modules.ShoppingCard.view
 
 import CartFragmentArgs
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,17 +11,22 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.CartAdapter
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.TaxLineX
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartViewModel
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
+import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentCartBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class CartFragment : Fragment() ,CartListener {
     val draftOrderIds = mutableListOf<Long>()
@@ -44,103 +50,86 @@ class CartFragment : Fragment() ,CartListener {
             layoutManager = mLayoutManager
         }
         allProductFactory =
-            CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+            CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()),CustomerData.getInstance(requireContext()).cartListId)
         allProductViewModel = ViewModelProvider(this, allProductFactory).get(CartViewModel::class.java)
-        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-            value?.let {
-                Log.i("TAG", "Data updated. Size: ${value.draft_orders}")
-                val subtotal = value.draft_orders.sumOf { draftOrder ->
-                    draftOrderIds.add(draftOrder.id)
-                    draftOrder.line_items.sumOf { it.price.toDouble() }
 
+        lifecycleScope.launch {
+            allProductViewModel.productCard.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.recyclerViewCartItems.visibility = View.GONE
+                    }
+                    is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.recyclerViewCartItems.visibility = View.VISIBLE
+                        mAdapter.setCartList(response.data.draft_order.line_items.drop(1))
+                        val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
+                        binding.textViewSubtotal.text = "Subtotal: $${String.format("%.2f", subtotal)}"
+
+                    }
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-
-                binding.textViewSubtotal.text = "Subtotal: $${String.format("%.2f", subtotal)}"
-
-
-                mAdapter.setCartList(value.draft_orders)
-                mAdapter.notifyDataSetChanged()
             }
-        })
+            lifecycleScope.launch {
+                allProductViewModel.productCardImage.collectLatest { response ->
+                    when(response){
+                        is NetworkState.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.recyclerViewCartItems.visibility = View.GONE
+                        }
+                        is NetworkState.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.recyclerViewCartItems.visibility = View.VISIBLE
+//                            mAdapter.setCardImages(response.data.images[0].src)
+//                            response.data.images[0].src
+                              //  allProductViewModel.getCardProductsImages(item.id)
+                            }
+
+                        is NetworkState.Failure -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+        }
+        }
 
         binding.buttonCheckout.setOnClickListener {
             val args = CartFragmentArgs(draftOrderIds).toBundle() // Convert CartFragmentArgs to Bundle
-
             findNavController().navigate(R.id.action_cartFragment_to_paymentFragment, args)
-
-
-
-
-
-
         }
-
-
-
         return view
     }
-    private fun refreshFragment() {
-        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-            value?.let {
-                Log.i("TAG", "Data updated. Size: ${value.draft_orders}")
-                val draftOrderList = value.draft_orders.map { listOf(it) } // Wrap each DraftOrder in a list
-                mAdapter.setCartList(value.draft_orders)
-                mAdapter.notifyDataSetChanged()
-            }
-        })
-    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     override fun deleteCart(id: Long) {
-        allProductViewModel.senddeleteDrafOrderRequest(id)
-        Toast.makeText(requireContext(), "Deleted Successfully", Toast.LENGTH_LONG).show()
-        refreshFragment()
-
-    }
-
-    override fun sendeditChoosenQuantityRequest(
-        id: Long,
-        admin_graphql_api_id: String,
-        applied_discount: Any?,
-        custom: Boolean,
-        fulfillment_service: String,
-        gift_card: Boolean,
-        grams: Int,
-        lineItemId: Long,
-        name: String,
-        price: String,
-        product_id: Any?,
-        properties: List<Any>,
-        quantity: Int,
-        requires_shipping: Boolean,
-        sku: Any?,
-        tax_lines: List<TaxLineX>,
-        taxable: Boolean,
-        title: String,
-        variant_id: Any?,
-        variant_title: Any?,
-        vendor: Any?
-    ) {
-
-        draftOrderIds.forEach { id ->
-            Log.i("dddd", "${id} ")
-            Log.i("dddd", "$applied_discount ")
-            allProductViewModel.sendeditChoosenQuantityRequest(id,admin_graphql_api_id,applied_discount,custom,fulfillment_service,gift_card,
-            grams,lineItemId,name,price,product_id,properties,quantity
-                ,requires_shipping,sku,tax_lines,taxable,title,variant_id.toString(),variant_title,vendor)
-
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Confirm Deletion")
+        builder.setMessage("Are you sure you want to delete this item from your shopping cart?")
+        builder.setPositiveButton("Yes") { dialog, which ->
+            allProductViewModel.deleteCardProduct(id)
+            Toast.makeText(requireContext(), "Deleted Successfully", Toast.LENGTH_LONG).show()
         }
 
+        builder.setNegativeButton("No") { dialog, which ->
+        }
 
-
-
-        Toast.makeText(requireContext(), "Deleted Successfully", Toast.LENGTH_LONG).show()
+        val dialog = builder.create()
+        dialog.show()
     }
 
-    override fun getSubTotal(total: String) {
-         binding.textViewSubtotal.text =total
+
+    override  fun sendeditChoosenQuantityRequest(id: Long, quantity: Int,price:String){
+        allProductViewModel.editCardQuantityProduct(id,quantity,price)
+        Toast.makeText(requireContext(), "sendeditChoosenQuantityRequest Successfully", Toast.LENGTH_LONG).show()
     }
+
 }

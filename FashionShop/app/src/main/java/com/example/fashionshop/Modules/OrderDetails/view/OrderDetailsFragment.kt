@@ -10,17 +10,22 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsFactory
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsViewModel
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartViewModel
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
+import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentOrderDetailsBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class OrderDetailsFragment() : Fragment()  {
     // Declare the binding object
@@ -50,17 +55,31 @@ class OrderDetailsFragment() : Fragment()  {
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
         allProductFactory =
-            CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+            CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()),CustomerData.getInstance(requireContext()).cartListId)
         allProductViewModel = ViewModelProvider(this, allProductFactory).get(CartViewModel::class.java)
-        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-            value?.let {
-                Log.i("TAG", "Data updated. Size: ${value.draft_orders}")
-                val subtotal = value.draft_orders.sumOf { draftOrder ->
-                    draftOrder.line_items.sumOf { it.price.toDouble() }
+//        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
+//            value?.let {
+//                Log.i("TAG", "Data updated. Size: ${value.draft_orders}")
+//                val subtotal = value.draft_orders.sumOf { draftOrder ->
+//                    draftOrder.line_items.sumOf { it.price.toDouble() }
+//                }
+//                binding.subTotalValue.text = "${String.format("%.2f", subtotal)}"
+//            }
+//        })
+        lifecycleScope.launch {
+            allProductViewModel.productCard.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> {
+                    }
+                    is NetworkState.Success -> {
+                        val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
+                        binding.subTotalValue.text = "Subtotal: $${String.format("%.2f", subtotal)}" }
+                    is NetworkState.Failure -> {
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-                binding.subTotalValue.text = "${String.format("%.2f", subtotal)}"
             }
-        })
+        }
 
         allCodesFactory =
             OrderDetailsFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
@@ -76,33 +95,34 @@ class OrderDetailsFragment() : Fragment()  {
 
 
 
-                }
+                    }
                 }
 
 
             }
-})
+        })
         binding.validate.setOnClickListener {
             allCodesViewModel.getAdsCode()
+            Log.i("getAdsCode", "titlesList: ${titlesList}")
             for (i in titlesList){
                 if ( binding.coupon.text.toString() == i){
                     val copon = i
                     Toast.makeText(requireContext(), "Copon Preeesed Successfully", Toast.LENGTH_LONG).show()
                     allCodesViewModel.products2.observe(viewLifecycleOwner, Observer { value ->
                         value?.let {
-                        for (i in value.price_rules)
-                            if (i.title == copon ){
-                               val valueOfDis = i.value
-                                val subtotal = binding.subTotalValue.text.toString().toDoubleOrNull() ?: 0.0
-                                binding.discountValue.text = i.value
-                               val discountAmount = (subtotal * valueOfDis.toDouble()/ 100)
-                                val total = subtotal + discountAmount
-                                binding.totalValue.text = total.toString()
-                                break
+                            for (i in value.price_rules)
+                                if (i.title == copon ){
+                                    val valueOfDis = i.value
+                                    val subtotal = binding.subTotalValue.text.toString().toDoubleOrNull() ?: 0.0
+                                    binding.discountValue.text = i.value
+                                    val discountAmount = (subtotal * valueOfDis.toDouble()/ 100)
+                                    val total = subtotal + discountAmount
+                                    binding.totalValue.text = total.toString()
+                                    break
 
-                            }
+                                }
                         }
-                        })
+                    })
                     break
                 }
                 else{
@@ -124,7 +144,7 @@ class OrderDetailsFragment() : Fragment()  {
                 }
                 break
 
+            }
         }
-    }
 
-        }}
+    }}

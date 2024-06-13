@@ -6,102 +6,93 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fashionshop.Model.DraftOrderEditingQuntity
+import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.DraftOrders
+import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.LineItem
 import com.example.fashionshop.Model.TaxLineX
 import com.example.fashionshop.Model.editOrderQuantityBody
 import com.example.fashionshop.Repository.Repository
+import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
-class CartViewModel (private val repo: Repository
+class CartViewModel (private val repo: Repository, private var listId: Long
 ): ViewModel() {
-    private  var _products: MutableLiveData<DraftOrders> = MutableLiveData<DraftOrders>()
-    val products : LiveData<DraftOrders> = _products
-    private var _products2: MutableLiveData<DraftOrders> =
-        MutableLiveData<DraftOrders>()
-    val products2: LiveData<DraftOrders> = _products2
+
+    private var _productCard = MutableStateFlow<NetworkState<DraftOrderResponse>>(NetworkState.Loading)
+    var productCard: StateFlow<NetworkState<DraftOrderResponse>> = _productCard
+    private var _productCardImage = MutableStateFlow<NetworkState<Images>>(NetworkState.Loading)
+    var productCardImage : StateFlow<NetworkState<Images>> = _productCardImage
     init {
-        getAllDraftOrders()
+        getCardProducts()
     }
 
-
-
-    fun getAllDraftOrders() {
-        viewModelScope.launch(Dispatchers.IO) {
-            Log.i("TAG", "DraftOrders: ViewMOdel")
-            val ProductList= repo.getDraftOrders()
-            _products.postValue(ProductList)
-
+    fun getCardProducts(){
+        viewModelScope.launch(Dispatchers.IO){
+            try {
+                val response = repo.getDraftOrder(listId)
+                _productCard.value = NetworkState.Success(response)
+            } catch (e: HttpException) {
+                _productCard.value = NetworkState.Failure(e)
+            }catch (e: Exception) {
+                _productCard.value = NetworkState.Failure(e)
+            }
         }
     }
-    fun senddeleteDrafOrderRequest(id:Long
-    )  {
-        viewModelScope.launch(Dispatchers.IO) {
-            Log.i("TAG", "deleteSingleCustomerDrafOrder : ViewMOdel")
-            repo.deleteSingleCustomerDrafOrder(id)
-            getAllDraftOrders()
+    fun getCardProductsImages(id: Long){
+        viewModelScope.launch(Dispatchers.IO){
+            try {
+                val response = repo.getProductImage(id)
+                _productCardImage.value = NetworkState.Success(response)
+            } catch (e: HttpException) {
+                _productCardImage.value = NetworkState.Failure(e)
+            }catch (e: Exception) {
+                _productCardImage.value = NetworkState.Failure(e)
+            }
         }
     }
 
-    fun sendeditChoosenQuantityRequest(
-        id: Long,
-        admin_graphql_api_id: String,
-        applied_discount: Any?, // Ensure it's a Map
-        custom: Boolean,
-        fulfillment_service: String,
-        gift_card: Boolean,
-        grams: Int,
-        lineItemId: Long,
-        name: String,
-        price: String,
-        product_id: Any?,
-        properties: List<Any>,
-        quantity: Int,
-        requires_shipping: Boolean,
-        sku: Any?,
-        tax_lines: List<TaxLineX>,
-        taxable: Boolean,
-        title: String,
-        variant_id: String,
-        variant_title: Any?,
-        vendor: Any?
-    ) {
-        val lineItem = LineItem(
-            admin_graphql_api_id = admin_graphql_api_id,
-            applied_discount = applied_discount.toString(),
-            custom = custom,
-            fulfillment_service = fulfillment_service,
-            gift_card = gift_card,
-            grams = grams,
-            id = lineItemId,
-            name = name,
-            price = price,
-            product_id = product_id.toString(),
-            properties = properties,
-            quantity = quantity,
-            requires_shipping = requires_shipping,
-            sku = sku.toString(),
-            tax_lines = tax_lines,
-            taxable = taxable,
-            title = title,
-            variant_id = variant_id.toString(),
-            variant_title = variant_title.toString(),
-            vendor = vendor.toString()
-        )
-        val draftOrder = DraftOrderEditingQuntity(listOf(lineItem))
-        val quantityRequest = editOrderQuantityBody(draftOrder)
-        editSingleCustomerQuantityDraftOrder(id, quantityRequest)
+    fun deleteCardProduct(id: Long){
+        viewModelScope.launch(Dispatchers.IO){
+            _productCard.value = NetworkState.Loading
+            val draftOrder = repo.getDraftOrder(listId).draft_order
+            val updatedLineItems = draftOrder.line_items.filter {
+                it.id != id
+            }
+            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+            try {
+                val updatedResponse = repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                _productCard.value = NetworkState.Success(updatedResponse)
+            } catch (e: Exception) {
+                _productCard.value = NetworkState.Failure(e)
+            }
+        }
     }
 
-
-    fun editSingleCustomerQuantityDraftOrder(id: Long, quantitnyRequest: editOrderQuantityBody)
-    {
+    fun editCardQuantityProduct(id: Long, quantity: Int, price: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            _productCard.value = NetworkState.Loading
+            val draftOrderResponse = repo.getDraftOrder(listId)
+            val draftOrder = draftOrderResponse.draft_order
+            val updatedLineItems = draftOrder.line_items.map { lineItem ->
+                if (lineItem.id == id) {
+                    lineItem.copy(quantity = quantity, price = price)
+                } else {
+                    lineItem
+                }
+            }
+            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
 
-            val result = repo.editSingleCustomerAddressDraftOrderQuantity(id, quantitnyRequest)
-            _products2.postValue(result)
-
+            try {
+                val updatedResponse = repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                _productCard.value = NetworkState.Success(updatedResponse)
+            } catch (e: Exception) {
+                _productCard.value = NetworkState.Failure(e)
+            }
         }
     }
 }

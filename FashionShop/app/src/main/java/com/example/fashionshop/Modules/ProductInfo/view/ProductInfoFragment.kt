@@ -65,7 +65,6 @@ class ProductInfoFragment : Fragment() {
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
 
-
         setUpRecycleView()
         initViewModel()
         viewModel.getProductInfo(args.productId)
@@ -87,6 +86,23 @@ class ProductInfoFragment : Fragment() {
                 }
             }
         }
+
+        binding.addToCartBtn.setOnClickListener {
+            val networkManager: NetworkManager = NetworkManagerImp.getInstance()
+            val repository: Repository = RepositoryImp(networkManager)
+            val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
+            viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
+            val product = (viewModel.product.value as? NetworkState.Success)?.data?.product
+            if (product != null) {
+                viewModel.insertCardProduct(product)
+                Toast.makeText(requireContext(), "Product Added Successfully", Toast.LENGTH_SHORT).show()
+                viewModel.insertCardProductImage(product)
+
+            } else {
+                Toast.makeText(requireContext(), "Product information not available", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
     private fun setUpRecycleView(){
@@ -112,7 +128,7 @@ class ProductInfoFragment : Fragment() {
     private fun initViewModel() {
         val networkManager: NetworkManager = NetworkManagerImp.getInstance()
         val repository: Repository = RepositoryImp(networkManager)
-        val factory = ProductInfoViewModelFactory(repository)
+        val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
         viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
 
         lifecycleScope.launch {
@@ -145,6 +161,9 @@ class ProductInfoFragment : Fragment() {
     private fun setData(product: ProductDetails) {
 
         binding.apply {
+            Log.i("TAG", "${
+                product.id}: ")
+
             name.text = product.title
             price.text = product.variants?.get(0)?.price
             val customer = CustomerData.getInstance(requireContext())
