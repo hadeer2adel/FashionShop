@@ -2,6 +2,7 @@ package com.example.fashionshop.Modules.Address.view
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -18,6 +20,8 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.viewModels.AddNewAddressFactory
 import com.example.fashionshop.viewModels.AddNewAddressViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -33,27 +37,76 @@ class MapsFragment : Fragment() {
     private lateinit var first_name: String
     private lateinit var last_name: String
     private lateinit var phone: String
-    private  var province: String = ""
+    private var province: String = ""
     private lateinit var country: String
     private lateinit var zip: String
     private lateinit var name: String
-    private  var province_code: String = ""
+    private var province_code: String = ""
     private lateinit var country_code: String
     private lateinit var country_name: String
-    private  var id: Long  = 1
-    private  var  customer_id: Long = 7371713577180
+    private var id: Long = 1
+    private var customer_id: Long = 7371713577180
     private var default: Boolean = false
     private lateinit var allProductFactory: AddNewAddressFactory
     private lateinit var allProductViewModel: AddNewAddressViewModel
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var googleMap: com.google.android.gms.maps.GoogleMap
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1
+
+    private fun requestLocationPermissions() {
+        requestPermissions(
+            arrayOf(
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                getCurrentLocation()
+            } else {
+                Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestLocationPermissions()
+            return
+        }
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                val currentLatLng = LatLng(location.latitude, location.longitude)
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+            } else {
+                Toast.makeText(requireContext(), "Unable to get current location", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     @SuppressLint("SuspiciousIndentation")
-
-    private val callback = OnMapReadyCallback { googleMap ->
+    private val callback = OnMapReadyCallback { map ->
+        googleMap = map
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(egyptLatLng, 6f))
 
         allProductFactory = AddNewAddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
         allProductViewModel = ViewModelProvider(this, allProductFactory).get(AddNewAddressViewModel::class.java)
-
 
         googleMap.setOnMapClickListener { latLng ->
             googleMap.clear()
@@ -70,7 +123,7 @@ class MapsFragment : Fragment() {
                 address2 = addresses[1].getAddressLine(0)
                 city = addresses[0].adminArea
                 zip = addresses[0].postalCode
-                country =addresses[0].countryName
+                country = addresses[0].countryName
                 country_code = addresses[0].countryCode
                 default = false
                 first_name = "hader"
@@ -78,7 +131,6 @@ class MapsFragment : Fragment() {
                 company = addresses[0].featureName
                 name = addresses[0].adminArea
                 country_name = addresses[0].countryName
-//                showPhoneNumberDialog()
                 val cityName = addresses[0].getAddressLine(0)
                 val lat = addresses[0].latitude
                 val lon = addresses[0].longitude
@@ -98,8 +150,7 @@ class MapsFragment : Fragment() {
                 putString("name", name)
                 putString("country_name", country_name)
             }
-            findNavController().navigate(R.id.action_from_map_to_addnewAddresses,bundle)
-        //    Toast.makeText(requireContext(), "Address Added Successfully", Toast.LENGTH_LONG).show()
+            findNavController().navigate(R.id.action_from_map_to_addnewAddresses, bundle)
         }
     }
 
@@ -116,6 +167,8 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        getCurrentLocation()
     }
 
     private fun showPhoneNumberDialog() {
@@ -130,27 +183,26 @@ class MapsFragment : Fragment() {
         builder.setPositiveButton("OK") { dialog, _ ->
             val phoneNumber = input.text.toString()
             allProductViewModel.sendAddressRequest(
-                address1 ,
-                address2 ,
-                city ,
-                company ,
-                first_name ,
-                last_name ,
-                phoneNumber ,
-                province ,
-                country ,
-                zip ,
-                name ,
-                province_code ,
-                country_code ,
-                country_name ,
-                id  ,
-                customer_id ,
+                address1,
+                address2,
+                city,
+                company,
+                first_name,
+                last_name,
+                phoneNumber,
+                province,
+                country,
+                zip,
+                name,
+                province_code,
+                country_code,
+                country_name,
+                id,
+                customer_id,
                 default
             )
             findNavController().navigate(R.id.action_from_map_to_newAddresses)
-//            Toast.makeText(requireContext(), "Phone number added: $phoneNumber", Toast.LENGTH_SHORT).show()
-               Toast.makeText(requireContext(), "Address Added Successfully", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Address Added Successfully", Toast.LENGTH_LONG).show()
 
             dialog.dismiss()
         }
@@ -160,5 +212,4 @@ class MapsFragment : Fragment() {
 
         builder.show()
     }
-
 }
