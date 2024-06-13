@@ -27,6 +27,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentFavoriteBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -58,7 +59,15 @@ class FavoriteFragment : Fragment() {
 
     private fun setUpRecycleView(){
         val onClick: (id: Long) -> Unit = {
-            viewModel.deleteFavProduct(it)
+            val onAllow: () -> Unit = {
+                viewModel.deleteFavProduct(it)
+            }
+            showDialog(
+                requireContext(),
+                R.string.delete_title,
+                R.string.delete_body,
+                onAllow
+            )
         }
         val onCardClick: (id: Long) -> Unit = {
             val navController = NavHostFragment.findNavController(this)

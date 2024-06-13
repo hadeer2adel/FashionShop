@@ -34,6 +34,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentProductInfoBinding
 import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
@@ -203,8 +204,16 @@ class ProductInfoFragment : Fragment() {
                 )
                 favViewModel.insertFavProduct(newProduct)
             } else {
-                binding.favBtn.setImageResource(R.drawable.ic_favorite_false)
-                product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+                val onAllow: () -> Unit = {
+                    binding.favBtn.setImageResource(R.drawable.ic_favorite_false)
+                    product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+                }
+                showDialog(
+                    requireContext(),
+                    R.string.delete_title,
+                    R.string.delete_body,
+                    onAllow
+                )
             }
         }
     }

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.R
+import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.CardProductBinding
 import kotlin.random.Random
 
@@ -64,12 +65,21 @@ class ProductAdapter (
             favBtn.setOnClickListener {
                 var isFav = holder.binding.favBtn.tag as Boolean
                 isFav = !isFav
-                holder.binding.favBtn.tag = isFav
-                onClick(isFav, data)
                 if (isFav) {
                     favBtn.setImageResource(R.drawable.ic_favorite_true)
+                    holder.binding.favBtn.tag = isFav
+                    onClick(isFav, data)
                 } else {
-                    favBtn.setImageResource(R.drawable.ic_favorite_false)
+                    val onAllow: () -> Unit = {
+                        favBtn.setImageResource(R.drawable.ic_favorite_false)
+                        holder.binding.favBtn.tag = isFav
+                        onClick(isFav, data)                    }
+                    showDialog(
+                        context,
+                        R.string.delete_title,
+                        R.string.delete_body,
+                        onAllow
+                    )
                 }
             }
             card.setOnClickListener {
