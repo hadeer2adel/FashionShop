@@ -13,7 +13,7 @@ import java.util.Date
 import java.util.Locale
 
 class OrdersAdapter(private val context: Context,
-                    private val onCardClick: ()->Unit)
+                    private val onCardClick: (order : Order)->Unit)
     : ListAdapter<Order , OrdersAdapter.OrderViewHolder>(OrderDiffUtil()){
 
     lateinit var binding: OrderCardBinding
@@ -32,7 +32,7 @@ class OrdersAdapter(private val context: Context,
             tvOrderPrice.text =  order.current_total_price
             tvProductsNumber.text = (order.line_items?.size).toString()
             tvDate.text = formatDate(order.created_at.toString())
-            card.setOnClickListener { onCardClick() }
+            card.setOnClickListener { onCardClick(order) }
         }
     }
 

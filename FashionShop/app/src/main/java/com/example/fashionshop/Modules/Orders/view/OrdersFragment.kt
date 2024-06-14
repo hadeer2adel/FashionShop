@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,6 +24,8 @@ import com.example.fashionshop.Model.Order
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
+import com.example.fashionshop.Modules.Home.view.HomeFragmentDirections
+import com.example.fashionshop.Modules.Orders.view.OrdersFragmentDirections
 import com.example.fashionshop.Modules.Orders.viewModel.OrdersFactory
 import com.example.fashionshop.Modules.Orders.viewModel.OrdersViewModel
 import com.example.fashionshop.Repository.Repository
@@ -79,8 +82,10 @@ class OrdersFragment : Fragment() {
     }
 
     private fun setUpRV(){
-        val onCardClick: () -> Unit = {
-           // Toast.makeText(requireContext(), "Clicked on ${brand.title}", Toast.LENGTH_SHORT).show()
+        val onCardClick: (order : Order) -> Unit = {
+           Toast.makeText(requireContext(), "Clicked on ${it.order_number}", Toast.LENGTH_SHORT).show()
+            //val action = OrdersFragmentDirections.a
+           // findNavController().navigate(action)
         }
         adapter = OrdersAdapter(requireContext(), onCardClick)
         binding.rvOrders.layoutManager =  LinearLayoutManager(requireContext())

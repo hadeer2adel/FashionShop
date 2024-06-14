@@ -43,7 +43,11 @@
         android:id="@+id/orderFragment"
         android:name="com.example.fashionshop.Modules.Orders.view.OrdersFragment"
         android:label="Orders"
-        tools:layout="@layout/fragment_orders" />
+        tools:layout="@layout/fragment_orders" >
+        <action
+            android:id="@+id/action_orderFragment_to_orderInfoFragment"
+            app:destination="@id/orderInfoFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"
@@ -154,7 +158,15 @@
     <action
         android:id="@+id/action_from_map_to_newAddresses"
         app:destination="@id/addressFragment" />
-
+    <fragment
+        android:id="@+id/orderInfoFragment"
+        android:name="com.example.fashionshop.OrderInfoFragment"
+        android:label="fragment_order_info"
+        tools:layout="@layout/fragment_order_info" >
+        <argument
+            android:name="order"
+            app:argType="com.example.fashionshop.Model.Order" />
+    </fragment>
 
 
 </navigation>

@@ -19,8 +19,6 @@ import retrofit2.http.Path
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.UpdateCustomerRequest
-import com.example.fashionshop.Model.editAddressBody
-import com.example.fashionshop.Model.editOrderQuantityBody
 
 interface Repository {
     suspend fun getcustomers(): OneCustomer

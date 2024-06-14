@@ -54,7 +54,7 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-      sliderView = view.findViewById(R.id.imageSlider)
+        sliderView = view.findViewById(R.id.imageSlider)
         setUpRV()
         initViewModel()
      //   setUpSlider(sliderView)

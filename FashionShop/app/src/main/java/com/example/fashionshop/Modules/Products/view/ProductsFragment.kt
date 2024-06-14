@@ -48,7 +48,7 @@ class ProductsFragment : Fragment()  {
         // Inflate the layout for this fragment
         _binding = FragmentProductsBinding.inflate(inflater, container, false)
         val view = binding.root
-        Toast.makeText(requireContext(), "Clicked on ${args.brandName}", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(requireContext(), "Clicked on ${args.brandName}", Toast.LENGTH_SHORT).show()
         return view
     }
 

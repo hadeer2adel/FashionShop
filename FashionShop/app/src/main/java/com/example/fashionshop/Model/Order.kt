@@ -1,10 +1,11 @@
 package com.example.fashionshop.Model
 
+import java.io.Serializable
+
 data class OrderResponse (
     val orders: List<Order>? = null,
     val order: Order? = null
 )
-
 data class Order (
     val id: Long? = null,
     val admin_graphql_api_id: String? = null,
@@ -54,7 +55,7 @@ data class Order (
     val billing_address: Address? = null,
     val shipping_address: Address? = null,
     val line_items: List<LineItem>? = null
-)
+): Serializable
 
 data class Address (
     val first_name: String? = null,
