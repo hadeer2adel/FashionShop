@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.AddressAdapter
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.FragmentChooseAddressBinding
@@ -37,7 +38,7 @@ class ChooseAddressFragment : Fragment() , AddressListener{
         _binding = FragmentChooseAddressBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.recyclerChooseAddrees.layoutManager = LinearLayoutManager(requireContext())
-        mAdapter = AddressAdapter(this)
+        mAdapter = AddressAdapter(this,false)
         mLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.recyclerChooseAddrees.apply {
             adapter = mAdapter
@@ -76,7 +77,7 @@ class ChooseAddressFragment : Fragment() , AddressListener{
     }
 
     override fun deleteAddress(addressId: Long) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setAddressDefault(id:Long,default: Boolean) {
@@ -103,10 +104,9 @@ class ChooseAddressFragment : Fragment() , AddressListener{
         province_code: Any,
         zip: String
     ) {
-        draftOrderIds.forEach { id ->
-            Log.i("gggg", "sendeditChoosenAddressRequest:  ${id} ")
+        Log.i("gggg", "sendeditChoosenAddressRequest:  ${id} ")
             allProductViewModel.sendeditChoosenAddressRequest(
-                id,
+                CustomerData.getInstance(requireContext()).cartListId,
                 address1,
                 address2,
                 city,
@@ -123,7 +123,7 @@ class ChooseAddressFragment : Fragment() , AddressListener{
                 province_code,
                 zip
             )
-        }
+
 
         Toast.makeText(requireContext(), "Address Preeesed Successfully", Toast.LENGTH_LONG).show()
         refreshFragment()

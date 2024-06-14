@@ -5,15 +5,21 @@ data class DraftOrderResponse(
 ) {
     data class DraftOrder(
         val id: Long = 0,
-        val line_items: List<LineItem> = listOf(LineItem(null, quantity = 1))
+        val line_items: List<LineItem> = listOf(LineItem(null, quantity = 1)),
+        val note_attributes : List<Note> = listOf(Note("", "")),
     ) {
         data class LineItem(
             val variant_id: Long?,
-            val quantity: Int?,
+            var quantity: Int?,
             val id: Long? = null,
             val title: String? = "dummy",
             val price: String? = "1",
             val sku: String? = null,
         )
+        data class Note(
+            val value: String?,
+            val name :String?
+        )
+
     }
 }

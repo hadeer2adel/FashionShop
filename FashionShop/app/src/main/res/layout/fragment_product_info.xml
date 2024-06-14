@@ -131,6 +131,21 @@
                 android:text="USD"
                 android:textColor="@color/black"
                 android:textSize="20sp"/>
+
+                <Button
+                    android:id="@+id/addToCartBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="@string/addToCart"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_gravity="end"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/red"
+                    app:cornerRadius="10dp"/>
+
             </LinearLayout>
 
             <View
@@ -174,7 +189,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/show_reviews"
-                android:textColor="@color/gray"
+                android:textColor="@color/red"
+                android:alpha="0.7"
                 android:layout_gravity="center"
                 android:textSize="16sp"
                 android:textAllCaps="false"/>
@@ -210,23 +226,9 @@
                 android:orientation="horizontal"
                 tools:listitem="@layout/card_product" />
 
-            <Button
-                android:id="@+id/addToCartBtn"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="@string/addToCart"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="52dp"
-                style="?attr/materialButtonOutlinedStyle"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="10dp"/>
-
             <View
                 android:layout_width="match_parent"
-                android:layout_height="40dp"/>
+                android:layout_height="70dp"/>
 
         </LinearLayout>
     </ScrollView>

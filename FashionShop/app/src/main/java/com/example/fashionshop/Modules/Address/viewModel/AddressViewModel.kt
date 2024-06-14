@@ -10,17 +10,23 @@ import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.Addresse
 import com.example.fashionshop.Model.BillingAddressX
+import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.DraftOrderX
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.ShippingAddressX
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Repository.Repository
+import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class AddressViewModel (private val repo: Repository
 ): ViewModel() {
+    private var _productCard = MutableStateFlow<NetworkState<DraftOrderResponse>>(NetworkState.Loading)
+    var productCard: StateFlow<NetworkState<DraftOrderResponse>> = _productCard
     private var _products: MutableLiveData<OneCustomer> = MutableLiveData<OneCustomer>()
     val products: LiveData<OneCustomer> = _products
     private var _products1: MutableLiveData<AddressUpdateRequest> =

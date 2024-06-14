@@ -77,12 +77,17 @@
         android:layout_height="wrap_content"
         android:hint="Province"
         android:minHeight="48dp" />
-
     <EditText
         android:id="@+id/etCountry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Country"
+        android:hint="Country Name"
+        android:minHeight="48dp" />
+    <EditText
+        android:id="@+id/etCountryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Country Name"
         android:minHeight="48dp" />
 
     <EditText
@@ -97,6 +102,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Name"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/etCountryCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Country Code"
         android:minHeight="48dp" />
 
     <Button

@@ -11,7 +11,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import kotlin.math.log
 
 class FavViewModel(private var repository: Repository, private var listId: Long) : ViewModel(){
 
@@ -31,6 +33,31 @@ class FavViewModel(private var repository: Repository, private var listId: Long)
         }
     }
 
+    fun isFavProduct(id: Long, favTrue: ()->Unit, favFalse: ()->Unit){
+        viewModelScope.launch(Dispatchers.IO) {
+            _product.value = NetworkState.Loading
+            val response = repository.getDraftOrder(listId).draft_order.line_items
+            if (response.size > 1) {
+                val isFav = response.toMutableList().any {
+                    val values = it.sku?.split("*")
+                    values?.get(0)?.equals(id.toString()) ?: false
+                }
+
+                withContext(Dispatchers.Main) {
+                    if (isFav) {
+                        favTrue()
+                    } else {
+                        favFalse()
+                    }
+                }
+            }else {
+                withContext(Dispatchers.Main) {
+                    favFalse()
+                }
+            }
+        }
+    }
+
     private fun convertProductToLineItem(product: Product): DraftOrderResponse.DraftOrder.LineItem{
         return DraftOrderResponse.DraftOrder.LineItem(
             null,
@@ -38,7 +65,7 @@ class FavViewModel(private var repository: Repository, private var listId: Long)
             product.id,
             product.title,
             product.variants?.get(0)?.price,
-            product.image?.src
+            product.id.toString() + "*" + product.image?.src,
         )
     }
 
@@ -66,9 +93,13 @@ class FavViewModel(private var repository: Repository, private var listId: Long)
         viewModelScope.launch(Dispatchers.IO){
             _product.value = NetworkState.Loading
             val draftOrder = repository.getDraftOrder(listId).draft_order
+
             val updatedLineItems = draftOrder.line_items.filter {
-                it.id != id
+                val values = it.sku?.split("*")
+                val equal = values?.get(0)?.equals(id.toString()) ?: false
+                (! equal)
             }
+
             val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
             try {
                 val updatedResponse = repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))

@@ -10,6 +10,7 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
@@ -137,5 +138,9 @@ class NetworkManagerImp private constructor(): NetworkManager {
         customer: UpdateCustomerRequest
     ): CustomerResponse {
         return networkService.updateCustomer(id, customer)
+    }
+
+    override suspend fun getProductImage(id: Long): Images {
+        return  networkService.getProductImage(id)
     }
 }

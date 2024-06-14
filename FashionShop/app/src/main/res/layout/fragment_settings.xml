@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Modules.Profile.view.SettingsFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -14,15 +15,28 @@
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:theme="@style/CustomToolbarTheme" />
 
+    <!-- Adjusted LinearLayout to be below the toolbar -->
+
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="190dp"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="134dp"
+        android:gravity="center"
         android:orientation="vertical"
-        android:padding="10dp"> <!-- Add margin top here -->
-
-
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/setting"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <!-- Buttons -->
         <Button
             android:id="@+id/AddressButton"
             android:layout_width="match_parent"
@@ -30,7 +44,7 @@
             android:background="@android:color/transparent"
             android:drawableEnd="@drawable/arrow_right"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="Address"
+            android:text="@string/Address"
             android:textAlignment="viewStart"
             android:textColor="@color/black" />
 
@@ -41,7 +55,7 @@
             android:background="@android:color/transparent"
             android:drawableEnd="@drawable/arrow_right"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="Currency"
+            android:text="@string/Currency"
             android:textAlignment="viewStart"
             android:textColor="@color/black" />
 
@@ -52,11 +66,44 @@
             android:background="@android:color/transparent"
             android:drawableEnd="@drawable/arrow_right"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="AboutUs"
+            android:text="@string/AboutUs"
             android:textAlignment="viewStart"
             android:textColor="@color/black" />
 
+        <!-- Switches -->
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/language"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/switchLanguageArabic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Switch
+            android:id="@+id/switchLanguageArabic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/AboutUsButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:minHeight="48dp"
+            android:text="@string/arabic"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/switchLanguageEnglish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/switchLanguageArabic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:minHeight="48dp"
+            android:text="@string/english"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </RelativeLayout>

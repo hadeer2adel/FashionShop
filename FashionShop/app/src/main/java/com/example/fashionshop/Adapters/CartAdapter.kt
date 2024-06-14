@@ -4,16 +4,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.DraftOrder
+import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Modules.ShoppingCard.view.CartListener
 import com.example.fashionshop.databinding.CartItemBinding
 
 class CartAdapter(private val listener: CartListener) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     class CartViewHolder(val binding: CartItemBinding) : RecyclerView.ViewHolder(binding.root)
-    private var items: List<DraftOrder> = emptyList()
+    private var items: List<DraftOrderResponse.DraftOrder.LineItem> = emptyList()
 
-    fun setCartList(cartItems: List<DraftOrder>) {
+    fun setCartList(cartItems: List<DraftOrderResponse.DraftOrder.LineItem>) {
         items = cartItems
         notifyDataSetChanged()
     }
@@ -25,89 +27,58 @@ class CartAdapter(private val listener: CartListener) : RecyclerView.Adapter<Car
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val item = items[position]
-        Log.i("CartAdapter", "item: ${item.line_items}")
-
-        val lineItems = item.line_items
-        for (lineItem in lineItems) {
-            holder.binding.itemName.text = lineItem.title ?: "N/A" // null check
-            holder.binding.itemPrice.text = lineItem.price?.toString() ?: "0.0" // null check
-            holder.binding.quantityText.text = lineItem.quantity.toString()
-            holder.binding.decreaseButton.setOnClickListener {
-                if (lineItem.quantity > 0) {
-                    lineItem.quantity--
-                    holder.binding.quantityText.text = lineItem.quantity.toString()
-                    listener.sendeditChoosenQuantityRequest(
-                        item.id,
-                        lineItem.admin_graphql_api_id ?: "", // null check
-                        lineItem.applied_discount?.let { // Handle applied_discount as an object
-                            mapOf(
-                                "title" to "",
-                                "description" to "",
-                                "value" to "",
-                                "value_type" to "",
-                                "amount" to ""
-                            )
-                        } , // null check, pass an empty map if null
-                        lineItem.custom,
-                        lineItem.fulfillment_service ?: "", // null check
-                        lineItem.gift_card,
-                        lineItem.grams,
-                        lineItem.id,
-                        lineItem.name ?: "N/A", // null check
-                        lineItem.price?.toString() ?: "0.0", // null check
-                        lineItem.product_id,
-                        lineItem.properties ?: emptyList(), // null check
-                        lineItem.quantity,
-                        lineItem.requires_shipping,
-                        lineItem.sku,
-                        lineItem.tax_lines ?: emptyList(), // null check
-                        lineItem.taxable,
-                        lineItem.title ?: "N/A", // null check
-                        lineItem.variant_id?.toString() ?: "0", // null check
-                        lineItem.variant_title ?: "N/A", // null check
-                        lineItem.vendor ?: "N/A" // null check
-                    )
-                }
-            }
-
-            holder.binding.increaseButton.setOnClickListener {
-                lineItem.quantity++
-                holder.binding.quantityText.text = lineItem.quantity.toString()
-                listener.sendeditChoosenQuantityRequest(
-                    item.id,
-                    lineItem.admin_graphql_api_id ?: "", // null check
-                    if (lineItem.applied_discount != null) {
-                        // Convert applied_discount to a Map if it's not null
-                        mapOf("applied_discount" to lineItem.applied_discount)
-                    } else {
-                        // Pass an empty Map if applied_discount is null
-                        emptyMap()
-                    },// null check, pass an empty map if null
-                    lineItem.custom,
-                    lineItem.fulfillment_service ?: "", // null check
-                    lineItem.gift_card,
-                    lineItem.grams,
-                    lineItem.id,
-                    lineItem.name ?: "N/A", // null check
-                    lineItem.price?.toString() ?: "0.0", // null check
-                    lineItem.product_id,
-                    lineItem.properties ?: emptyList(), // null check
-                    lineItem.quantity,
-                    lineItem.requires_shipping,
-                    lineItem.sku,
-                    lineItem.tax_lines ?: emptyList(), // null check
-                    lineItem.taxable,
-                    lineItem.title ?: "N/A", // null check
-                    lineItem.variant_id?.toString() ?: "0", // null check
-                    lineItem.variant_title ?: "N/A", // null check
-                    lineItem.vendor ?: "N/A" // null check
-                )
-            }
-        }
+//        item.note_attributes.forEach { note ->
+//            val imageUrl = note.value
+//            Glide.with(holder.itemView.context)
+//                .load(imageUrl)
+//                .into(holder.binding.imageView)
+//        }
+      //  Log.i("CartAdapter", "item: ${item.line_items}")
+        holder.binding.itemName.text = item.title
+        holder.binding.itemPrice.text = item.price
+        holder.binding.quantityText.text = item.quantity.toString()
         holder.binding.deleteIcon.setOnClickListener {
-            Log.i("CartAdapter", "deleteIcon: ${item.id} ")
-            listener.deleteCart(item.id)
+            item.id?.let { nonNullId ->
+                Log.i("CartAdapter", "deleteIcon: $nonNullId")
+                listener.deleteCart(nonNullId)
+            }
         }
+        holder.binding.decreaseButton.setOnClickListener {
+            val currentQuantity = item.quantity
+            if (currentQuantity != null && currentQuantity > 1) {
+                val newQuantity = currentQuantity - 1
+                item.quantity = newQuantity // Update item's quantity
+                holder.binding.quantityText.text = newQuantity.toString()
+                holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
+                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
+            } else {
+                Log.i("CartAdapter", "Cannot decrease below 1 quantity")
+            }
+        }
+
+        holder.binding.increaseButton.setOnClickListener {
+            val currentQuantity = item.quantity ?: 0
+            val newQuantity = currentQuantity + 1
+            item.quantity = newQuantity // Update item's quantity
+            holder.binding.quantityText.text = newQuantity.toString()
+            holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
+
+            listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
+        }
+    }
+
+    private fun calculateTotalPrice(price: String?, quantity: Int?): String {
+        val itemPrice = price?.toDoubleOrNull() ?: 0.0
+        val total = itemPrice * (quantity ?: 0)
+        return String.format("%.2f", total) // Format total price to 2 decimal places
+    }
+
+
+
+    private fun updateItemTotalPrice(holder: CartViewHolder, item: DraftOrderResponse.DraftOrder.LineItem, quantity: Int) {
+        val totalPrice = item.price?.toDoubleOrNull() ?: 0.0
+        val updatedPrice = totalPrice * quantity
+        holder.binding.itemPrice.text = updatedPrice.toString()
     }
 
     override fun getItemCount() = items.size

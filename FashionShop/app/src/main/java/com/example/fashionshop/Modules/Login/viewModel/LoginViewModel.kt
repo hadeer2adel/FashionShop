@@ -35,16 +35,17 @@ class LoginViewModel(private var repository: Repository) : ViewModel(){
             }
         }
     }
-
     fun saveCustomerData(context: Context, data: Customer){
         val customer = CustomerData.getInstance(context)
         customer.id = data.id
         customer.name = data.first_name + " " + data.last_name
         customer.email = data.email
         customer.currency = data.currency
-        customer.favListId = data.note as Long
-        customer.cartListId = data.multipass_identifier as Long
+        customer.favListId = (data.note as? String)?.toLongOrNull() ?: 0L
+        customer.cartListId = (data.multipass_identifier as? String)?.toLongOrNull() ?: 0L
+
     }
+
 
     override fun onCleared() {
         super.onCleared()

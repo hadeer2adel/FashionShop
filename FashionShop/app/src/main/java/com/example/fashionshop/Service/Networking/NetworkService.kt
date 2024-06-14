@@ -8,6 +8,7 @@ import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
@@ -118,6 +119,10 @@ interface NetworkService {
         @Path("id") id: Long,
         @Body customer: UpdateCustomerRequest
     ): CustomerResponse
+
+
+    @GET("products/{id}/images.json")
+    suspend fun getProductImage(@Path("id") id: Long): Images
 
 }
 

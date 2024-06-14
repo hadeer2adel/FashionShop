@@ -1,22 +1,23 @@
-package com.example.fashionshop
+package com.example.fashionshop.Modules.Profile.view
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
+import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
+import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.FragmentProfileBinding
-import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
-import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
 
 class ProfileFragment : Fragment() {
 
@@ -52,8 +53,10 @@ class ProfileFragment : Fragment() {
 
         allProductFactroy= AddressFactory(
             RepositoryImp.getInstance(
-            NetworkManagerImp.getInstance()))
-        allProductViewModel= ViewModelProvider(this,allProductFactroy).get(AddressViewModel::class.java)
+                NetworkManagerImp.getInstance()
+            )
+        )
+        allProductViewModel= ViewModelProvider(this, allProductFactroy).get(AddressViewModel::class.java)
         // Observe LiveData for address list updates
         allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
             value?.let {
@@ -63,14 +66,11 @@ class ProfileFragment : Fragment() {
             }
         })
         binding.ordersButton.setOnClickListener {
+//            binding.ordersButton.
             Toast.makeText(requireContext(), "Orders!", Toast.LENGTH_SHORT).show()
             navController.navigate(R.id.action_profileFragment_to_ordersFragment)
         }
 
-        binding.favoriteButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Favorites!", Toast.LENGTH_SHORT).show()
-            navController.navigate(R.id.action_profileFragment_to_favoritesFragment)
-        }
 
         binding.settings.setOnClickListener {
             navController.navigate(R.id.action_profileFragment_to_settingFragment)
@@ -78,7 +78,6 @@ class ProfileFragment : Fragment() {
 
         binding.logout.setOnClickListener {
             Toast.makeText(requireContext(), "Logout!", Toast.LENGTH_SHORT).show()
-            // Perform logout action
         }
     }
 

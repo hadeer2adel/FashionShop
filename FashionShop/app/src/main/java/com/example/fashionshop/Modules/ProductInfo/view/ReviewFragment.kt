@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Orientation
 import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Adapters.ReviewAdapter
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Reviews
 import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModel
 import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModelFactory
@@ -43,7 +44,7 @@ class ReviewFragment : Fragment() {
     private fun initViewModel() {
         val networkManager: NetworkManager = NetworkManagerImp.getInstance()
         val repository: Repository = RepositoryImp(networkManager)
-        val factory = ProductInfoViewModelFactory(repository)
+        val factory = ProductInfoViewModelFactory(repository, CustomerData.getInstance(requireContext()).cartListId)
         viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
 
         lifecycleScope.launch {

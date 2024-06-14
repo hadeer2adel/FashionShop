@@ -11,7 +11,7 @@ import com.example.fashionshop.Model.Addresse
 import com.example.fashionshop.Modules.Address.view.AddressListener
 import com.example.fashionshop.R
 
-class AddressAdapter(private val listener: AddressListener) : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() {
+class AddressAdapter(private val listener: AddressListener ,private val showDeleteIcon: Boolean) : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() {
 
     private var addressList: List<Addresse> = emptyList()
     private var selectedItemPosition = -1 // Default no item selected
@@ -87,6 +87,7 @@ class AddressAdapter(private val listener: AddressListener) : RecyclerView.Adapt
             notifyDataSetChanged() // Notify adapter that data set has changed
             true // Consume the long click
         }
+        holder.deleteIcon.visibility = if (showDeleteIcon) View.VISIBLE else View.GONE
 
         holder.deleteIcon.setOnClickListener {
             listener.deleteAddress(currentAddress.id)

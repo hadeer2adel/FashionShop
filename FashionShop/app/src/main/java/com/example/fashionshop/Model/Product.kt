@@ -28,6 +28,7 @@ data class ProductDetails(
     val id: Long? = null,
     val title: String? = null,
     val body_html: String? = null,
+    val image: ProductImage? = null,
     val images: List<ProductImage>? = null,
     val variants: List<Variant>? = null,
     val vendor: String? = null

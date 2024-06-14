@@ -1,6 +1,7 @@
 package com.example.fashionshop
 
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
@@ -11,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.fashionshop.Modules.Login.view.LoginActivity
 import com.example.fashionshop.Service.Caching.SharedPreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +20,24 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val sharedPreferencesManager = SharedPreferenceManager.getInstance(this)
+        val savedLanguage = sharedPreferencesManager.getLanguage()
+        if (!savedLanguage.isNullOrBlank()) {
+            val locale = Locale(savedLanguage)
+            Locale.setDefault(locale)
+            val configuration = Configuration()
+            configuration.locale = locale
+            resources.updateConfiguration(configuration, resources.displayMetrics)
+        }else {
+            // If no language is saved, use the device's default language
+            val deviceLocale = resources.configuration.locale
+            Locale.setDefault(deviceLocale)
+            val configuration = Configuration()
+            configuration.locale = deviceLocale
+            resources.updateConfiguration(configuration, resources.displayMetrics)
+        }
+
         super.onCreate(savedInstanceState)
 
 

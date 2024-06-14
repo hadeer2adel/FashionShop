@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.fashionshop.Adapters.ReviewAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.CustomerResponse
+import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.Product
+import com.example.fashionshop.Model.ProductDetails
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.Review
 import com.example.fashionshop.Model.Reviews
@@ -19,11 +21,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class ProductInfoViewModel(private var repository: Repository) : ViewModel(){
+class ProductInfoViewModel(private var repository: Repository, private var listId: Long) : ViewModel(){
 
     private var _product = MutableStateFlow<NetworkState<ProductResponse>>(NetworkState.Loading)
     var product: StateFlow<NetworkState<ProductResponse>> = _product
-
+    private var _productCard = MutableStateFlow<NetworkState<DraftOrderResponse>>(NetworkState.Loading)
+    var productCard: StateFlow<NetworkState<DraftOrderResponse>> = _productCard
     private var _reviews = MutableStateFlow<NetworkState<List<Review>>>(NetworkState.Loading)
     var reviews: StateFlow<NetworkState<List<Review>>> = _reviews
 
@@ -60,16 +63,75 @@ class ProductInfoViewModel(private var repository: Repository) : ViewModel(){
             }
         }
     }
+    private fun convertProductToLineItem(product: ProductDetails): DraftOrderResponse.DraftOrder.LineItem{
+        return DraftOrderResponse.DraftOrder.LineItem(
+            null,
+            1,
+            product.id,
+            product.title,
+            product.variants?.get(0)?.price,
+            product.images.toString()
+        )
+    }
+    private fun convertProductImageToNote(product: ProductDetails): DraftOrderResponse.DraftOrder.Note{
+        return DraftOrderResponse.DraftOrder.Note(
+            null,
+            "1",
+        )
+    }
+
+    fun insertCardProduct(product: ProductDetails) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _productCard.value = NetworkState.Loading
+            val draftOrder = repository.getDraftOrder(listId).draft_order
+            val updatedLineItems = draftOrder.line_items.toMutableList().apply {
+                add(convertProductToLineItem(product))
+            }
+            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+
+            try {
+                val updatedResponse =
+                    repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                _productCard.value = NetworkState.Success(updatedResponse)
+            } catch (e: Exception) {
+                _product.value = NetworkState.Failure(e)
+            }
+        }
+    }
+
+    fun insertCardProductImage(product: ProductDetails) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _productCard.value = NetworkState.Loading
+            val draftOrder = repository.getDraftOrder(listId).draft_order
+            val imageUrl = product.images?.firstOrNull()?.src ?: ""
+            val newNote = DraftOrderResponse.DraftOrder.Note(
+                value = imageUrl,
+                name = "product_image"
+            )
+            val updatedNoteAttributes = draftOrder.note_attributes.toMutableList().apply {
+                add(newNote)
+            }
+            val updatedDraftOrder = draftOrder.copy(note_attributes = updatedNoteAttributes)
+
+            try {
+                val updatedResponse =
+                    repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                _productCard.value = NetworkState.Success(updatedResponse)
+            } catch (e: Exception) {
+                _product.value = NetworkState.Failure(e)
+            }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
     }
 }
 
-class ProductInfoViewModelFactory (val repository: Repository): ViewModelProvider.Factory{
+class ProductInfoViewModelFactory (val repository: Repository, val listId: Long): ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(ProductInfoViewModel::class.java)){
-            ProductInfoViewModel(repository) as T
+            ProductInfoViewModel(repository,listId) as T
         }else{
             throw IllegalArgumentException("ProductInfoViewModel Class Not Found")
         }
