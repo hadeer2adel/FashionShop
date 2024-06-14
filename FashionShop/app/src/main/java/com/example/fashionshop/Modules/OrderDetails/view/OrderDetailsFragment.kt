@@ -26,9 +26,7 @@ import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentOrderDetailsBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
 class OrderDetailsFragment() : Fragment()  {
-    // Declare the binding object
     private var _binding: FragmentOrderDetailsBinding? = null
     private val binding get() = _binding!!
     private lateinit var navController: NavController
@@ -38,15 +36,14 @@ class OrderDetailsFragment() : Fragment()  {
     lateinit var allCodesFactory: OrderDetailsFactory
     private lateinit var allCodesViewModel: OrderDetailsViewModel
     val titlesList = mutableListOf<String>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentOrderDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,26 +51,22 @@ class OrderDetailsFragment() : Fragment()  {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
-        allProductFactory =
-            CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()),CustomerData.getInstance(requireContext()).cartListId)
+        allCodesFactory = OrderDetailsFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCodesViewModel = ViewModelProvider(this, allCodesFactory).get(OrderDetailsViewModel::class.java)
+        allCodesViewModel.getAdsCode()
+        fetchTitlesList()
+
+        allProductFactory = CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()), CustomerData.getInstance(requireContext()).cartListId)
         allProductViewModel = ViewModelProvider(this, allProductFactory).get(CartViewModel::class.java)
-//        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-//            value?.let {
-//                Log.i("TAG", "Data updated. Size: ${value.draft_orders}")
-//                val subtotal = value.draft_orders.sumOf { draftOrder ->
-//                    draftOrder.line_items.sumOf { it.price.toDouble() }
-//                }
-//                binding.subTotalValue.text = "${String.format("%.2f", subtotal)}"
-//            }
-//        })
+
         lifecycleScope.launch {
             allProductViewModel.productCard.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> {
-                    }
+                when(response) {
+                    is NetworkState.Loading -> {}
                     is NetworkState.Success -> {
                         val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
-                        binding.subTotalValue.text = "Subtotal: $${String.format("%.2f", subtotal)}" }
+                        binding.subTotalValue.text = "Subtotal: $${String.format("%.2f", subtotal)}"
+                    }
                     is NetworkState.Failure -> {
                         Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
                     }
@@ -81,70 +74,84 @@ class OrderDetailsFragment() : Fragment()  {
             }
         }
 
-        allCodesFactory =
-            OrderDetailsFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allCodesViewModel = ViewModelProvider(this, allCodesFactory).get(OrderDetailsViewModel::class.java)
-        allCodesViewModel.products2.observe(viewLifecycleOwner, Observer { value ->
-            value?.let {
-//                binding.discountValue.text = value.price_rules
-                val value = value.price_rules
-                for (i in value){
-                    titlesList.add(i.title)
-                    if ( binding.coupon.text.toString() == i.title){
 
+        // Fetch and populate titlesList
+        //fetchTitlesList()
 
-
-
-                    }
-                }
-
-
-            }
-        })
         binding.validate.setOnClickListener {
-            allCodesViewModel.getAdsCode()
-            Log.i("getAdsCode", "titlesList: ${titlesList}")
-            for (i in titlesList){
-                if ( binding.coupon.text.toString() == i){
-                    val copon = i
-                    Toast.makeText(requireContext(), "Copon Preeesed Successfully", Toast.LENGTH_LONG).show()
-                    allCodesViewModel.products2.observe(viewLifecycleOwner, Observer { value ->
-                        value?.let {
-                            for (i in value.price_rules)
-                                if (i.title == copon ){
-                                    val valueOfDis = i.value
-                                    val subtotal = binding.subTotalValue.text.toString().toDoubleOrNull() ?: 0.0
-                                    binding.discountValue.text = i.value
-                                    val discountAmount = (subtotal * valueOfDis.toDouble()/ 100)
-                                    val total = subtotal + discountAmount
-                                    binding.totalValue.text = total.toString()
-                                    break
+            validateCoupon()
+        }
+    }
 
-                                }
-                        }
-                    })
-                    break
-                }
-                else{
-                    val alertDialogBuilder = AlertDialog.Builder(requireContext())
-                    alertDialogBuilder.apply {
-                        setTitle("Invalid Coupon")
-                        setMessage("The coupon you entered is invalid.")
-                        setPositiveButton("OK") { dialog, _ ->
-                            dialog.dismiss()
-                            binding.discountValue.text = "0"
-                            binding.totalValue.text = "0"
-                        }
+    private fun fetchTitlesList() {
+        lifecycleScope.launch {
+            allCodesViewModel.productCode.collectLatest { response ->
+                when(response) {
+                    is NetworkState.Loading -> {}
+                    is NetworkState.Success -> {
+                        val value = response.data.price_rules
+                        //titlesList.clear()
+                        titlesList.addAll(value.map { it.title })
+                        binding.validate.isEnabled = true // Enable validate button
                     }
-
-                    alertDialogBuilder.create().show()
-
-                    Toast.makeText(requireContext(), "Coupon Code False", Toast.LENGTH_LONG).show()
-                    Log.i("Coupon", "False: ")
+                    is NetworkState.Failure -> {
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-                break
-
             }
         }
+    }
 
-    }}
+    private fun validateCoupon() {
+        allCodesViewModel.getAdsCode()
+        Log.i("getAdsCode", "titlesList: $titlesList")
+        val couponCode = binding.coupon.text.toString()
+
+        if (couponCode in titlesList) {
+            val coupon = couponCode
+            Toast.makeText(requireContext(), "Coupon Applied Successfully", Toast.LENGTH_LONG).show()
+            lifecycleScope.launch {
+                allCodesViewModel.productCode.collectLatest { response ->
+                    when(response) {
+                        is NetworkState.Loading -> {}
+                        is NetworkState.Success -> {
+                            val value = response.data
+                            for (rule in value.price_rules) {
+                                if (rule.title == coupon) {
+                                    val valueOfDis = rule.value.toDoubleOrNull() ?: 0.0
+                                    val subtotal = binding.subTotalValue.text.toString().replace("Subtotal: $", "").toDoubleOrNull() ?: 0.0
+                                    val discountAmount = subtotal * (valueOfDis / 100)
+                                    val total = subtotal + discountAmount
+                                    binding.discountValue.text = "${String.format("%.2f", kotlin.math.abs(valueOfDis))}%"
+                                    binding.totalValue.text = String.format("%.2f", total)
+                                    break
+                                }
+                            }
+                        }
+                        is NetworkState.Failure -> {
+                            Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        } else {
+            showInvalidCouponDialog()
+        }
+    }
+
+    private fun showInvalidCouponDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.apply {
+            setTitle("Invalid Coupon")
+            setMessage("The coupon you entered is invalid.")
+            setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                binding.discountValue.text = "0"
+                binding.totalValue.text = "0"
+            }
+        }
+        alertDialogBuilder.create().show()
+        Toast.makeText(requireContext(), "Coupon Code is Invalid", Toast.LENGTH_LONG).show()
+        Log.i("Coupon", "False: ")
+    }
+}

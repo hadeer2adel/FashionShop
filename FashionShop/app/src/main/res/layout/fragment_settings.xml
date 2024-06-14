@@ -27,12 +27,15 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="10dp">
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
             android:text="@string/setting"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -46,64 +49,48 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/Address"
             android:textAlignment="viewStart"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/CurrencyButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="@android:color/transparent"
             android:drawableEnd="@drawable/arrow_right"
             android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/Currency"
             android:textAlignment="viewStart"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/AboutUsButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="@android:color/transparent"
             android:drawableEnd="@drawable/arrow_right"
             android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/AboutUs"
             android:textAlignment="viewStart"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
-        <!-- Switches -->
-
-        <TextView
-            android:id="@+id/textView"
+        <Button
+            android:id="@+id/LanguagesButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/arrow_right"
+            android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/language"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/switchLanguageArabic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textAlignment="viewStart"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
-        <Switch
-            android:id="@+id/switchLanguageArabic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/AboutUsButton"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:minHeight="48dp"
-            android:text="@string/arabic"
-            android:textStyle="bold" />
-
-        <Switch
-            android:id="@+id/switchLanguageEnglish"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/switchLanguageArabic"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:minHeight="48dp"
-            android:text="@string/english"
-            android:textStyle="bold" />
     </LinearLayout>
 
 </RelativeLayout>
