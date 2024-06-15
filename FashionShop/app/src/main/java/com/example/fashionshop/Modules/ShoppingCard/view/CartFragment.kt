@@ -102,6 +102,9 @@ class CartFragment : Fragment() ,CartListener {
             val args = CartFragmentArgs(draftOrderIds).toBundle() // Convert CartFragmentArgs to Bundle
             findNavController().navigate(R.id.action_cartFragment_to_paymentFragment, args)
         }
+        binding.deleteall.setOnClickListener {
+            allProductViewModel.deleteAllCartProducts()
+        }
         return view
     }
 

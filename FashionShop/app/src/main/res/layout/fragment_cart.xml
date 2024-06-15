@@ -8,7 +8,20 @@
     android:padding="16dp"
     android:layout_marginBottom="80dp"
     tools:context=".Modules.ShoppingCard.view.CartFragment">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
 
+        <ImageView
+            android:id="@+id/deleteall"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_delete" />
+
+    </RelativeLayout>
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"

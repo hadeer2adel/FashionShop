@@ -57,6 +57,10 @@ class CategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isAllFabsVisible = false
+
+
+
+
         binding.fabCategory.setOnClickListener {
             isAllFabsVisible = if (isAllFabsVisible == false) {
                 showAllFabButtons()
@@ -168,6 +172,7 @@ class CategoryFragment : Fragment() {
         val factory = CategoryFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(CategoryViewModel::class.java)
         viewModel.getProducts()
+        viewModel.getLatestRates()
         lifecycleScope.launch {
             viewModel.products.collectLatest { response ->
                 when(response){
@@ -178,7 +183,12 @@ class CategoryFragment : Fragment() {
                 }
             }
         }
+
+
+
     }
+
+
 
     private fun showLoading() {
         binding.progressBar3.visibility = View.VISIBLE

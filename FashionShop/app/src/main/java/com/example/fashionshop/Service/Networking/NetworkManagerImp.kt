@@ -10,6 +10,7 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.ExchangeRatesResponse
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
@@ -22,6 +23,9 @@ import com.example.fashionshop.Model.editOrderQuantityBody
 class NetworkManagerImp private constructor(): NetworkManager {
     private val networkService : NetworkService by lazy {
         RetrofitHelper.retrofitInstance.create(NetworkService::class.java)
+    }
+    private val networkServiceExchanges:NetworkService by lazy {
+        RetrofitHelperExchnges.exchangeRatesRetrofit.create(NetworkService::class.java)
     }
 
     companion object{
@@ -138,4 +142,10 @@ class NetworkManagerImp private constructor(): NetworkManager {
     override suspend fun getProductImage(id: Long): Images {
         return  networkService.getProductImage(id)
     }
+
+    override suspend fun getLatestRates(apiKey: String) : ExchangeRatesResponse {
+      return  networkServiceExchanges.getLatestRates(apiKey)
+    }
+
+
 }
