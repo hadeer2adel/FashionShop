@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.DraftOrder
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Modules.ShoppingCard.view.CartListener
+import com.example.fashionshop.R
 import com.example.fashionshop.databinding.CartItemBinding
 
 class CartAdapter(private val listener: CartListener) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
@@ -34,6 +35,21 @@ class CartAdapter(private val listener: CartListener) : RecyclerView.Adapter<Car
 //                .into(holder.binding.imageView)
 //        }
       //  Log.i("CartAdapter", "item: ${item.line_items}")
+        Log.i("Glide", "onBindViewHolder:${item.sku} ")
+        val imageUrls = parseSkuString(item.sku)
+        Log.i("Glide", "Parsed Image URLs: $imageUrls")
+
+        if (imageUrls.isNotEmpty()) {
+            Glide.with(holder.itemView.context)
+                .load(imageUrls[0])
+                .placeholder(R.drawable.adidas) // Optional: add a placeholder
+                .error(R.drawable.logout) // Optional: add an error image
+                .into(holder.binding.imageView)
+        } else {
+            Log.i("Glide", "No image URLs found in SKU: ${item.sku}")
+        }
+
+
         holder.binding.itemName.text = item.title
         holder.binding.itemPrice.text = item.price
         holder.binding.quantityText.text = item.quantity.toString()
@@ -72,9 +88,11 @@ class CartAdapter(private val listener: CartListener) : RecyclerView.Adapter<Car
         val total = itemPrice * (quantity ?: 0)
         return String.format("%.2f", total) // Format total price to 2 decimal places
     }
-
-
-
+    private fun parseSkuString(sku: String?): List<String> {
+        if (sku == null) return emptyList()
+        val regex = """ProductImage\(src=([^,]+)\)""".toRegex()
+        return regex.findAll(sku).map { it.groupValues[1].trim() }.toList()
+    }
     private fun updateItemTotalPrice(holder: CartViewHolder, item: DraftOrderResponse.DraftOrder.LineItem, quantity: Int) {
         val totalPrice = item.price?.toDoubleOrNull() ?: 0.0
         val updatedPrice = totalPrice * quantity

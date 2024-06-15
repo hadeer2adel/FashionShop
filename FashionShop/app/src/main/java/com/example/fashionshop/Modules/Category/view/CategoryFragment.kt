@@ -183,9 +183,24 @@ class CategoryFragment : Fragment() {
                 }
             }
         }
-
-
-
+//
+//viewModel.getLatestRates()
+//        lifecycleScope.launch {
+//            viewModel.productCurrency.collectLatest { response ->
+//                when(response){
+//                    is NetworkState.Loading -> showLoading()
+//                    is NetworkState.Success -> {
+//
+//                        Log.i("initViewModel", "initViewModel:${  response.data.base} ")
+//
+//
+//
+//                    }
+//                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
+//                    else -> { }
+//                }
+//            }
+//        }
     }
 
 

@@ -25,7 +25,7 @@ class NetworkManagerImp private constructor(): NetworkManager {
         RetrofitHelper.retrofitInstance.create(NetworkService::class.java)
     }
     private val networkServiceExchanges:NetworkService by lazy {
-        RetrofitHelperExchnges.exchangeRatesRetrofit.create(NetworkService::class.java)
+        RetrofitHelperExchanges.exchangeRatesRetrofit.create(NetworkService::class.java)
     }
 
     companion object{
