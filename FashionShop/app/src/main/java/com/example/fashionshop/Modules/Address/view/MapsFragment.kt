@@ -23,6 +23,7 @@ import com.example.fashionshop.viewModels.AddNewAddressViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -50,7 +51,7 @@ class MapsFragment : Fragment() {
     private lateinit var allProductFactory: AddNewAddressFactory
     private lateinit var allProductViewModel: AddNewAddressViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var googleMap: com.google.android.gms.maps.GoogleMap
+    private lateinit var googleMap: GoogleMap
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
     private fun requestLocationPermissions() {
@@ -94,13 +95,14 @@ class MapsFragment : Fragment() {
             if (location != null) {
                 val currentLatLng = LatLng(location.latitude, location.longitude)
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+                googleMap.addMarker(MarkerOptions().position(currentLatLng).title("Your Location"))
             } else {
                 Toast.makeText(requireContext(), "Unable to get current location", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    @SuppressLint("SuspiciousIndentation")
+    @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { map ->
         googleMap = map
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(egyptLatLng, 6f))
@@ -111,7 +113,7 @@ class MapsFragment : Fragment() {
         googleMap.setOnMapClickListener { latLng ->
             googleMap.clear()
             googleMap.addMarker(MarkerOptions().position(latLng).title("Selected Location"))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8f))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
             val selectedLatitude = latLng.latitude
             val selectedLongitude = latLng.longitude
             val geocoder = Geocoder(requireContext())
@@ -134,7 +136,7 @@ class MapsFragment : Fragment() {
                 val cityName = addresses[0].getAddressLine(0)
                 val lat = addresses[0].latitude
                 val lon = addresses[0].longitude
-                Toast.makeText(requireContext(), "City: $cityName, Longitude: $lat", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "City: $cityName, Longitude: $lon", Toast.LENGTH_LONG).show()
             }
             val bundle = Bundle().apply {
                 putString("address1", address1)

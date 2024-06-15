@@ -1,7 +1,11 @@
 package com.example.fashionshop.Modules.Category.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.ExchangeRatesResponse
+import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Repository.Repository
@@ -9,6 +13,7 @@ import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -21,6 +26,8 @@ class CategoryViewModel(private var repository: Repository) : ViewModel() {
     private var _allProducts: List<Product> = emptyList()
     private var _subProducts: List<Product> = emptyList()
     private val searchSharedFlow = MutableSharedFlow<String>()
+    private var _productCurrency = MutableStateFlow<NetworkState<ExchangeRatesResponseX>>(NetworkState.Loading)
+    var productCurrency: StateFlow<NetworkState<ExchangeRatesResponseX>> = _productCurrency
 
     fun getProducts() {
         viewModelScope.launch(Dispatchers.IO){
@@ -70,6 +77,31 @@ class CategoryViewModel(private var repository: Repository) : ViewModel() {
         }.toList()
         _products.value = NetworkState.Success(ProductResponse(filteredProducts))
     }
+    fun  getLatestRates(){
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val apiKey = "PXJgV81f0U9LdvbEurbssy1o3AynUjEM"
+                val symbols = "EGP" // Replace with desired symbols
+                val base = "USD"
+                val response = repository.getExchangeRates(apiKey,symbols, base)
+                Log.d("ViewModel", "Exchange rates response: $response")
+                _productCurrency.value = NetworkState.Success(response)
+            } catch (e: HttpException) {
+                Log.e("ViewModel", "HttpException: ${e.message()}")
+                _productCurrency.value = NetworkState.Failure(e)
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Exception: ${e.message}")
+                _productCurrency.value = NetworkState.Failure(e)
+            }
+        }
+
+
+    }
+
+
+
+
 
     override fun onCleared() {
         super.onCleared()

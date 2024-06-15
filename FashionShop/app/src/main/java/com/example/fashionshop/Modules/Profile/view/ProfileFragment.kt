@@ -73,6 +73,7 @@ class ProfileFragment : Fragment() {
 
 
         binding.settings.setOnClickListener {
+
             navController.navigate(R.id.action_profileFragment_to_settingFragment)
         }
 

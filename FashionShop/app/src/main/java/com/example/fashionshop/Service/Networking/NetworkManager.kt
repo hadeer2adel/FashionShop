@@ -12,6 +12,8 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.ExchangeRatesResponse
+import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
@@ -46,5 +48,5 @@ interface NetworkManager {
     suspend fun getDraftOrder(id: Long): DraftOrderResponse
     suspend fun updateCustomer(id: Long, customer: UpdateCustomerRequest): CustomerResponse
     suspend fun getProductImage(@Path("id") id: Long): Images
-
+    suspend  fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX
 }

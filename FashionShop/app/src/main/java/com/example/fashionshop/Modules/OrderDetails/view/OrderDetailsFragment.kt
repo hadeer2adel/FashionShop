@@ -16,6 +16,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
+import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsFactory
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsViewModel
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
@@ -27,8 +29,7 @@ import com.example.fashionshop.databinding.FragmentOrderDetailsBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class OrderDetailsFragment() : Fragment()  {
-    // Declare the binding object
+class OrderDetailsFragment() : Fragment() {
     private var _binding: FragmentOrderDetailsBinding? = null
     private val binding get() = _binding!!
     private lateinit var navController: NavController
@@ -38,113 +39,157 @@ class OrderDetailsFragment() : Fragment()  {
     lateinit var allCodesFactory: OrderDetailsFactory
     private lateinit var allCodesViewModel: OrderDetailsViewModel
     val titlesList = mutableListOf<String>()
+    private var currencyConversionRate: Double = 1.0
+    private lateinit var allCategoryFactory: CategoryFactory
+    private lateinit var allCategoryViewModel: CategoryViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentOrderDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val customer = CustomerData.getInstance(requireContext())
+        binding.currency.text = customer.currency
         navController = NavHostFragment.findNavController(this)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
-        allProductFactory =
-            CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()),CustomerData.getInstance(requireContext()).cartListId)
+        allCodesFactory = OrderDetailsFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCodesViewModel = ViewModelProvider(this, allCodesFactory).get(OrderDetailsViewModel::class.java)
+        allCodesViewModel.getAdsCode()
+        fetchTitlesList()
+
+        allProductFactory = CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()), CustomerData.getInstance(requireContext()).cartListId)
         allProductViewModel = ViewModelProvider(this, allProductFactory).get(CartViewModel::class.java)
-//        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-//            value?.let {
-//                Log.i("TAG", "Data updated. Size: ${value.draft_orders}")
-//                val subtotal = value.draft_orders.sumOf { draftOrder ->
-//                    draftOrder.line_items.sumOf { it.price.toDouble() }
-//                }
-//                binding.subTotalValue.text = "${String.format("%.2f", subtotal)}"
-//            }
-//        })
+
+        allCategoryFactory = CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+        allCategoryViewModel.getLatestRates()
+        lifecycleScope.launch {
+            allCategoryViewModel.productCurrency.collectLatest { response ->
+                when (response) {
+                    is NetworkState.Loading -> "showLoading()"
+                    is NetworkState.Success -> {
+                        Log.i("initViewModel", "initViewModel:${response.data}")
+                        currencyConversionRate = response.data.rates?.EGP ?: 1.0
+                    }
+                    is NetworkState.Failure -> ""
+                    else -> {}
+                }
+            }
+        }
         lifecycleScope.launch {
             allProductViewModel.productCard.collectLatest { response ->
-                when(response){
+                when (response) {
                     is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
                     }
                     is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
                         val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
-                        binding.subTotalValue.text = "Subtotal: $${String.format("%.2f", subtotal)}" }
+                        val customer = CustomerData.getInstance(requireContext())
+                        if (customer.currency == "EGY") {
+                            binding.subTotalValue.text = "${String.format("%.2f", convertCurrency(subtotal))}"
+                        } else {
+                            binding.subTotalValue.text = "${String.format("%.2f", subtotal)}"
+                        }
+                    }
                     is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
                         Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
 
-        allCodesFactory =
-            OrderDetailsFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allCodesViewModel = ViewModelProvider(this, allCodesFactory).get(OrderDetailsViewModel::class.java)
-        allCodesViewModel.products2.observe(viewLifecycleOwner, Observer { value ->
-            value?.let {
-//                binding.discountValue.text = value.price_rules
-                val value = value.price_rules
-                for (i in value){
-                    titlesList.add(i.title)
-                    if ( binding.coupon.text.toString() == i.title){
-
-
-
-
-                    }
-                }
-
-
-            }
-        })
         binding.validate.setOnClickListener {
-            allCodesViewModel.getAdsCode()
-            Log.i("getAdsCode", "titlesList: ${titlesList}")
-            for (i in titlesList){
-                if ( binding.coupon.text.toString() == i){
-                    val copon = i
-                    Toast.makeText(requireContext(), "Copon Preeesed Successfully", Toast.LENGTH_LONG).show()
-                    allCodesViewModel.products2.observe(viewLifecycleOwner, Observer { value ->
-                        value?.let {
-                            for (i in value.price_rules)
-                                if (i.title == copon ){
-                                    val valueOfDis = i.value
-                                    val subtotal = binding.subTotalValue.text.toString().toDoubleOrNull() ?: 0.0
-                                    binding.discountValue.text = i.value
-                                    val discountAmount = (subtotal * valueOfDis.toDouble()/ 100)
-                                    val total = subtotal + discountAmount
-                                    binding.totalValue.text = total.toString()
-                                    break
+            validateCoupon()
+        }
+    }
+    private fun convertCurrency(amount: Double?): Double {
+        amount ?: return 0.0 // Handle null or undefined amount gracefully
+        return amount * currencyConversionRate
+    }
+//    private fun convertCurrency(amount: Double?): String {
+//        amount ?: return "" // Handle null or undefined amount gracefully
+//        val convertedPrice = amount * currencyConversionRate
+//        return String.format("%.2f", convertedPrice)
+//    }
 
-                                }
-                        }
-                    })
-                    break
-                }
-                else{
-                    val alertDialogBuilder = AlertDialog.Builder(requireContext())
-                    alertDialogBuilder.apply {
-                        setTitle("Invalid Coupon")
-                        setMessage("The coupon you entered is invalid.")
-                        setPositiveButton("OK") { dialog, _ ->
-                            dialog.dismiss()
-                            binding.discountValue.text = "0"
-                            binding.totalValue.text = "0"
-                        }
+    private fun fetchTitlesList() {
+        lifecycleScope.launch {
+            allCodesViewModel.productCode.collectLatest { response ->
+                when (response) {
+                    is NetworkState.Loading -> {}
+                    is NetworkState.Success -> {
+                        val value = response.data.price_rules
+                        titlesList.clear()
+                        titlesList.addAll(value.map { it.title })
+                        binding.validate.isEnabled = true // Enable validate button
                     }
-
-                    alertDialogBuilder.create().show()
-
-                    Toast.makeText(requireContext(), "Coupon Code False", Toast.LENGTH_LONG).show()
-                    Log.i("Coupon", "False: ")
+                    is NetworkState.Failure -> {
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-                break
-
             }
         }
+    }
 
-    }}
+    private fun validateCoupon() {
+        allCodesViewModel.getAdsCode()
+        Log.i("getAdsCode", "titlesList: $titlesList")
+        val couponCode = binding.coupon.text.toString()
+
+        if (couponCode in titlesList) {
+            val coupon = couponCode
+            Toast.makeText(requireContext(), "Coupon Applied Successfully", Toast.LENGTH_LONG).show()
+            lifecycleScope.launch {
+                allCodesViewModel.productCode.collectLatest { response ->
+                    when (response) {
+                        is NetworkState.Loading -> {}
+                        is NetworkState.Success -> {
+                            val value = response.data
+                            for (rule in value.price_rules) {
+                                if (rule.title == coupon) {
+                                    val valueOfDis = rule.value.toDoubleOrNull() ?: 0.0
+                                    val subtotal = binding.subTotalValue.text.toString().toDoubleOrNull() ?: 0.0
+                                    val discountAmount = subtotal * (valueOfDis / 100)
+                                    val total = subtotal + discountAmount
+                                    binding.discountValue.text = "${String.format("%.2f", kotlin.math.abs(valueOfDis))}%"
+                                    binding.totalValue.text = String.format("%.2f", total)
+                                    break
+                                }
+                            }
+                        }
+                        is NetworkState.Failure -> {
+                            Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        } else {
+            showInvalidCouponDialog()
+        }
+    }
+
+    private fun showInvalidCouponDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.apply {
+            setTitle("Invalid Coupon")
+            setMessage("The coupon you entered is invalid.")
+            setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                binding.discountValue.text = "0"
+                binding.totalValue.text = "0"
+            }
+        }
+        alertDialogBuilder.create().show()
+        Toast.makeText(requireContext(), "Coupon Code is Invalid", Toast.LENGTH_LONG).show()
+        Log.i("Coupon", "False: ")
+    }
+}
