@@ -1,4 +1,4 @@
-package com.example.fashionshop.Modules.Signup.view
+package com.example.fashionshop.Modules.Authentication.view
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,14 +9,9 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.fashionshop.MainActivity
-import com.example.fashionshop.Model.Addresse
-import com.example.fashionshop.Model.Customer
-import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.CustomerRequest
-import com.example.fashionshop.Model.CustomerResponse
-import com.example.fashionshop.Modules.Login.view.LoginActivity
-import com.example.fashionshop.Modules.Signup.viewModel.SignupViewModel
-import com.example.fashionshop.Modules.Signup.viewModel.SignupViewModelFactory
+import com.example.fashionshop.Modules.Authentication.viewModel.AuthenticationViewModel
+import com.example.fashionshop.Modules.Authentication.viewModel.AuthenticationViewModelFactory
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
@@ -35,7 +30,7 @@ class SignupActivity : AppCompatActivity() {
     private val passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$"
     private lateinit var mAuth: FirebaseAuth
     private lateinit var binding: ActivitySignupBinding
-    private lateinit var viewModel: SignupViewModel
+    private lateinit var viewModel: AuthenticationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,15 +91,15 @@ class SignupActivity : AppCompatActivity() {
         val networkManager: NetworkManager = NetworkManagerImp.getInstance()
         val repository: Repository = RepositoryImp(networkManager)
 
-        val factory = SignupViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(SignupViewModel::class.java)
+        val factory = AuthenticationViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory).get(AuthenticationViewModel::class.java)
 
         lifecycleScope.launch {
             viewModel.customer.collectLatest { response ->
                 when(response){
                     is NetworkState.Loading -> {}
                     is NetworkState.Success ->{
-                        viewModel.saveCustomerData(this@SignupActivity, response.data.customer)
+                        viewModel.saveCustomerData(this@SignupActivity, response.data.customer!!)
                         binding.progressBar.visibility = View.GONE
                         startActivity(Intent(this@SignupActivity, MainActivity::class.java))
                     }

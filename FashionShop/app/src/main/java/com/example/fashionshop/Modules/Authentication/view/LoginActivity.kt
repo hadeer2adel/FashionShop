@@ -1,7 +1,6 @@
-package com.example.fashionshop.Modules.Login.view
+package com.example.fashionshop.Modules.Authentication.view
 
 import android.content.Intent
-import android.content.IntentSender
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,22 +9,20 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.fashionshop.MainActivity
-import com.example.fashionshop.Modules.Login.viewModel.LoginViewModel
-import com.example.fashionshop.Modules.Login.viewModel.LoginViewModelFactory
-import com.example.fashionshop.Modules.Signup.view.SignupActivity
-import com.example.fashionshop.Modules.Signup.viewModel.SignupViewModel
-import com.example.fashionshop.Modules.Signup.viewModel.SignupViewModelFactory
+import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Model.CustomerRequest
+import com.example.fashionshop.Modules.Authentication.viewModel.AuthenticationViewModel
+import com.example.fashionshop.Modules.Authentication.viewModel.AuthenticationViewModelFactory
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
-import com.example.fashionshop.Service.Caching.SharedPreferenceManager
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.ActivityLoginBinding
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.flow.collectLatest
@@ -35,23 +32,27 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var viewModel: LoginViewModel
+    private lateinit var viewModel: AuthenticationViewModel
+    private lateinit var googleSignInClient: GoogleSignInClient
+
 
     companion object {
-        private const val REQ_ONE_TAP = 5
+        private const val RC_SIGN_IN = 9001
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val sharedPreferenceManager = SharedPreferenceManager(this)
-        if (!sharedPreferenceManager.retrieveBoolean(SharedPreferenceManager.Key.IS_LOGGED_IN, false)) {
-            val loginIntent = Intent(this, MainActivity::class.java)
-            startActivity(loginIntent)
-            finish()
-            return
-        }
 
+        if(CustomerData.getInstance(this).isLogged){
+            startActivity(Intent(this, MainActivity::class.java))}
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
         mAuth = FirebaseAuth.getInstance()
         initViewModel()
 
@@ -73,11 +74,6 @@ class LoginActivity : AppCompatActivity() {
                 mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            val sharedPreferenceManager = SharedPreferenceManager(this)
-                            sharedPreferenceManager.saveBoolean(SharedPreferenceManager.Key.IS_LOGGED_IN, true)
-                            val mainIntent = Intent(this, MainActivity::class.java)
-                            startActivity(mainIntent)
-                            finish()
                             val user = FirebaseAuth.getInstance().currentUser
                             user?.let {
                                 binding.progressBar.visibility = View.VISIBLE
@@ -94,7 +90,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.googleBtn.setOnClickListener {
-            Log.i("TAG", "onCreate: ")
             googleLogin()
         }
     }
@@ -102,21 +97,46 @@ class LoginActivity : AppCompatActivity() {
     private fun initViewModel(){
         val networkManager: NetworkManager = NetworkManagerImp.getInstance()
         val repository: Repository = RepositoryImp(networkManager)
+        val factory = AuthenticationViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory).get(AuthenticationViewModel::class.java)
 
-        val factory = LoginViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
+        lifecycleScope.launch {
+            viewModel.customers.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> {}
+                    is NetworkState.Success ->{
+                        val customer = response.data.customers?.first()
+                        if (customer!!.note == 0L || customer.multipass_identifier == 0L) {
+                             viewModel.updateCustomer(customer.id)
+                        }
+                        else {
+                            viewModel.saveCustomerData(this@LoginActivity, customer)
+                            binding.progressBar.visibility = View.GONE
+                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        }
+                    }
+                    is NetworkState.Failure ->{
+                        Toast.makeText(this@LoginActivity, response.error.message.toString(), Toast.LENGTH_SHORT).show()
+                        Log.i("TAG", response.error.message.toString())
+                    }
+                }
+            }
+        }
 
         lifecycleScope.launch {
             viewModel.customer.collectLatest { response ->
                 when(response){
                     is NetworkState.Loading -> {}
                     is NetworkState.Success ->{
-                        viewModel.saveCustomerData(this@LoginActivity, response.data.customers.first())
+                        viewModel.saveCustomerData(this@LoginActivity, response.data.customer!!)
                         binding.progressBar.visibility = View.GONE
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                     }
                     is NetworkState.Failure ->{
+                        binding.progressBar.visibility = View.GONE
+                        binding.screen.visibility = View.VISIBLE
                         Toast.makeText(this@LoginActivity, response.error.message.toString(), Toast.LENGTH_SHORT).show()
+                        Log.i("TAG", "Failure: "+ response.error.message.toString())
                     }
                 }
             }
@@ -133,59 +153,39 @@ class LoginActivity : AppCompatActivity() {
         return valid
     }
 
+    private fun googleLogin() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQ_ONE_TAP && resultCode == RESULT_OK) {
-            handleGoogleResult(data)
-        }
-    }
 
-    private fun handleGoogleResult(data: Intent?) {
-        try {
-            val credential = Identity.getSignInClient(this).getSignInCredentialFromIntent(data)
-            val idToken = credential.googleIdToken
-            if (idToken != null) {
-                val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
-                mAuth.signInWithCredential(firebaseCredential)
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            val user = FirebaseAuth.getInstance().currentUser
-                            user?.let {
-                                binding.progressBar.visibility = View.VISIBLE
-                                binding.screen.visibility = View.GONE
-                                viewModel.getCustomerByEmail(user.email!!)
-                            }
-                        } else {
-                            Toast.makeText(this@LoginActivity, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            if (task.isSuccessful) {
+                val account = task.result
+                firebaseAuthWithGoogle(account.idToken!!)
+            } else {
+                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
             }
-        } catch (e: ApiException) {
-            Toast.makeText(this@LoginActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun googleLogin() {
-        val signInRequest = BeginSignInRequest.builder()
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    .setServerClientId(getString(R.string.client_id))
-                    .setFilterByAuthorizedAccounts(true)
-                    .build()
-            )
-            .build()
-
-        Identity.getSignInClient(this).beginSignIn(signInRequest)
-            .addOnSuccessListener(this) { signInResult ->
-                try {
-                    startIntentSenderForResult(signInResult.pendingIntent.intentSender, REQ_ONE_TAP, null, 0, 0, 0)
-                } catch (e: IntentSender.SendIntentException) {
-                    Toast.makeText(this@LoginActivity, "Failed to start Request", Toast.LENGTH_SHORT).show()
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        mAuth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = mAuth.currentUser
+                    user?.let {
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.screen.visibility = View.GONE
+                        viewModel.getCustomerByEmail(user.email!!)
+                    }
+                } else {
+                    Toast.makeText(this@LoginActivity, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
-            .addOnFailureListener(this) { e ->
-                Toast.makeText(this, "Sign-in failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
     }
+
 }

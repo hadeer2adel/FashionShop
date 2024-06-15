@@ -26,7 +26,7 @@ interface Repository {
     suspend fun getBrands(): Response<BrandResponse>
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
     suspend fun getProducts(): Response<ProductResponse>
-    suspend fun getCustomerByEmail(email: String): customers
+    suspend fun getCustomerByEmail(email: String): CustomerResponse
     suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest
     suspend fun editSingleCustomerAddress(
         id: Long,

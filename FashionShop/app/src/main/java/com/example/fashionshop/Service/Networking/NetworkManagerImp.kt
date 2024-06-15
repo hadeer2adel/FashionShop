@@ -101,7 +101,7 @@ class NetworkManagerImp private constructor(): NetworkManager {
     }
 
 
-    override suspend fun getCustomerByEmail(email: String): customers {
+    override suspend fun getCustomerByEmail(email: String): CustomerResponse {
         return networkService.getCustomerByEmail(email)
     }
 

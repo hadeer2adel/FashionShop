@@ -36,7 +36,7 @@ interface NetworkManager {
     suspend fun getBrands(): Response<BrandResponse>
     suspend fun getProducts(): Response<ProductResponse>
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
-    suspend fun getCustomerByEmail(email: String): customers
+    suspend fun getCustomerByEmail(email: String): CustomerResponse
     suspend fun getDiscountCodesCount(): PriceRuleCount
     suspend fun getDiscountCodes(): PriceRule
     suspend fun getProductById(id: Long): ProductResponse

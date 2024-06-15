@@ -45,7 +45,7 @@ interface NetworkService {
     @GET("customers/search.json")
     suspend fun getCustomerByEmail(
         @Query("email") email: String
-    ): customers
+    ): CustomerResponse
 
     @GET("customers/7371713577180.json")
     suspend fun getSingleCustomer(): OneCustomer

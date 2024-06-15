@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.example.fashionshop.MainActivity
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.OnBackPressedListener
 import com.example.fashionshop.R
 import com.example.fashionshop.Service.Caching.SharedPreferenceManager
@@ -73,14 +74,14 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
 
         binding.switchLanguageArabic.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                SharedPreferenceManager.getInstance(requireContext()).saveLanguageUnit("ar")
+                CustomerData.getInstance(requireContext()).languageCode = "ar"
                 setAppLanguage("ar")
                 startActivity(Intent(requireContext(), MainActivity::class.java))
             }
         }
         binding.switchLanguageEnglish.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                SharedPreferenceManager.getInstance(requireContext()).saveLanguageUnit("en")
+                CustomerData.getInstance(requireContext()).languageCode = "en"
                 setAppLanguage("en")
                 startActivity(Intent(requireContext(), MainActivity::class.java))
             }
@@ -111,8 +112,7 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
     private fun setAppLanguage(languageCode: String) {
         val currentLocale = Locale.getDefault()
         val newLocale = Locale(languageCode)
-        val sharedPreferencesManager = SharedPreferenceManager.getInstance(requireContext())
-        sharedPreferencesManager.saveLanguage(languageCode)
+        CustomerData.getInstance(requireContext()).language = languageCode
         if (currentLocale != newLocale && !isLanguageChanging) {
             isLanguageChanging = true
             Locale.setDefault(newLocale)

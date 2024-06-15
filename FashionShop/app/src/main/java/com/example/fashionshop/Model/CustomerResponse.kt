@@ -15,7 +15,10 @@ data class UpdateCustomerRequest(val customer: Customer) {
     )
 }
 
-data class CustomerResponse(val customer: Customer) {
+data class CustomerResponse(
+    val customer: Customer? = null,
+    val customers: List<Customer>? = null,
+    ) {
     data class Customer(
         val id: Long,
         val first_name: String,
