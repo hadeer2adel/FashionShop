@@ -39,18 +39,48 @@
         android:paddingBottom="16dp"
         tools:listitem="@layout/cart_item" />
 
-    <TextView
-        android:id="@+id/textViewSubtotal"
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="10dp"
-        android:text="Subtotal: $0.00"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/textViewSubtotall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subtotal: "
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textViewSubtotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20.00"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="USD"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+
+
+
 
     <Button
         android:id="@+id/buttonCheckout"

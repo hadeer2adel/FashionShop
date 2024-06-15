@@ -46,6 +46,7 @@ class CategoryFragment : Fragment() ,CategoryListener{
     private lateinit var viewModel: CategoryViewModel
     private var mainCategory = ""
     private var subCategory = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,31 +57,11 @@ class CategoryFragment : Fragment() ,CategoryListener{
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
+
+
         isAllFabsVisible = false
-        allCategoryFactory =
-            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
-        var d = 0.0
-
-        allCategoryViewModel.getLatestRates()
-        lifecycleScope.launch {
-            allCategoryViewModel.productCurrency.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> showLoading()
-                    is NetworkState.Success -> {
-                        d= response.data.rates.EGP
-                        Log.i("initViewModel", "initViewModel:${  response.data} ")
-                        val exchangeRate = response.data.rates?.EGP ?: 1.0 // Default to 1.0 if rate is not available
-                        updateCurrencyRates(exchangeRate)
-
-
-                    }
-                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
-                    else -> { }
-                }
-            }
-        }
 
 
         binding.fabCategory.setOnClickListener {
@@ -104,6 +85,29 @@ class CategoryFragment : Fragment() ,CategoryListener{
             showFilterMenu(requireContext())
         }
         setUpRV()
+        allCategoryFactory =
+            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+        var d = 0.0
+
+        allCategoryViewModel.getLatestRates()
+        lifecycleScope.launch {
+            allCategoryViewModel.productCurrency.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> showLoading()
+                    is NetworkState.Success -> {
+                        d= response.data.rates.EGP
+                        Log.i("initViewModel", "initViewModel:${  response.data} ")
+                        val exchangeRate = response.data.rates?.EGP ?: 1.0 // Default to 1.0 if rate is not available
+                        updateCurrencyRates(exchangeRate)
+
+
+                    }
+                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
+                    else -> { }
+                }
+            }
+        }
 
         initViewModel()
         binding.category.selectButton(binding.btnAll)

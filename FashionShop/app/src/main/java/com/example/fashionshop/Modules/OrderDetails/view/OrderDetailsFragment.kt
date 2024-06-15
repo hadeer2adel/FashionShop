@@ -16,6 +16,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
+import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsFactory
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsViewModel
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
@@ -26,7 +28,8 @@ import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentOrderDetailsBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-class OrderDetailsFragment() : Fragment()  {
+
+class OrderDetailsFragment() : Fragment() {
     private var _binding: FragmentOrderDetailsBinding? = null
     private val binding get() = _binding!!
     private lateinit var navController: NavController
@@ -36,6 +39,9 @@ class OrderDetailsFragment() : Fragment()  {
     lateinit var allCodesFactory: OrderDetailsFactory
     private lateinit var allCodesViewModel: OrderDetailsViewModel
     val titlesList = mutableListOf<String>()
+    private var currencyConversionRate: Double = 1.0
+    private lateinit var allCategoryFactory: CategoryFactory
+    private lateinit var allCategoryViewModel: CategoryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +53,8 @@ class OrderDetailsFragment() : Fragment()  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val customer = CustomerData.getInstance(requireContext())
+        binding.currency.text = customer.currency
         navController = NavHostFragment.findNavController(this)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
@@ -59,38 +67,68 @@ class OrderDetailsFragment() : Fragment()  {
         allProductFactory = CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()), CustomerData.getInstance(requireContext()).cartListId)
         allProductViewModel = ViewModelProvider(this, allProductFactory).get(CartViewModel::class.java)
 
+        allCategoryFactory = CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+        allCategoryViewModel.getLatestRates()
+        lifecycleScope.launch {
+            allCategoryViewModel.productCurrency.collectLatest { response ->
+                when (response) {
+                    is NetworkState.Loading -> "showLoading()"
+                    is NetworkState.Success -> {
+                        Log.i("initViewModel", "initViewModel:${response.data}")
+                        currencyConversionRate = response.data.rates?.EGP ?: 1.0
+                    }
+                    is NetworkState.Failure -> ""
+                    else -> {}
+                }
+            }
+        }
         lifecycleScope.launch {
             allProductViewModel.productCard.collectLatest { response ->
-                when(response) {
-                    is NetworkState.Loading -> {}
+                when (response) {
+                    is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
                     is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
                         val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
-                        binding.subTotalValue.text = "Subtotal: $${String.format("%.2f", subtotal)}"
+                        val customer = CustomerData.getInstance(requireContext())
+                        if (customer.currency == "EGY") {
+                            binding.subTotalValue.text = "${String.format("%.2f", convertCurrency(subtotal))}"
+                        } else {
+                            binding.subTotalValue.text = "${String.format("%.2f", subtotal)}"
+                        }
                     }
                     is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
                         Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
 
-
-        // Fetch and populate titlesList
-        //fetchTitlesList()
-
         binding.validate.setOnClickListener {
             validateCoupon()
         }
     }
+    private fun convertCurrency(amount: Double?): Double {
+        amount ?: return 0.0 // Handle null or undefined amount gracefully
+        return amount * currencyConversionRate
+    }
+//    private fun convertCurrency(amount: Double?): String {
+//        amount ?: return "" // Handle null or undefined amount gracefully
+//        val convertedPrice = amount * currencyConversionRate
+//        return String.format("%.2f", convertedPrice)
+//    }
 
     private fun fetchTitlesList() {
         lifecycleScope.launch {
             allCodesViewModel.productCode.collectLatest { response ->
-                when(response) {
+                when (response) {
                     is NetworkState.Loading -> {}
                     is NetworkState.Success -> {
                         val value = response.data.price_rules
-                        //titlesList.clear()
+                        titlesList.clear()
                         titlesList.addAll(value.map { it.title })
                         binding.validate.isEnabled = true // Enable validate button
                     }
@@ -112,14 +150,14 @@ class OrderDetailsFragment() : Fragment()  {
             Toast.makeText(requireContext(), "Coupon Applied Successfully", Toast.LENGTH_LONG).show()
             lifecycleScope.launch {
                 allCodesViewModel.productCode.collectLatest { response ->
-                    when(response) {
+                    when (response) {
                         is NetworkState.Loading -> {}
                         is NetworkState.Success -> {
                             val value = response.data
                             for (rule in value.price_rules) {
                                 if (rule.title == coupon) {
                                     val valueOfDis = rule.value.toDoubleOrNull() ?: 0.0
-                                    val subtotal = binding.subTotalValue.text.toString().replace("Subtotal: $", "").toDoubleOrNull() ?: 0.0
+                                    val subtotal = binding.subTotalValue.text.toString().toDoubleOrNull() ?: 0.0
                                     val discountAmount = subtotal * (valueOfDis / 100)
                                     val total = subtotal + discountAmount
                                     binding.discountValue.text = "${String.format("%.2f", kotlin.math.abs(valueOfDis))}%"

@@ -42,9 +42,11 @@ class ProductAdapter (
             title.text = data.title
           //  price.text = "${data.variants?.get(0)?.price}"
           //  price.text = convertCurrency(data.variants?.get(0)?.price)
-            val priceDouble = data.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
-            price.text = convertCurrency(priceDouble)
-
+            if (CustomerData.getInstance(context).currency == "EGY") {
+                val priceDouble = data.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
+                price.text = convertCurrency(priceDouble)
+            } else{ price.text = data.variants?.get(0)?.price
+            }
             val customer = CustomerData.getInstance(context)
             Log.i("customer", "${customer.currency}")
 //            if (customer.currency == "EGY") {

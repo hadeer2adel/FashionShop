@@ -67,24 +67,6 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
 
 
-        allCategoryViewModel.getLatestRates()
-        lifecycleScope.launch {
-            allCategoryViewModel.productCurrency.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> showLoading()
-                    is NetworkState.Success -> {
-
-                        Log.i("initViewModel", "initViewModel:${  response.data} ")
-
-
-
-                    }
-                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
-                    else -> { }
-                }
-            }
-        }
-
 
 
 

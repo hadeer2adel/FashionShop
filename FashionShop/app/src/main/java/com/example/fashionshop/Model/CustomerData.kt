@@ -55,7 +55,7 @@ class CustomerData private constructor(_context: Context) {
         name = manager.retrieve(SharedPreferenceManager.Key.NAME, "")
         email = manager.retrieve(SharedPreferenceManager.Key.EMAIL, "")
         phone = manager.retrieve(SharedPreferenceManager.Key.PHONE, "")
-        currency = manager.retrieve(SharedPreferenceManager.Key.CURRENCY, "")
+        currency = manager.retrieve(SharedPreferenceManager.Key.CURRENCY, "EGY")
         favListId = manager.retrieve(SharedPreferenceManager.Key.FavListID, "0").toLong()
         cartListId = manager.retrieve(SharedPreferenceManager.Key.CartListID, "0").toLong()
     }
