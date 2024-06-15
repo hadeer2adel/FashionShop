@@ -34,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var viewModel: AuthenticationViewModel
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var customerRequest: CustomerRequest
 
 
     companion object {
@@ -105,14 +106,18 @@ class LoginActivity : AppCompatActivity() {
                 when(response){
                     is NetworkState.Loading -> {}
                     is NetworkState.Success ->{
-                        val customer = response.data.customers?.first()
-                        if (customer!!.note == 0L || customer.multipass_identifier == 0L) {
-                             viewModel.updateCustomer(customer.id)
+                        if(response.data.customers == null || response.data.customers.isEmpty() || response.data.customers.size < 1){
+                            viewModel.createCustomer(customerRequest)
                         }
                         else {
-                            viewModel.saveCustomerData(this@LoginActivity, customer)
-                            binding.progressBar.visibility = View.GONE
-                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            val customer = response.data.customers?.first()
+                            if (customer!!.note == 0L || customer.multipass_identifier == 0L) {
+                                viewModel.updateCustomer(customer.id)
+                            } else {
+                                viewModel.saveCustomerData(this@LoginActivity, customer)
+                                binding.progressBar.visibility = View.GONE
+                                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            }
                         }
                     }
                     is NetworkState.Failure ->{
@@ -178,6 +183,11 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = mAuth.currentUser
                     user?.let {
+                        customerRequest = CustomerRequest(CustomerRequest.Customer(
+                            user.displayName,
+                            "",
+                            user.email
+                        ))
                         binding.progressBar.visibility = View.VISIBLE
                         binding.screen.visibility = View.GONE
                         viewModel.getCustomerByEmail(user.email!!)
