@@ -22,8 +22,12 @@ import com.example.fashionshop.Model.PriceRuleX
 import com.example.fashionshop.Model.SmartCollection
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
 import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
+import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
+import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.Home.viewModel.HomeFactory
 import com.example.fashionshop.Modules.Home.viewModel.HomeViewModel
+import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
+import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartViewModel
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
@@ -44,7 +48,8 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
     private lateinit var sliderView: SliderView
     private lateinit var allProductFactory: HomeFactory
     private lateinit var allProductViewModel: HomeViewModel
-
+    private lateinit var allCategoryFactory: CategoryFactory
+    private lateinit var allCategoryViewModel: CategoryViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,7 +60,40 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-      sliderView = view.findViewById(R.id.imageSlider)
+
+        allCategoryFactory =
+            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+
+
+
+        allCategoryViewModel.getLatestRates()
+        lifecycleScope.launch {
+            allCategoryViewModel.productCurrency.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> showLoading()
+                    is NetworkState.Success -> {
+
+                        Log.i("initViewModel", "initViewModel:${  response.data} ")
+
+
+
+                    }
+                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
+                    else -> { }
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+        sliderView = view.findViewById(R.id.imageSlider)
         setUpRV()
         initViewModel()
      //   setUpSlider(sliderView)

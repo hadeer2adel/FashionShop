@@ -9,6 +9,7 @@ import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.ExchangeRatesResponse
+import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
@@ -121,8 +122,7 @@ interface NetworkService {
 
     @GET("products/{id}/images.json")
     suspend fun getProductImage(@Path("id") id: Long): Images
-    @GET("latest")
-    suspend fun getLatestRates(@Query("apikey") apiKey: String): ExchangeRatesResponse
+
 }
 
 

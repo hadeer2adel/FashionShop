@@ -10,6 +10,7 @@ import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.ExchangeRatesResponse
+import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.PriceRule
@@ -139,7 +140,9 @@ class RepositoryImp constructor(
         return networkManager.getProductImage(id)
     }
 
-    override suspend fun getLatestRates(apiKey: String): ExchangeRatesResponse {
-        return networkManager.getLatestRates(apiKey)
+
+
+    override suspend fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX{
+        return networkManager.getExchangeRates(apiKey,symbols,base)
     }
 }

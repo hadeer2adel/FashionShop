@@ -1,12 +1,9 @@
 package com.example.fashionshop.Model
 
-import com.google.gson.annotations.SerializedName
-
-data class ExchangeRatesResponse(
+data class ExchangeRatesResponseX(
     val base: String,
     val date: String,
-    val rates: Rates,
+    val rates: RatesX,
     val success: Boolean,
     val timestamp: Int
-
 )

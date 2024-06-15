@@ -1,9 +1,11 @@
 package com.example.fashionshop.Modules.Category.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.ExchangeRatesResponse
+import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Repository.Repository
@@ -20,8 +22,8 @@ class CategoryViewModel(private var repository: Repository) : ViewModel() {
     private var _products = MutableStateFlow<NetworkState<ProductResponse>>(NetworkState.Loading)
     val products =_products.asStateFlow()
     private var _allProducts: List<Product> = emptyList()
-    private var _productCurrency = MutableStateFlow<NetworkState<ExchangeRatesResponse>>(NetworkState.Loading)
-    var productCurrency: StateFlow<NetworkState<ExchangeRatesResponse>> = _productCurrency
+    private var _productCurrency = MutableStateFlow<NetworkState<ExchangeRatesResponseX>>(NetworkState.Loading)
+    var productCurrency: StateFlow<NetworkState<ExchangeRatesResponseX>> = _productCurrency
 
     fun getProducts() {
         viewModelScope.launch(Dispatchers.IO){
@@ -51,13 +53,19 @@ class CategoryViewModel(private var repository: Repository) : ViewModel() {
 
     fun  getLatestRates(){
 
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = repository.getLatestRates("YisNLpcqTYuAGXP2Nh8QFySPSDOBAuP1")
+                val apiKey = "YisNLpcqTYuAGXP2Nh8QFySPSDOBAuP1"
+                val symbols = "EGP" // Replace with desired symbols
+                val base = "USD"
+                val response = repository.getExchangeRates(apiKey,symbols, base)
+                Log.d("ViewModel", "Exchange rates response: $response")
                 _productCurrency.value = NetworkState.Success(response)
             } catch (e: HttpException) {
+                Log.e("ViewModel", "HttpException: ${e.message()}")
                 _productCurrency.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Exception: ${e.message}")
                 _productCurrency.value = NetworkState.Failure(e)
             }
         }
