@@ -52,5 +52,6 @@ interface Repository {
     suspend fun getProductImage(@Path("id") id: Long): Images
     suspend fun createOrder(order: OrderBody): OrderBodyResponse
 
+    suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
 
 }

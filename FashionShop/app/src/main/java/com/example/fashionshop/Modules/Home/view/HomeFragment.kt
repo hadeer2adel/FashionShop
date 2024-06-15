@@ -20,10 +20,10 @@ import com.example.fashionshop.Adapters.SliderAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.PriceRuleX
 import com.example.fashionshop.Model.SmartCollection
-import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
-import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
 import com.example.fashionshop.Modules.Home.viewModel.HomeFactory
 import com.example.fashionshop.Modules.Home.viewModel.HomeViewModel
+import com.example.fashionshop.Modules.Home.viewModel.OrderInfoFactory
+import com.example.fashionshop.Modules.Home.viewModel.OrderInfoViewModel
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp

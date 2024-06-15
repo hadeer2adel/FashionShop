@@ -129,6 +129,8 @@ interface NetworkService {
     suspend fun createOrder(
         @Body order: OrderBody
     ): OrderBodyResponse
+    @GET("orders/{id}.json")
+    suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
 }
 
 

@@ -30,6 +30,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentOrderDetailsBinding
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -300,7 +301,7 @@ class OrderDetailsFragment() : Fragment()  {
                 )
             },
             total_tax = 13.5, // Replace with actual total tax
-            currency = "USD" // Replace with actual currency
+            currency = CustomerData.getInstance(requireContext()).currency // Replace with actual currency
         )
 
         // Example call to ViewModel method to create order
@@ -317,6 +318,10 @@ class OrderDetailsFragment() : Fragment()  {
             }
         )
     }
+
+
+
+
 
 
 

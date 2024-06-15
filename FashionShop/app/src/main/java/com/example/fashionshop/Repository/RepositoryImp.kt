@@ -147,4 +147,8 @@ class RepositoryImp constructor(
     override suspend fun createOrder(order: OrderBody): OrderBodyResponse {
         return networkManager.createOrder(order)
     }
+
+    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
+        return networkManager.getSingleOrder(orderId)
+    }
 }

@@ -149,4 +149,8 @@ class NetworkManagerImp private constructor(): NetworkManager {
     override suspend fun createOrder(order: OrderBody): OrderBodyResponse {
         return networkService.createOrder(order)
     }
+
+    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
+        return networkService.getSingleOrder(orderId)
+    }
 }
