@@ -3,13 +3,11 @@ package com.example.fashionshop.Modules.ShoppingCard.view
 import CartFragmentArgs
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.CartAdapter
 import com.example.fashionshop.Model.CustomerData
-import com.example.fashionshop.Model.TaxLineX
+import com.example.fashionshop.Model.LineItem
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartViewModel
 import com.example.fashionshop.R
@@ -63,7 +61,8 @@ class CartFragment : Fragment() ,CartListener {
                     is NetworkState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         binding.recyclerViewCartItems.visibility = View.VISIBLE
-                        mAdapter.setCartList(response.data.draft_order.line_items.drop(1))
+                        val lineItemsList = response.data.draft_order.line_items.drop(1)
+                        mAdapter.setCartList(lineItemsList)
                         val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
                         binding.textViewSubtotal.text = "Subtotal: $${String.format("%.2f", subtotal)}"
 
@@ -100,6 +99,7 @@ class CartFragment : Fragment() ,CartListener {
 
         binding.buttonCheckout.setOnClickListener {
             val args = CartFragmentArgs(draftOrderIds).toBundle() // Convert CartFragmentArgs to Bundle
+
             findNavController().navigate(R.id.action_cartFragment_to_paymentFragment, args)
         }
         return view
@@ -131,5 +131,7 @@ class CartFragment : Fragment() ,CartListener {
         allProductViewModel.editCardQuantityProduct(id,quantity,price)
         Toast.makeText(requireContext(), "sendeditChoosenQuantityRequest Successfully", Toast.LENGTH_LONG).show()
     }
+
+
 
 }

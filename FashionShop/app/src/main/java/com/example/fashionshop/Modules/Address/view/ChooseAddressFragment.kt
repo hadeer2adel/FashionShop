@@ -13,7 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.AddressAdapter
+import com.example.fashionshop.Model.Addresse
 import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Model.LineItem
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.FragmentChooseAddressBinding
@@ -29,6 +31,7 @@ class ChooseAddressFragment : Fragment() , AddressListener{
     private lateinit var mAdapter: AddressAdapter
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var draftOrderIds: List<Long>
+    private var dynamicAddresse: Addresse? = null // Initialize with null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,16 +58,36 @@ class ChooseAddressFragment : Fragment() , AddressListener{
             }
         })
 
-    binding.buttonContinueToPayment.setOnClickListener {
-    findNavController().navigate(R.id.action_AdressFragment_to_paymentFragment)
-}
+        binding.buttonContinueToPayment.setOnClickListener {
+           findNavController().navigate(R.id.action_AdressFragment_to_paymentFragment )
+//            val action = ChooseAddressFragmentDirections.actionChooseAddressFragmentToDestinationFragment(dynamicAddresse)
+//            findNavController().navigate(action)
+            //error when i click
+            if (dynamicAddresse != null) {
+                //val action = ChooseAddressFragmentDirections.actionAdressFragmentToPaymentFragment(dynamicAddresse!!)
+                //findNavController().navigate(action)
+            } else {
+                Log.e("ChooseAddressFragment", "dynamicAddresse is null")
+                Toast.makeText(requireContext(), "Address is not available", Toast.LENGTH_SHORT).show()
+            }
+        }
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
     }
     private fun refreshFragment() {
         allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
             value?.let {
                 Log.i("TAG", "Data updated. Size: ${value.customer.id}")
-                val (defaultAddresses, nonDefaultAddresses) = value.customer.addresses.partition { it.default }
+                val (defaultAddresses, nonDefaultAddresses) = value.customer.addresses.partition {
+                    it.default
+
+                }
+                dynamicAddresse = defaultAddresses.firstOrNull() ?: nonDefaultAddresses.firstOrNull()
                 val filteredAddresses = defaultAddresses + nonDefaultAddresses
                 mAdapter.setAddressList(filteredAddresses)
              //   mAdapter.notifyDataSetChanged()

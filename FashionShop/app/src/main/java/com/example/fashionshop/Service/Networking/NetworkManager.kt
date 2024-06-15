@@ -14,12 +14,15 @@ import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.OrderBody
+import com.example.fashionshop.Model.OrderBodyResponse
 import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
+import retrofit2.http.Body
 import retrofit2.http.Path
 
 interface NetworkManager {
@@ -49,5 +52,6 @@ interface NetworkManager {
     suspend fun getProductImage(@Path("id") id: Long): Images
 
     suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
+    suspend fun createOrder(order: OrderBody): OrderBodyResponse
 
 }

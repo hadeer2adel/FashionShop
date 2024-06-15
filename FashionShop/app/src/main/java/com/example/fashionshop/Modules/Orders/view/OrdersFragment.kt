@@ -28,6 +28,7 @@ import com.example.fashionshop.Modules.Home.view.HomeFragmentDirections
 import com.example.fashionshop.Modules.Orders.view.OrdersFragmentDirections
 import com.example.fashionshop.Modules.Orders.viewModel.OrdersFactory
 import com.example.fashionshop.Modules.Orders.viewModel.OrdersViewModel
+import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
@@ -84,8 +85,11 @@ class OrdersFragment : Fragment() {
     private fun setUpRV(){
         val onCardClick: (order : Order) -> Unit = {
            Toast.makeText(requireContext(), "Clicked on ${it.order_number}", Toast.LENGTH_SHORT).show()
-            //val action = OrdersFragmentDirections.a
+            //val action = OrdersFragmentDirections.actionOrderFragmentToOrderInfoFragment(it)
            // findNavController().navigate(action)
+
+            //findNavController().navigate(R.id.action_OrdersFragment_to_OrderInfoFragment,it)
+
         }
         adapter = OrdersAdapter(requireContext(), onCardClick)
         binding.rvOrders.layoutManager =  LinearLayoutManager(requireContext())
@@ -129,7 +133,7 @@ class OrdersFragment : Fragment() {
         val factory = OrdersFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(OrdersViewModel::class.java)
         val id = CustomerData.getInstance(requireContext()).id
-        viewModel.getOrders(7371713577180)
+        viewModel.getOrders(id)
         lifecycleScope.launch {
             viewModel.orders.collectLatest { response ->
                 when(response){

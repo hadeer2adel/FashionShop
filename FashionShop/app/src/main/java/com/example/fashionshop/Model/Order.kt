@@ -6,6 +6,7 @@ data class OrderResponse (
     val orders: List<Order>? = null,
     val order: Order? = null
 )
+
 data class Order (
     val id: Long? = null,
     val admin_graphql_api_id: String? = null,

@@ -10,7 +10,7 @@ class OrderDetailsFactory(val repository: Repository): ViewModelProvider.Factory
         return if (modelClass.isAssignableFrom(OrderDetailsViewModel::class.java)){
             OrderDetailsViewModel(repository) as T
         }else{
-            throw IllegalArgumentException("HomeViewModel Class Not Found")
+            throw IllegalArgumentException("OrderDetailsViewModel Class Not Found")
         }
     }
 }

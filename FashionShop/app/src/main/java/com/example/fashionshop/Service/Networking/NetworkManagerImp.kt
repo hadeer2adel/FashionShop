@@ -12,6 +12,8 @@ import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.OrderBody
+import com.example.fashionshop.Model.OrderBodyResponse
 import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
@@ -142,5 +144,9 @@ class NetworkManagerImp private constructor(): NetworkManager {
 
     override suspend fun getProductImage(id: Long): Images {
         return  networkService.getProductImage(id)
+    }
+
+    override suspend fun createOrder(order: OrderBody): OrderBodyResponse {
+        return networkService.createOrder(order)
     }
 }
