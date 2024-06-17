@@ -76,22 +76,26 @@ class LoginActivity : AppCompatActivity() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             val user = FirebaseAuth.getInstance().currentUser
-                            user?.let {
-                                binding.progressBar.visibility = View.VISIBLE
-                                binding.screen.visibility = View.GONE
-                                viewModel.getCustomerByEmail(email)
+                            if(user?.isEmailVerified == true) {
+                                user.let {
+                                    binding.progressBar.visibility = View.VISIBLE
+                                    binding.screen.visibility = View.GONE
+                                    viewModel.getCustomerByEmail(email)
+                                }
                             }
+                            else { onFailure(R.string.error_email_verify) }
                         } else {
-                            Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
-                            binding.emailTxt.error = "Wrong email"
-                            binding.passwordTxt.error = "Wrong password"
+                            onFailure(R.string.error_login)
+                            binding.emailTxt.error = getString(R.string.not_exist)
+                            binding.passwordTxt.error = getString(R.string.not_exist)
                         }
                     }
             }
         }
 
         binding.googleBtn.setOnClickListener {
-            googleLogin()
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
         }
     }
 
@@ -106,12 +110,12 @@ class LoginActivity : AppCompatActivity() {
                 when(response){
                     is NetworkState.Loading -> {}
                     is NetworkState.Success ->{
-                        if(response.data.customers == null || response.data.customers.isEmpty() || response.data.customers.size < 1){
+                        if(response.data.customers.isNullOrEmpty()){
                             viewModel.createCustomer(customerRequest)
                         }
                         else {
-                            val customer = response.data.customers?.first()
-                            if (customer!!.note == 0L || customer.multipass_identifier == 0L) {
+                            val customer = response.data.customers.first()
+                            if (customer.note == 0L || customer.multipass_identifier == 0L) {
                                 viewModel.updateCustomer(customer.id)
                             } else {
                                 viewModel.saveCustomerData(this@LoginActivity, customer)
@@ -120,10 +124,7 @@ class LoginActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    is NetworkState.Failure ->{
-                        Toast.makeText(this@LoginActivity, response.error.message.toString(), Toast.LENGTH_SHORT).show()
-                        Log.i("TAG", response.error.message.toString())
-                    }
+                    is NetworkState.Failure ->{ onFailure(R.string.error_login) }
                 }
             }
         }
@@ -137,12 +138,7 @@ class LoginActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                     }
-                    is NetworkState.Failure ->{
-                        binding.progressBar.visibility = View.GONE
-                        binding.screen.visibility = View.VISIBLE
-                        Toast.makeText(this@LoginActivity, response.error.message.toString(), Toast.LENGTH_SHORT).show()
-                        Log.i("TAG", "Failure: "+ response.error.message.toString())
-                    }
+                    is NetworkState.Failure ->{ onFailure(R.string.error_login) }
                 }
             }
         }
@@ -151,17 +147,13 @@ class LoginActivity : AppCompatActivity() {
     private fun validation(): Boolean {
         var valid = false
         when {
-            binding.email.text.toString().isEmpty() -> binding.emailTxt.error = "Email is empty"
-            binding.password.text.toString().isEmpty() -> binding.passwordTxt.error = "Password is empty"
+            binding.email.text.toString().isEmpty() -> binding.emailTxt.error = getString(R.string.empty)
+            binding.password.text.toString().isEmpty() -> binding.passwordTxt.error = getString(R.string.empty)
             else -> valid = true
         }
         return valid
     }
 
-    private fun googleLogin() {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -170,9 +162,7 @@ class LoginActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 val account = task.result
                 firebaseAuthWithGoogle(account.idToken!!)
-            } else {
-                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
-            }
+            } else { onFailure(R.string.error_login) }
         }
     }
 
@@ -192,10 +182,14 @@ class LoginActivity : AppCompatActivity() {
                         binding.screen.visibility = View.GONE
                         viewModel.getCustomerByEmail(user.email!!)
                     }
-                } else {
-                    Toast.makeText(this@LoginActivity, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                }
+                } else { onFailure(R.string.error_login) }
             }
+    }
+
+    private fun onFailure(messageId: Int){
+        binding.progressBar.visibility = View.GONE
+        binding.screen.visibility = View.VISIBLE
+        Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show()
     }
 
 }

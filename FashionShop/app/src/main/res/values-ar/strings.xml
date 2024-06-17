@@ -28,7 +28,7 @@
     <string name="signupTitle1">Create Account</string>
     <string name="signupTitle2">Let\'s Get Started!</string>
     <string name="orLogin1">Already have an account?</string>
-    <string name="orLogin2">LogIn</string>
+    <string name="orLogin2">LogIn</string>=
 
     //data field
     <string name="fname">First Name</string>
@@ -71,30 +71,49 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="validate">Validate</string>
+    <string name="sure">Sure</string>
+
     //Address
-    <string name="newAddress">أضف عنوان جديد</string>
-    <string name="newAddressAdded">قم بإرسال الطلب</string>
-    <string name="chooseAddressOrder">أختر عنوان لإتمام الطلب</string>
-    <string name="Address">العنوان</string>
+    <string name="newAddress">Add New Address</string>
+    <string name="newAddressAdded">Send Request</string>
+    <string name="chooseAddressOrder">Choose Address for Your Order</string>
+    <string name="Address">Address</string>
 
 
 
     //payment
-    <string name="payment">الاستمرار في الطلب</string>
-    <string name="checkout">ارسال الطلب</string>
+    <string name="payment">Continue To Payment</string>
+    <string name="checkout">Checkout</string>
 
     //settings
-    <string name="language">اللغة</string>
-    <string name="arabic">العربية</string>
-    <string name="english">الانجليزية</string>
-    <string name="setting">الإعدادات</string>
-    <string name="Currency">العملة</string>
-    <string name="AboutUs">معلومات عنا</string>
+    <string name="language">Language</string>
+    <string name="arabic">Arabic</string>
+    <string name="english">English</string>
+    <string name="setting">Setting</string>
+    <string name="Currency">Currency</string>
+    <string name="AboutUs">AboutUs</string>
 
     //profile
-    <string name="Orders">الطلبات</string>
-    <string name="Logout">تسجيل الخروج</string>
-    <string name="Settings">الإعدادات</string>
+    <string name="Orders">Orders</string>
+    <string name="Logout">Logout</string>
+    <string name="Settings">Settings</string>
+    //Dialog
+    <string name="delete_title">Deletion</string>
+    <string name="delete_body">Are you sure you want to delete this product from your favourite list?</string>
+
+    //auth message
+    <string name="auth">Authentication</string>
+    <string name="error_login">Login failed, please try again"</string>
+    <string name="error_signup">Create account failed, please try again</string>
+    <string name="email_message">Please verify your email, then try to login again</string>
+    <string name="error_email_verify">Login failed, please verify your email first</string>
+    <string name="exist">Already Exist</string>
+    <string name="not_exist">Not Exist</string>
+    <string name="empty">Empty Field</string>
+    <string name="error_email_format">Invalid email format</string>
+    <string name="error_password_format">At least contains 8 characters
+at least one upper letter, one lowercase letter, and one digit</string>
+    <string name="error_not_match">Password and confirm password doesn\'t match</string>
 
 
 </resources>
