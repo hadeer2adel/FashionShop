@@ -48,6 +48,19 @@ class CustomerData private constructor(_context: Context) {
             field = value
             manager.save(SharedPreferenceManager.Key.CartListID, value.toString())
         }
+    var language: String = ""
+        get() = field
+        set(value) {
+            field = value
+            manager.save(SharedPreferenceManager.Key.Language, value)
+        }
+    var languageCode: String = ""
+        get() = field
+        set(value) {
+            field = value
+            manager.save(SharedPreferenceManager.Key.LanguageCode, value)
+        }
+
 
     init {
         manager = SharedPreferenceManager(_context)
@@ -58,6 +71,8 @@ class CustomerData private constructor(_context: Context) {
         currency = manager.retrieve(SharedPreferenceManager.Key.CURRENCY, "EGY")
         favListId = manager.retrieve(SharedPreferenceManager.Key.FavListID, "0").toLong()
         cartListId = manager.retrieve(SharedPreferenceManager.Key.CartListID, "0").toLong()
+        language = manager.retrieve(SharedPreferenceManager.Key.Language, "")
+        languageCode = manager.retrieve(SharedPreferenceManager.Key.LanguageCode, "en")
     }
 
     companion object {

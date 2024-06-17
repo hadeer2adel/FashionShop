@@ -42,7 +42,7 @@ class ProductAdapter (
             title.text = data.title
           //  price.text = "${data.variants?.get(0)?.price}"
           //  price.text = convertCurrency(data.variants?.get(0)?.price)
-            if (CustomerData.getInstance(context).currency == "EGY") {
+            if (CustomerData.getInstance(context).currency == "USD") {
                 val priceDouble = data.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
                 price.text = convertCurrency(priceDouble)
             } else{ price.text = data.variants?.get(0)?.price
@@ -85,7 +85,7 @@ class ProductAdapter (
     }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully
-        val convertedPrice = amount * currencyConversionRate
+        val convertedPrice = amount / currencyConversionRate
         return String.format("%.2f", convertedPrice)
     }
 }

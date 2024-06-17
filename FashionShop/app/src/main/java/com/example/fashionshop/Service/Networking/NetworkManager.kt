@@ -24,12 +24,12 @@ import com.example.fashionshop.Model.editOrderQuantityBody
 import retrofit2.http.Path
 
 interface NetworkManager {
-    suspend fun getcutomers(): OneCustomer
-    suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest
+    suspend fun getcutomers( id: Long): OneCustomer
+    suspend fun AddSingleCustomerAdreess( id: Long,addressRequest: AddressRequest): AddressRequest
 
-    suspend fun editSingleCustomerAddress(id:Long,addressRequest: AddressDefultRequest): AddressUpdateRequest
+    suspend fun editSingleCustomerAddress(cutomerId:Long,id:Long,addressRequest: AddressDefultRequest): AddressUpdateRequest
 
-    suspend fun deleteSingleCustomerAddress(id:Long)
+    suspend fun deleteSingleCustomerAddress(customerId:Long,id:Long)
     suspend fun deleteSingleCustomerDrafOrder(id:Long)
     suspend fun getDraftOrders():DraftOrders
     suspend fun editSingleCustomerAddressDraftOrder(id:Long,addressRequest: editAddressBody): DraftOrders

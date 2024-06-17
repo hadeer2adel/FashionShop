@@ -80,24 +80,58 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
         )
     }
 
+//    fun insertCardProduct(product: ProductDetails) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            _productCard.value = NetworkState.Loading
+//            val draftOrder = repository.getDraftOrder(listId).draft_order
+//            val updatedLineItems = draftOrder.line_items.toMutableList().apply {
+//                add(convertProductToLineItem(product))
+//            }
+//            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+//
+//            try {
+//                val updatedResponse =
+//                    repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+//                _productCard.value = NetworkState.Success(updatedResponse)
+//            } catch (e: Exception) {
+//                _product.value = NetworkState.Failure(e)
+//            }
+//        }
+//    }
+
+
+
+
     fun insertCardProduct(product: ProductDetails) {
         viewModelScope.launch(Dispatchers.IO) {
             _productCard.value = NetworkState.Loading
             val draftOrder = repository.getDraftOrder(listId).draft_order
-            val updatedLineItems = draftOrder.line_items.toMutableList().apply {
-                add(convertProductToLineItem(product))
-            }
-            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+            val existingLineItem = draftOrder.line_items.find { it.id == product.id }
 
-            try {
-                val updatedResponse =
-                    repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
-                _productCard.value = NetworkState.Success(updatedResponse)
-            } catch (e: Exception) {
-                _product.value = NetworkState.Failure(e)
+            if (existingLineItem == null) {
+                val updatedLineItems = draftOrder.line_items.toMutableList().apply {
+                    add(convertProductToLineItem(product))
+                }
+                val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+
+                try {
+                    val updatedResponse =
+                        repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                    _productCard.value = NetworkState.Success(updatedResponse)
+                } catch (e: Exception) {
+                    _productCard.value = NetworkState.Failure(e)
+                }
+            } else {
+//                // Show toast message indicating the item is already in the cart
+//                showToast("Item is already in the cart")
+//                _productCard.value = NetworkState.Failure(Exception("Product already in cart"))
             }
         }
     }
+
+
+
+
 
     fun insertCardProductImage(product: ProductDetails) {
         viewModelScope.launch(Dispatchers.IO) {

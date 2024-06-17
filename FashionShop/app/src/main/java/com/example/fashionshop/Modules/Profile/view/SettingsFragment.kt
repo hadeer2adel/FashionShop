@@ -101,7 +101,9 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
     }
     private fun showLanguageDialog() {
         val options = arrayOf("Arabic", "English")
-        val currentLanguage = SharedPreferenceManager.getInstance(requireContext()).getLanguageUnit()
+        val currentLanguage = CustomerData.getInstance(requireContext()).languageCode
+
+        //    SharedPreferenceManager.getInstance(requireContext()).getLanguageUnit()
 
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Choose Language")
@@ -111,7 +113,8 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
                     1 -> "en"
                     else -> "en" // Default to English if unexpected selection
                 }
-                SharedPreferenceManager.getInstance(requireContext()).saveLanguageUnit(selectedLanguage)
+                CustomerData.getInstance(requireContext()).languageCode = selectedLanguage
+               // SharedPreferenceManager.getInstance(requireContext()).saveLanguageUnit(selectedLanguage)
                 setAppLanguage(selectedLanguage)
                 startActivity(Intent(requireContext(), MainActivity::class.java))
 
@@ -127,7 +130,9 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
                 1 -> "en"
                 else -> "en" // Default to English if unexpected selection
             }
-            SharedPreferenceManager.getInstance(requireContext()).saveLanguageUnit(selectedLanguage)
+            CustomerData.getInstance(requireContext()).languageCode = selectedLanguage
+
+          //  SharedPreferenceManager.getInstance(requireContext()).saveLanguageUnit(selectedLanguage)
             setAppLanguage(selectedLanguage)
             startActivity(Intent(requireContext(), MainActivity::class.java))
 
@@ -165,7 +170,8 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
         val currentLocale = Locale.getDefault()
         val newLocale = Locale(languageCode)
         val sharedPreferencesManager = SharedPreferenceManager.getInstance(requireContext())
-        sharedPreferencesManager.saveLanguage(languageCode)
+       // sharedPreferencesManager.saveLanguage(languageCode)
+        CustomerData.getInstance(requireContext()).language = languageCode
         if (currentLocale != newLocale && !isLanguageChanging) {
             isLanguageChanging = true
             Locale.setDefault(newLocale)

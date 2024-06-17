@@ -14,7 +14,9 @@ class SharedPreferenceManager(private val context: Context) {
         CURRENCY,
         IS_LOGGED_IN,
         FavListID,
-        CartListID
+        CartListID,
+        Language,
+        LanguageCode
     }
     private var sharedPreferences: SharedPreferences? = null
     private var editor: SharedPreferences.Editor? = null

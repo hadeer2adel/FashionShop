@@ -9,15 +9,20 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
 import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
+import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentProfileBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
 
@@ -57,14 +62,32 @@ class ProfileFragment : Fragment() {
             )
         )
         allProductViewModel= ViewModelProvider(this, allProductFactroy).get(AddressViewModel::class.java)
-        // Observe LiveData for address list updates
-        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-            value?.let {
-                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
-                binding.nameCustomer.text = value.customer.first_name + " " + value.customer.last_name
-                binding.emailCustomer.text = value.customer.email
-            }
-        })
+        allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
+        lifecycleScope.launch {
+            allProductViewModel.products.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    is NetworkState.Success -> {
+                        Log.i("TAG", "Data updated. Size: ${response.data.customer.id}")
+                        binding.nameCustomer.text = response.data.customer.first_name + " " + response.data.customer.last_name
+                        binding.emailCustomer.text = response.data.customer.email
+
+                    }
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } }
+//        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
+//            value?.let {
+//                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
+//                binding.nameCustomer.text = value.customer.first_name + " " + value.customer.last_name
+//                binding.emailCustomer.text = value.customer.email
+//            }
+//        })
         binding.ordersButton.setOnClickListener {
 //            binding.ordersButton.
             Toast.makeText(requireContext(), "Orders!", Toast.LENGTH_SHORT).show()

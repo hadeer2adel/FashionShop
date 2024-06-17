@@ -185,7 +185,7 @@ class ProductInfoFragment : Fragment() {
     }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully
-        val convertedPrice = amount * currencyConversionRate
+        val convertedPrice = amount / currencyConversionRate
         return String.format("%.2f", convertedPrice)
     }
     private fun setData(product: ProductDetails) {
@@ -196,7 +196,7 @@ class ProductInfoFragment : Fragment() {
             val customer = CustomerData.getInstance(requireContext())
             name.text = product.title
            // price.text = product.variants?.get(0)?.price
-            if (customer.currency=="EGY"){
+            if (customer.currency=="USD"){
                 val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
                 price.text = convertCurrency(priceDouble)
 
