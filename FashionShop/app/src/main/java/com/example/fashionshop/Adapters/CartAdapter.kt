@@ -55,7 +55,7 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
         } else {
             Log.i("Glide", "No image URLs found in SKU: ${item.sku}")
         }
-    if (CustomerData.getInstance(context).currency == "EGY"){
+    if (CustomerData.getInstance(context).currency == "USD"){
         val priceDouble = item.price?.toDoubleOrNull() ?: 0.0
         holder.binding.itemPrice.text =  convertCurrency(priceDouble)}
         else{   holder.binding.itemPrice.text = item.price}
@@ -94,7 +94,7 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
     }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully
-        val convertedPrice = amount * currencyConversionRate
+        val convertedPrice = amount / currencyConversionRate
         return String.format("%.2f", convertedPrice)
     }
     private fun calculateTotalPrice(price: String?, quantity: Int?): String {

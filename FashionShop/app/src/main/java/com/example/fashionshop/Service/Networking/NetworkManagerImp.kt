@@ -41,24 +41,25 @@ class NetworkManagerImp private constructor(): NetworkManager {
         }
     }
 
-    override suspend fun getcutomers(): OneCustomer {
-        val responce= networkService.getSingleCustomer()
+    override suspend fun getcutomers( id: Long): OneCustomer {
+        val responce= networkService.getSingleCustomer(id)
         return responce
     }
 
-    override suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest {
-        val responce= networkService.AddSingleCustomerAdreess(addressRequest)
+    override suspend fun AddSingleCustomerAdreess( id: Long,addressRequest: AddressRequest): AddressRequest {
+        val responce= networkService.AddSingleCustomerAdreess(id,addressRequest)
         return responce    }
 
     override suspend fun editSingleCustomerAddress(
+        customerId:Long,
         id: Long,
         addressRequest: AddressDefultRequest
     ): AddressUpdateRequest {
-        val responce= networkService.editSingleCustomerAddress(id,addressRequest)
+        val responce= networkService.editSingleCustomerAddress(customerId,id,addressRequest)
         return responce    }
 
-    override suspend fun deleteSingleCustomerAddress(id: Long) {
-        networkService.deleteSingleCustomerAddress(id)
+    override suspend fun deleteSingleCustomerAddress(customerId:Long,id: Long) {
+        networkService.deleteSingleCustomerAddress(customerId,id)
     }
 
     override suspend fun deleteSingleCustomerDrafOrder(id: Long)

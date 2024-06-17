@@ -67,6 +67,7 @@ class CustomerData private constructor(_context: Context) {
             manager.save(SharedPreferenceManager.Key.LanguageCode, value)
         }
 
+
     init {
         manager = SharedPreferenceManager(_context)
         id = manager.retrieve(SharedPreferenceManager.Key.ID, "0").toLong()
@@ -79,6 +80,7 @@ class CustomerData private constructor(_context: Context) {
         language = manager.retrieve(SharedPreferenceManager.Key.Language, "")
         languageCode = manager.retrieve(SharedPreferenceManager.Key.LanguageCode, "en")
         isLogged = manager.retrieve(SharedPreferenceManager.Key.IS_LOGGED_IN, "false").toBoolean()
+
     }
 
     companion object {

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,9 @@ import com.example.fashionshop.databinding.FragmentChooseAddressBinding
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
 import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
 import com.example.fashionshop.R
+import com.example.fashionshop.Service.Networking.NetworkState
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class ChooseAddressFragment : Fragment() , AddressListener{
     lateinit var allProductFactroy: AddressFactory
@@ -47,13 +51,38 @@ class ChooseAddressFragment : Fragment() , AddressListener{
 
         allProductFactroy = AddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
         allProductViewModel = ViewModelProvider(this, allProductFactroy).get(AddressViewModel::class.java)
-        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-            value?.let {
-                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
-                mAdapter.setAddressList(value.customer.addresses)
-                mAdapter.notifyDataSetChanged()
-            }
-        })
+       allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
+        lifecycleScope.launch {
+            allProductViewModel.products.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.recyclerChooseAddrees.visibility = View.GONE
+                    }
+                    is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.recyclerChooseAddrees.visibility = View.VISIBLE
+                        Log.i("TAG", "Data updated. Size: ${response.data.customer.id}")
+                        val (defaultAddresses, nonDefaultAddresses) = response.data.customer.addresses.partition { it.default }
+                        val filteredAddresses = defaultAddresses + nonDefaultAddresses
+                        mAdapter.setAddressList(filteredAddresses)
+                        mAdapter.notifyDataSetChanged()
+
+
+                    }
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } }
+//        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
+//            value?.let {
+//                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
+//                mAdapter.setAddressList(value.customer.addresses)
+//                mAdapter.notifyDataSetChanged()
+//            }
+//        })
 
     binding.buttonContinueToPayment.setOnClickListener {
     findNavController().navigate(R.id.action_AdressFragment_to_paymentFragment)
@@ -61,15 +90,31 @@ class ChooseAddressFragment : Fragment() , AddressListener{
         return view
     }
     private fun refreshFragment() {
-        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-            value?.let {
-                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
-                val (defaultAddresses, nonDefaultAddresses) = value.customer.addresses.partition { it.default }
-                val filteredAddresses = defaultAddresses + nonDefaultAddresses
-                mAdapter.setAddressList(filteredAddresses)
-             //   mAdapter.notifyDataSetChanged()
-            }
-        })
+        allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
+        lifecycleScope.launch {
+            allProductViewModel.products.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.recyclerChooseAddrees.visibility = View.GONE
+                    }
+                    is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.recyclerChooseAddrees.visibility = View.VISIBLE
+                        Log.i("TAG", "Data updated. Size: ${response.data.customer.id}")
+                        val (defaultAddresses, nonDefaultAddresses) = response.data.customer.addresses.partition { it.default }
+                        val filteredAddresses = defaultAddresses + nonDefaultAddresses
+                        mAdapter.setAddressList(filteredAddresses)
+                        mAdapter.notifyDataSetChanged()
+
+
+                    }
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } }
     }
     override fun onDestroyView() {
         super.onDestroyView()
@@ -81,52 +126,10 @@ class ChooseAddressFragment : Fragment() , AddressListener{
     }
 
     override fun setAddressDefault(id:Long,default: Boolean) {
-        allProductViewModel.sendeditAddressRequest(id,default)
+        allProductViewModel.sendeditAddressRequest(id,default,CustomerData.getInstance(requireContext()).id)
         Toast.makeText(requireContext(), "Address Preeesed Successfully", Toast.LENGTH_LONG).show()
         refreshFragment()
     }
 
-    override fun sendeditChoosenAddressRequest(
-        idd: Long,
-        address1: String,
-        address2: String,
-        city: String,
-        company: String,
-        country: String,
-        country_code: String,
-        first_name: String,
-        last_name: String,
-        latitude: Any,
-        longitude: Any,
-        name: String,
-        phone: String,
-        province: String,
-        province_code: Any,
-        zip: String
-    ) {
-        Log.i("gggg", "sendeditChoosenAddressRequest:  ${id} ")
-            allProductViewModel.sendeditChoosenAddressRequest(
-                CustomerData.getInstance(requireContext()).cartListId,
-                address1,
-                address2,
-                city,
-                company,
-                country,
-                country_code,
-                first_name,
-                last_name,
-                latitude,
-                longitude,
-                name,
-                phone,
-                province,
-                province_code,
-                zip
-            )
-
-
-        Toast.makeText(requireContext(), "Address Preeesed Successfully", Toast.LENGTH_LONG).show()
-        refreshFragment()
-    }
 }
 

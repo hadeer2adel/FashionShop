@@ -93,7 +93,7 @@ class OrderDetailsFragment() : Fragment() {
                         binding.progressBar.visibility = View.GONE
                         val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
                         val customer = CustomerData.getInstance(requireContext())
-                        if (customer.currency == "EGY") {
+                        if (customer.currency == "USD") {
                             binding.subTotalValue.text = "${String.format("%.2f", convertCurrency(subtotal))}"
                         } else {
                             binding.subTotalValue.text = "${String.format("%.2f", subtotal)}"
@@ -113,7 +113,7 @@ class OrderDetailsFragment() : Fragment() {
     }
     private fun convertCurrency(amount: Double?): Double {
         amount ?: return 0.0 // Handle null or undefined amount gracefully
-        return amount * currencyConversionRate
+        return amount / currencyConversionRate
     }
 //    private fun convertCurrency(amount: Double?): String {
 //        amount ?: return "" // Handle null or undefined amount gracefully

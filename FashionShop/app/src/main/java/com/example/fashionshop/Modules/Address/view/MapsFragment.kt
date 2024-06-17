@@ -18,8 +18,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
-import com.example.fashionshop.viewModels.AddNewAddressFactory
-import com.example.fashionshop.viewModels.AddNewAddressViewModel
+import com.example.fashionshop.Modules.Address.viewModel.AddNewAddressFactory
+import com.example.fashionshop.Modules.Address.viewModel.AddNewAddressViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory

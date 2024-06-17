@@ -96,7 +96,7 @@ class CartFragment : Fragment() ,CartListener {
                         mAdapter.setCartList(response.data.draft_order.line_items.drop(1))
                         val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
                         val customer = CustomerData.getInstance(requireContext())
-                        if (customer.currency=="EGY"){
+                        if (customer.currency=="USD"){
                          //   val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
                            // price.text = convertCurrency(subtotal)
                             binding.textViewSubtotal.text = "${convertCurrency(subtotal)}"
@@ -160,7 +160,7 @@ class CartFragment : Fragment() ,CartListener {
     }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully
-        val convertedPrice = amount * currencyConversionRate
+        val convertedPrice = amount / currencyConversionRate
         return String.format("%.2f", convertedPrice)
     }
     override fun deleteCart(id: Long) {

@@ -23,18 +23,22 @@ import com.example.fashionshop.Model.editOrderQuantityBody
 import retrofit2.http.Path
 
 interface Repository {
-    suspend fun getcustomers(): OneCustomer
+    suspend fun getcustomers(id:Long): OneCustomer
     suspend fun createCustomer(customer: CustomerRequest): CustomerResponse
     suspend fun getBrands(): Response<BrandResponse>
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
     suspend fun getProducts(): Response<ProductResponse>
     suspend fun getCustomerByEmail(email: String): CustomerResponse
-    suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest
+    //suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest
+    //suspend fun getCustomerByEmail(email: String): customers
+    suspend fun AddSingleCustomerAdreess(id:Long,addressRequest: AddressRequest): AddressRequest
+
     suspend fun editSingleCustomerAddress(
+        customerID:Long,
         id: Long,
         addressRequest: AddressDefultRequest
     ): AddressUpdateRequest
-    suspend fun deleteSingleCustomerAddress(id:Long)
+    suspend fun deleteSingleCustomerAddress(customerID: Long,id: Long)
     suspend fun getDraftOrders(): DraftOrders
     suspend fun deleteSingleCustomerDrafOrder(id:Long)
     suspend fun editSingleCustomerAddressDraftOrder(id:Long,addressRequest: editAddressBody): DraftOrders

@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        val savedLanguage = CustomerData.getInstance(this).language
+        val savedLanguage =   CustomerData.getInstance(this).language
         if (!savedLanguage.isNullOrBlank()) {
             val locale = Locale(savedLanguage)
             Locale.setDefault(locale)
