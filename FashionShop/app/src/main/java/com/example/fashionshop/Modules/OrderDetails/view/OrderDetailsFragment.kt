@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.example.fashionshop.Model.CustomerData
@@ -20,8 +21,12 @@ import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsFactory
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsViewModel
+import com.example.fashionshop.Modules.Payment.view.PaymentSheetFragment
+import com.example.fashionshop.Modules.Payment.viewModel.PaymentFactory
+import com.example.fashionshop.Modules.Payment.viewModel.PaymentViewModel
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartViewModel
+import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
@@ -42,6 +47,10 @@ class OrderDetailsFragment() : Fragment() {
     private var currencyConversionRate: Double = 1.0
     private lateinit var allCategoryFactory: CategoryFactory
     private lateinit var allCategoryViewModel: CategoryViewModel
+    private lateinit var allPaymentFactory: PaymentFactory
+    private lateinit var allPaymentViewModel: PaymentViewModel
+    var subtotalInt = 0.0
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +62,9 @@ class OrderDetailsFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        allPaymentFactory =
+            PaymentFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allPaymentViewModel = ViewModelProvider(this, allPaymentFactory).get(PaymentViewModel::class.java)
         val customer = CustomerData.getInstance(requireContext())
         binding.currency.text = customer.currency
         navController = NavHostFragment.findNavController(this)
@@ -91,12 +103,19 @@ class OrderDetailsFragment() : Fragment() {
                     }
                     is NetworkState.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
+                        var subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
+//                        subtotalInt=subtotal
                         val customer = CustomerData.getInstance(requireContext())
                         if (customer.currency == "USD") {
                             binding.subTotalValue.text = "${String.format("%.2f", convertCurrency(subtotal))}"
+                            binding.totalValue.text =  "${String.format("%.2f", convertCurrency(subtotal))}"
+                            subtotalInt= convertCurrency(subtotal)
+
                         } else {
                             binding.subTotalValue.text = "${String.format("%.2f", subtotal)}"
+                            binding.totalValue.text =  "${String.format("%.2f", subtotal)}"
+                            subtotalInt= subtotal
+
                         }
                     }
                     is NetworkState.Failure -> {
@@ -109,6 +128,9 @@ class OrderDetailsFragment() : Fragment() {
 
         binding.validate.setOnClickListener {
             validateCoupon()
+        }
+        binding.paymentButtonContainer.setOnClickListener {
+            showPaymentMethodDialog()
         }
     }
     private fun convertCurrency(amount: Double?): Double {
@@ -162,6 +184,7 @@ class OrderDetailsFragment() : Fragment() {
                                     val total = subtotal + discountAmount
                                     binding.discountValue.text = "${String.format("%.2f", kotlin.math.abs(valueOfDis))}%"
                                     binding.totalValue.text = String.format("%.2f", total)
+                                    subtotalInt= total
                                     break
                                 }
                             }
@@ -192,4 +215,68 @@ class OrderDetailsFragment() : Fragment() {
         Toast.makeText(requireContext(), "Coupon Code is Invalid", Toast.LENGTH_LONG).show()
         Log.i("Coupon", "False: ")
     }
+
+
+
+    fun paymentVisa(){
+        var customer = CustomerData.getInstance(requireContext())
+        allPaymentViewModel.getPaymentProducts("https://example.com/cancel","https://example.com/cancel",customer.email,customer.currency,"Your Order","Please Write your Card Information",
+            subtotalInt.toInt()*100,1,"payment","card")
+
+        lifecycleScope.launch {
+            allPaymentViewModel.productPayment.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> "showLoading()"
+                    is NetworkState.Success -> {
+                        val paymentUrl = response.data.url
+                        // loadPaymentUrl(paymentUrl)
+                        showPaymentSheet(paymentUrl)
+                    }
+                    is NetworkState.Failure -> ""
+                    else -> { }
+                }
+            }}
+    }
+
+
+    private fun showPaymentSheet(paymentUrl: String) {
+        val paymentSheetFragment = PaymentSheetFragment.newInstance(paymentUrl)
+        paymentSheetFragment.show(childFragmentManager, "PaymentSheetFragment")
+    }
+    private fun showPaymentMethodDialog() {
+        val options = arrayOf("Visa", "Cash")
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Choose Your Payment Method")
+            .setSingleChoiceItems(options, -1) { dialog, which ->
+                val selectedPaymentMethod = when (which) {
+                    0 -> "Visa"
+                    1 -> "Cash"
+                    else -> ""
+                }
+                processPayment(selectedPaymentMethod)
+
+                dialog.dismiss()
+            }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun processPayment(paymentMethod: String) {
+        when (paymentMethod) {
+            "Visa" -> {
+                paymentVisa()
+            }
+            "Cash" -> {
+                findNavController().navigate(R.id.actiomfromSheet_to_order)
+                Toast.makeText(requireContext(),"You Choose Cash Method Succssed Order", Toast.LENGTH_SHORT).show()
+
+            }
+            else -> {
+
+            }
+        }
+    }
+
 }

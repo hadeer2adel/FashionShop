@@ -85,8 +85,10 @@ class ChooseAddressFragment : Fragment() , AddressListener{
 //        })
 
     binding.buttonContinueToPayment.setOnClickListener {
-    findNavController().navigate(R.id.action_AdressFragment_to_paymentFragment)
-}
+   // findNavController().navigate(R.id.action_AdressFragment_to_paymentFragment)
+        findNavController().navigate(R.id.action_Payment_to_orderDetailsFragment)
+
+    }
         return view
     }
     private fun refreshFragment() {

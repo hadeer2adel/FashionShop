@@ -32,14 +32,13 @@ class AddressAdapter(private val listener: AddressListener ,private val showDele
 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
         val currentAddress = addressList[position]
-        holder.countryTextView.text = currentAddress.country
-        holder.addressTextView.text = currentAddress.address1
-        holder.addressTextView2.text = currentAddress.address2 as CharSequence?
-        holder.phoneTextView.text = currentAddress.phone
+        holder.countryTextView.text = "Country: ${currentAddress.country}"
+        holder.addressTextView.text = "Address 1: ${currentAddress.address1}"
+        holder.addressTextView2.text = "Address 2: ${currentAddress.address2}"
+        holder.phoneTextView.text = "Phone: ${currentAddress.phone}"
         holder.itemView.isSelected = selectedItemPosition == position
 
         if (currentAddress.default) {
-
             holder.cardView.setCardBackgroundColor(holder.itemView.context.getColor(R.color.default_address_color))
         } else {
             holder.cardView.setCardBackgroundColor(holder.itemView.context.getColor(R.color.non_default_address_color))
@@ -48,7 +47,6 @@ class AddressAdapter(private val listener: AddressListener ,private val showDele
         holder.itemView.setOnLongClickListener {
             // Set the current item as selected
             selectedItemPosition = holder.adapterPosition
-
             listener.setAddressDefault(currentAddress.id, true)
             notifyDataSetChanged() // Notify adapter that data set has changed
             true // Consume the long click

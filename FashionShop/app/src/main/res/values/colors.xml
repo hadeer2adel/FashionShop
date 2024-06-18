@@ -12,8 +12,9 @@
     <color name="gray1">#BEBEBE</color>
     <color name="LightGray">#D3D3D3</color>
     <color name="darkGray">#A9A9A9</color>
-    <color name="default_address_color">#D3D3D3</color>
+    <color name="default_address_color">#CCCCCC</color>
     <color name="non_default_address_color">#FFFFFF</color>
+
     <color name="trans_gray">#8BC1C1C1</color>
 
 

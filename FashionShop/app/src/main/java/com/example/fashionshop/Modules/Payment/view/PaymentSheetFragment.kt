@@ -39,21 +39,20 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-//    override fun onDismiss(dialog: DialogInterface) {
-//        super.onDismiss(dialog)
-//        // Handle navigation and toast on dismiss
-//        navigateToSettingsFragment()
-//        showToast("Payment successful")
-//    }
-//
-//    private fun navigateToSettingsFragment() {
-//        findNavController().navigate(R.id.action_Payment_to_orderDetailsFragment)
-//
-//    }
-//
-//    private fun showToast(message: String) {
-//        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-//    }
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        navigateToSettingsFragment()
+        showToast("Payment successful")
+    }
+
+    private fun navigateToSettingsFragment() {
+        findNavController().navigate(R.id.actiomfromSheet_to_order)
+
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
 
     companion object {
         fun newInstance(paymentUrl: String): PaymentSheetFragment {
