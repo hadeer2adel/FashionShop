@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     android:layout_marginBottom="80dp"
     tools:context=".Modules.ShoppingCard.view.CartFragment">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,6 +22,7 @@
             android:src="@drawable/ic_delete" />
 
     </RelativeLayout>
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
@@ -29,43 +30,38 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_gravity="center"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCartItems"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#ECE5E5"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
         tools:listitem="@layout/cart_item" />
-
-
-
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="10dp">
+        android:layout_margin="16dp">
 
-            <TextView
-                android:id="@+id/textViewSubtotall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subtotal: "
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textViewSubtotall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subtotal: "
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/textViewSubtotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="20.00"
             android:textColor="@color/red"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -75,20 +71,16 @@
             android:layout_marginStart="8dp"
             android:text="USD"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
     </LinearLayout>
-
-
-
-
 
     <Button
         android:id="@+id/buttonCheckout"
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_margin="15dp"
-        android:backgroundTint="@color/black"
+        android:layout_marginHorizontal="16dp"
+        android:backgroundTint="@color/favourite"
         android:text="@string/checkout"
         android:textColor="@color/white"
         android:textSize="20sp"

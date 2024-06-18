@@ -143,7 +143,7 @@
                     android:layout_gravity="end"
                     style="?attr/materialButtonOutlinedStyle"
                     android:textColor="@color/white"
-                    android:backgroundTint="@color/red"
+                    android:backgroundTint="@color/favourite"
                     app:cornerRadius="10dp"/>
 
             </LinearLayout>

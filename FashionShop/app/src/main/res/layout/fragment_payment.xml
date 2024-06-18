@@ -4,60 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="16dp"
     android:layout_marginBottom="80dp"
     tools:context=".PaymentFragment">
-
-    <!-- Online Payment Header -->
-
-    <!-- Visa Card CheckBox -->
 
     <TextView
         android:id="@+id/onlinePaymentHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:background="@color/gray"
+        android:layout_marginTop="40dp"
         android:text="Online Payment"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-        android:id="@+id/cashOnDeliveryCheckBox"
+        android:id="@+id/visaCardCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="4dp"
         android:button="@drawable/custom_checkbox"
         android:paddingStart="10dp"
-        android:text="Cash on Delivery"
+        android:text="Visa Card"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/morePaymentOptionsHeader" />
+        app:layout_constraintTop_toBottomOf="@id/onlinePaymentHeader" />
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/gray"
+        android:alpha="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/visaCardCheckBox" />
 
     <TextView
         android:id="@+id/morePaymentOptionsHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:background="@color/gray"
+        android:layout_marginTop="56dp"
         android:text="More Payment Options"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/visaCardCheckBox" />
 
     <CheckBox
-        android:id="@+id/visaCardCheckBox"
+        android:id="@+id/cashOnDeliveryCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="4dp"
         android:button="@drawable/custom_checkbox"
         android:paddingStart="10dp"
-        android:text="Visa Card"
+        android:text="Cash on Delivery"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/onlinePaymentHeader" />
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/morePaymentOptionsHeader" />
 
     <!-- More Payment Options Header -->
 
@@ -87,7 +94,6 @@
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_margin="15dp"
         android:backgroundTint="@color/black"
         android:text="@string/payment"
         android:textColor="@color/white"

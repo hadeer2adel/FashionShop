@@ -27,14 +27,17 @@
                 android:layout_marginStart="20dp"
                 android:src="@drawable/ic_person_circler"
                 android:scaleType="centerCrop"
+                android:tintMode="screen"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:tint="@color/LightGray" />
 
         <TextView
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="8dp"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -42,14 +45,13 @@
             app:layout_constraintTop_toTopOf="@+id/image"
             app:layout_constraintStart_toEndOf="@+id/image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/image"
             />
 
         <RatingBar
             android:id="@+id/ratingBar"
             android:layout_width="230dp"
             android:layout_height="40dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="4dp"
             android:isIndicator="true"
             android:numStars="5"
             android:progressTint="@color/star"
@@ -58,8 +60,8 @@
             android:scaleY="0.4"
             android:transformPivotX="0dp"
             android:rating="3.5"
-            app:layout_constraintTop_toBottomOf="@id/image"
-            app:layout_constraintStart_toStartOf="@id/image"/>
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintStart_toStartOf="@id/name"/>
 
         <TextView
             android:id="@+id/review"

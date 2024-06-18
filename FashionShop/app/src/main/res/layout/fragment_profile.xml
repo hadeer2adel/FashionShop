@@ -36,8 +36,11 @@
             android:id="@+id/nameCustomer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
+            android:layout_marginTop="8dp"
             android:text="Habiba Mohamed"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@android:color/black" />
 
@@ -45,6 +48,9 @@
             android:id="@+id/emailCustomer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textSize="18sp"
             android:text="habiba123@gmail.com"
             android:textColor="@android:color/black" />
     </LinearLayout>
@@ -53,9 +59,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/profileLayout"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="34dp"
         android:orientation="vertical"
-        android:textDirection="locale"> <!-- Add margin top here -->
+        android:textDirection="locale"
+        android:padding="8dp">
 
 
 
@@ -68,42 +75,49 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/Orders"
             android:textAlignment="viewStart"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
-<!--        <Button-->
-<!--            android:id="@+id/favoriteButton"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@android:color/transparent"-->
-<!--            android:drawableEnd="@drawable/arrow_right"-->
-<!--            android:foreground="?android:attr/selectableItemBackground"-->
-<!--            android:text="Favorite"-->
-<!--            android:textAlignment="viewStart"-->
-<!--            android:textColor="@color/black" />-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@color/gray"
+            android:alpha="0.4"/>
 
         <Button
             android:id="@+id/settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:background="@android:color/transparent"
             android:drawableStart="@drawable/arrow_right"
             android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/Settings"
             android:textAlignment="viewStart"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@color/gray"
+            android:alpha="0.4"/>
 
         <Button
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:background="@android:color/transparent"
             android:drawableEnd="@drawable/logout"
+            android:drawableTint="@color/favourite"
             android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/Logout"
             android:textAlignment="viewStart"
-            android:textColor="@color/black" />
+            android:textColor="@color/favourite"
+            android:textSize="18sp" />
 
 
     </LinearLayout>
