@@ -83,7 +83,6 @@
     <string name="phone">Phone:</string>
 
 
-
     //payment
     <string name="payment">Continue To Payment</string>
     <string name="checkout">Checkout</string>
@@ -118,5 +117,9 @@
 at least one upper letter, one lowercase letter, and one digit</string>
     <string name="error_not_match">Password and confirm password doesn\'t match</string>
 
+
+    //cart
+    <string name="DeleteAll">Delete All Cart Items</string>
+    <string name="subTotal">Subtotal:</string>
 
 </resources>

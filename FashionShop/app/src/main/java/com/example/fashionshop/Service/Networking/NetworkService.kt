@@ -4,6 +4,7 @@ import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.BrandResponse
+import com.example.fashionshop.Model.CheckoutSessionResponse
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DraftOrders
@@ -22,6 +23,8 @@ import com.example.fashionshop.Model.editOrderQuantityBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -124,6 +127,21 @@ interface NetworkService {
 
     @GET("products/{id}/images.json")
     suspend fun getProductImage(@Path("id") id: Long): Images
+
+    @FormUrlEncoded
+    @POST("v1/checkout/sessions")
+    suspend fun createCheckoutSession(
+        @Field("success_url") successUrl: String,
+        @Field("cancel_url") cancelUrl: String,
+        @Field("customer_email") customerEmail: String,
+        @Field("line_items[0][price_data][currency]") currency: String,
+        @Field("line_items[0][price_data][product_data][name]") productName: String,
+        @Field("line_items[0][price_data][product_data][description]") productDescription: String,
+        @Field("line_items[0][price_data][unit_amount_decimal]") unitAmountDecimal: Int,
+        @Field("line_items[0][quantity]") quantity: Int,
+        @Field("mode") mode: String,
+        @Field("payment_method_types[0]") paymentMethodType: String
+    ): CheckoutSessionResponse
 
 }
 

@@ -8,6 +8,7 @@ import retrofit2.Response
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
+import com.example.fashionshop.Model.CheckoutSessionResponse
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.ExchangeRatesResponse
@@ -27,6 +28,9 @@ class NetworkManagerImp private constructor(): NetworkManager {
     }
     private val networkServiceExchanges:networkService2 by lazy {
         RetrofitHelperExchanges.exchangeRatesRetrofit.create(networkService2::class.java)
+    }
+    private val networkServicePayment:NetworkService by lazy {
+        RetrofitHelperPayment.retrofitInstance.create(NetworkService::class.java)
     }
 
     companion object{
@@ -149,7 +153,19 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return networkServiceExchanges.getExchangeRates(apiKey,symbols,base)
     }
 
-
-
+    override suspend fun createCheckoutSession(
+        successUrl: String,
+        cancelUrl: String,
+        customerEmail: String,
+        currency: String,
+        productName: String,
+        productDescription: String,
+        unitAmountDecimal: Int,
+        quantity: Int,
+        mode: String,
+        paymentMethodType: String
+    ): CheckoutSessionResponse {
+      return   networkServicePayment.createCheckoutSession(successUrl,cancelUrl,customerEmail,currency,productName,productDescription,unitAmountDecimal,quantity,mode,paymentMethodType)
+        }
 
 }

@@ -60,7 +60,7 @@ class CartFragment : Fragment() ,CartListener {
             CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
         allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
         var d = 0.0
-
+      //  allProductViewModel.getCardProducts()
         allCategoryViewModel.getLatestRates()
         lifecycleScope.launch {
             allCategoryViewModel.productCurrency.collectLatest { response ->
@@ -151,13 +151,123 @@ class CartFragment : Fragment() ,CartListener {
         }
         return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        mAdapter = CartAdapter(this,requireContext())
+        mLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.recyclerViewCartItems.apply {
+            adapter = mAdapter
+            layoutManager = mLayoutManager
+        }
+
+        val customer = CustomerData.getInstance(requireContext())
+        binding.currency .text = customer.currency
+        allCategoryFactory =
+            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+        var d = 0.0
+      //  allProductViewModel.getCardProducts()
+        allCategoryViewModel.getLatestRates()
+        lifecycleScope.launch {
+            allCategoryViewModel.productCurrency.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> "showLoading()"
+                    is NetworkState.Success -> {
+                        d= response.data.rates.EGP
+                        Log.i("initViewModel", "initViewModel:${  response.data} ")
+                        currencyConversionRate = response.data.rates?.EGP ?: 1.0
+                        val exchangeRate = response.data.rates?.EGP ?: 1.0 // Default to 1.0 if rate is not available
+                        updateCurrencyRates(exchangeRate)
+
+
+                    }
+                    is NetworkState.Failure -> ""
+                    else -> { }
+                }
+            }}
+        allProductFactory =
+            CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()),CustomerData.getInstance(requireContext()).cartListId)
+        allProductViewModel = ViewModelProvider(this, allProductFactory).get(CartViewModel::class.java)
+
+        lifecycleScope.launch {
+            allProductViewModel.productCard.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.recyclerViewCartItems.visibility = View.GONE
+                    }
+                    is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.recyclerViewCartItems.visibility = View.VISIBLE
+                        mAdapter.setCartList(response.data.draft_order.line_items.drop(1))
+                        val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
+                        val customer = CustomerData.getInstance(requireContext())
+                        if (customer.currency=="USD"){
+                            //   val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
+                            // price.text = convertCurrency(subtotal)
+                            binding.textViewSubtotal.text = "${convertCurrency(subtotal)}"
+
+                        }
+                        else
+                        {
+                            binding.textViewSubtotal.text = "${String.format("%.2f", subtotal)}"
+
+
+                        }
+
+
+
+                    }
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } }
+        lifecycleScope.launch {
+            allProductViewModel.productCardImage.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.recyclerViewCartItems.visibility = View.GONE
+                    }
+                    is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.recyclerViewCartItems.visibility = View.VISIBLE
+//                            mAdapter.setCardImages(response.data.images[0].src)
+//                            response.data.images[0].src
+                        //  allProductViewModel.getCardProductsImages(item.id)
+                    }
+
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+
+        binding.buttonCheckout.setOnClickListener {
+            val args = CartFragmentArgs(draftOrderIds).toBundle() // Convert CartFragmentArgs to Bundle
+            findNavController().navigate(R.id.action_cartFragment_to_paymentFragment, args)
+        }
+        binding.deleteall.setOnClickListener {
+            allProductViewModel.deleteAllCartProducts()
+        }
+
+    }
+
+
     private fun updateCurrencyRates(newRate: Double) {
         mAdapter.updateCurrencyConversionRate(newRate)
     }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        _binding = null
+//    }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully
         val convertedPrice = amount / currencyConversionRate

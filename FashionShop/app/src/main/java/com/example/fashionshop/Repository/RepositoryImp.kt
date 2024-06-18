@@ -7,6 +7,7 @@ import com.example.fashionshop.Model.customers
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
+import com.example.fashionshop.Model.CheckoutSessionResponse
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.ExchangeRatesResponse
@@ -147,4 +148,20 @@ class RepositoryImp constructor(
     override suspend fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX{
         return networkManager.getExchangeRates(apiKey,symbols,base)
     }
+
+    override suspend fun createCheckoutSession(
+        successUrl: String,
+        cancelUrl: String,
+        customerEmail: String,
+        currency: String,
+        productName: String,
+        productDescription: String,
+        unitAmountDecimal: Int,
+        quantity: Int,
+        mode: String,
+        paymentMethodType: String
+    ): CheckoutSessionResponse {
+     return   networkManager.createCheckoutSession(successUrl,cancelUrl,customerEmail,currency,productName,productDescription,unitAmountDecimal,quantity,mode,paymentMethodType)    }
+
+
 }

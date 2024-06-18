@@ -115,5 +115,14 @@
 at least one upper letter, one lowercase letter, and one digit</string>
     <string name="error_not_match">Password and confirm password doesn\'t match</string>
 
+<!--    <string name="Orders">الطلبات</string>-->
+<!--    <string name="Logout">تسجيل الخروج</string>-->
+<!--    <string name="Settings">الإعدادات</string>-->
+    <string name="DeleteAll">مسح جميع عناصر عربة التسوق</string>
+    <string name="subTotal">المجموع الكلي:</string>
 
+    <string name="country">القارة</string>
+    <string name="address_1">العنوان الأول :</string>
+    <string name="address_2">العنوان الثاني ::</string>
+    <string name="phone">الهاتف :</string>
 </resources>

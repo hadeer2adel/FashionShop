@@ -9,6 +9,7 @@ import retrofit2.http.Query
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
+import com.example.fashionshop.Model.CheckoutSessionResponse
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.ExchangeRatesResponse
@@ -52,6 +53,7 @@ interface Repository {
     suspend fun updateCustomer(id: Long, customer: UpdateCustomerRequest): CustomerResponse
     suspend fun getProductImage(@Path("id") id: Long): Images
     suspend  fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX
-
-
+    suspend fun createCheckoutSession(successUrl: String,cancelUrl: String,customerEmail: String,currency: String,productName: String,productDescription: String,
+                                      unitAmountDecimal: Int, quantity: Int,mode: String, paymentMethodType: String
+    ): CheckoutSessionResponse
 }
