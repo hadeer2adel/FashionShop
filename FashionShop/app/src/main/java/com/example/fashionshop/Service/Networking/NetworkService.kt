@@ -8,6 +8,8 @@ import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.ExchangeRatesResponse
+import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderBody
@@ -24,6 +26,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -48,26 +51,28 @@ interface NetworkService {
     @GET("customers/search.json")
     suspend fun getCustomerByEmail(
         @Query("email") email: String
-    ): customers
+    ): CustomerResponse
 
-    @GET("customers/7371713577180.json")
-    suspend fun getSingleCustomer(): OneCustomer
+    @GET("customers/{id}.json")
+    suspend fun getSingleCustomer(@Path("id") id: Long): OneCustomer
 
-    @POST("customers/7371713577180/addresses.json")
-    suspend fun AddSingleCustomerAdreess(  @Body addressRequest: AddressRequest): AddressRequest
+    @POST("customers/{id}/addresses.json")
+    suspend fun AddSingleCustomerAdreess( @Path("id") id: Long, @Body addressRequest: AddressRequest): AddressRequest
 
 
-    @PUT("customers/7371713577180/addresses/{id}.json")
+    @PUT("customers/{CustomerId}/addresses/{id}.json")
     suspend fun editSingleCustomerAddress(
+        @Path("CustomerId") CustomerId: Long,
         @Path("id") id: Long,
         @Body addressRequest: AddressDefultRequest
     ): AddressUpdateRequest
 
 
-    @DELETE("customers/7371713577180/addresses/{id}.json")
+    @DELETE("customers/{CustomerId}/addresses/{id}.json")
     suspend fun deleteSingleCustomerAddress(
+        @Path("CustomerId") CustomerId: Long,
         @Path("id") id: Long,
-    )
+        )
 
 
     @GET("draft_orders.json")

@@ -6,6 +6,12 @@ import com.example.fashionshop.Service.Caching.SharedPreferenceManager
 class CustomerData private constructor(_context: Context) {
     private val manager: SharedPreferenceManager
 
+    var isLogged: Boolean = false
+        get() = field
+        set(value) {
+            field = value
+            manager.save(SharedPreferenceManager.Key.IS_LOGGED_IN, value.toString())
+        }
     var id: Long = 0
         get() = field
         set(value) {
@@ -48,6 +54,19 @@ class CustomerData private constructor(_context: Context) {
             field = value
             manager.save(SharedPreferenceManager.Key.CartListID, value.toString())
         }
+    var language: String = ""
+        get() = field
+        set(value) {
+            field = value
+            manager.save(SharedPreferenceManager.Key.Language, value)
+        }
+    var languageCode: String = ""
+        get() = field
+        set(value) {
+            field = value
+            manager.save(SharedPreferenceManager.Key.LanguageCode, value)
+        }
+
 
     init {
         manager = SharedPreferenceManager(_context)
@@ -55,9 +74,13 @@ class CustomerData private constructor(_context: Context) {
         name = manager.retrieve(SharedPreferenceManager.Key.NAME, "")
         email = manager.retrieve(SharedPreferenceManager.Key.EMAIL, "")
         phone = manager.retrieve(SharedPreferenceManager.Key.PHONE, "")
-        currency = manager.retrieve(SharedPreferenceManager.Key.CURRENCY, "")
+        currency = manager.retrieve(SharedPreferenceManager.Key.CURRENCY, "EGY")
         favListId = manager.retrieve(SharedPreferenceManager.Key.FavListID, "0").toLong()
         cartListId = manager.retrieve(SharedPreferenceManager.Key.CartListID, "0").toLong()
+        language = manager.retrieve(SharedPreferenceManager.Key.Language, "")
+        languageCode = manager.retrieve(SharedPreferenceManager.Key.LanguageCode, "en")
+        isLogged = manager.retrieve(SharedPreferenceManager.Key.IS_LOGGED_IN, "false").toBoolean()
+
     }
 
     companion object {

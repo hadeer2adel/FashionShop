@@ -12,6 +12,8 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.ExchangeRatesResponse
+import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderBody
@@ -26,12 +28,12 @@ import retrofit2.http.Body
 import retrofit2.http.Path
 
 interface NetworkManager {
-    suspend fun getcutomers(): OneCustomer
-    suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest
+    suspend fun getcutomers( id: Long): OneCustomer
+    suspend fun AddSingleCustomerAdreess( id: Long,addressRequest: AddressRequest): AddressRequest
 
-    suspend fun editSingleCustomerAddress(id:Long,addressRequest: AddressDefultRequest): AddressUpdateRequest
+    suspend fun editSingleCustomerAddress(cutomerId:Long,id:Long,addressRequest: AddressDefultRequest): AddressUpdateRequest
 
-    suspend fun deleteSingleCustomerAddress(id:Long)
+    suspend fun deleteSingleCustomerAddress(customerId:Long,id:Long)
     suspend fun deleteSingleCustomerDrafOrder(id:Long)
     suspend fun getDraftOrders():DraftOrders
     suspend fun editSingleCustomerAddressDraftOrder(id:Long,addressRequest: editAddressBody): DraftOrders
@@ -40,7 +42,7 @@ interface NetworkManager {
     suspend fun getBrands(): Response<BrandResponse>
     suspend fun getProducts(): Response<ProductResponse>
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
-    suspend fun getCustomerByEmail(email: String): customers
+    suspend fun getCustomerByEmail(email: String): CustomerResponse
     suspend fun getDiscountCodesCount(): PriceRuleCount
     suspend fun getDiscountCodes(): PriceRule
     suspend fun getProductById(id: Long): ProductResponse
@@ -57,4 +59,5 @@ interface NetworkManager {
     suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
 
 
+    suspend  fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX
 }

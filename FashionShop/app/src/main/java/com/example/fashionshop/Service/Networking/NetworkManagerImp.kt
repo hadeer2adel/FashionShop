@@ -10,6 +10,8 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.ExchangeRatesResponse
+import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderBody
@@ -26,6 +28,9 @@ class NetworkManagerImp private constructor(): NetworkManager {
     private val networkService : NetworkService by lazy {
         RetrofitHelper.retrofitInstance.create(NetworkService::class.java)
     }
+    private val networkServiceExchanges:networkService2 by lazy {
+        RetrofitHelperExchanges.exchangeRatesRetrofit.create(networkService2::class.java)
+    }
 
     companion object{
 
@@ -39,24 +44,25 @@ class NetworkManagerImp private constructor(): NetworkManager {
         }
     }
 
-    override suspend fun getcutomers(): OneCustomer {
-        val responce= networkService.getSingleCustomer()
+    override suspend fun getcutomers( id: Long): OneCustomer {
+        val responce= networkService.getSingleCustomer(id)
         return responce
     }
 
-    override suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest {
-        val responce= networkService.AddSingleCustomerAdreess(addressRequest)
+    override suspend fun AddSingleCustomerAdreess( id: Long,addressRequest: AddressRequest): AddressRequest {
+        val responce= networkService.AddSingleCustomerAdreess(id,addressRequest)
         return responce    }
 
     override suspend fun editSingleCustomerAddress(
+        customerId:Long,
         id: Long,
         addressRequest: AddressDefultRequest
     ): AddressUpdateRequest {
-        val responce= networkService.editSingleCustomerAddress(id,addressRequest)
+        val responce= networkService.editSingleCustomerAddress(customerId,id,addressRequest)
         return responce    }
 
-    override suspend fun deleteSingleCustomerAddress(id: Long) {
-        networkService.deleteSingleCustomerAddress(id)
+    override suspend fun deleteSingleCustomerAddress(customerId:Long,id: Long) {
+        networkService.deleteSingleCustomerAddress(customerId,id)
     }
 
     override suspend fun deleteSingleCustomerDrafOrder(id: Long)
@@ -104,7 +110,7 @@ class NetworkManagerImp private constructor(): NetworkManager {
     }
 
 
-    override suspend fun getCustomerByEmail(email: String): customers {
+    override suspend fun getCustomerByEmail(email: String): CustomerResponse {
         return networkService.getCustomerByEmail(email)
     }
 
@@ -153,4 +159,11 @@ class NetworkManagerImp private constructor(): NetworkManager {
     override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
         return networkService.getSingleOrder(orderId)
     }
+    override suspend fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX{
+        return networkServiceExchanges.getExchangeRates(apiKey,symbols,base)
+    }
+
+
+
+
 }

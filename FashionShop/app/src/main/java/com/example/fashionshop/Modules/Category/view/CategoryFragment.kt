@@ -39,8 +39,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
 
-class CategoryFragment : Fragment() {
-
+class CategoryFragment : Fragment() ,CategoryListener{
+    private lateinit var allCategoryFactory: CategoryFactory
+    private lateinit var allCategoryViewModel: CategoryViewModel
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
     var isAllFabsVisible: Boolean? = null
@@ -59,8 +60,13 @@ class CategoryFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
+
+
         isAllFabsVisible = false
+
+
         binding.fabCategory.setOnClickListener {
             isAllFabsVisible = if (isAllFabsVisible == false) {
                 showAllFabButtons()
@@ -82,6 +88,30 @@ class CategoryFragment : Fragment() {
             showFilterMenu(requireContext())
         }
         setUpRV()
+        allCategoryFactory =
+            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+        var d = 0.0
+
+        allCategoryViewModel.getLatestRates()
+        lifecycleScope.launch {
+            allCategoryViewModel.productCurrency.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> showLoading()
+                    is NetworkState.Success -> {
+                        d= response.data.rates.EGP
+                        Log.i("initViewModel", "initViewModel:${  response.data} ")
+                        val exchangeRate = response.data.rates?.EGP ?: 1.0 // Default to 1.0 if rate is not available
+                        updateCurrencyRates(exchangeRate)
+
+
+                    }
+                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
+                    else -> { }
+                }
+            }
+        }
+
         initViewModel()
         binding.category.selectButton(binding.btnAll)
         observeButtonsGroup()
@@ -176,8 +206,11 @@ class CategoryFragment : Fragment() {
 
         binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvProducts.adapter = adapter
-    }
 
+    }
+    private fun updateCurrencyRates(newRate: Double) {
+        adapter.updateCurrencyConversionRate(newRate)
+    }
     private fun initViewModel(){
         val networkManager: NetworkManager = NetworkManagerImp.getInstance()
         val repository: Repository = RepositoryImp(networkManager)
@@ -188,6 +221,7 @@ class CategoryFragment : Fragment() {
         favViewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
 
         viewModel.getProducts()
+        viewModel.getLatestRates()
         lifecycleScope.launch {
             viewModel.products.collectLatest { response ->
                 when(response){
@@ -198,7 +232,27 @@ class CategoryFragment : Fragment() {
                 }
             }
         }
+//
+//viewModel.getLatestRates()
+//        lifecycleScope.launch {
+//            viewModel.productCurrency.collectLatest { response ->
+//                when(response){
+//                    is NetworkState.Loading -> showLoading()
+//                    is NetworkState.Success -> {
+//
+//                        Log.i("initViewModel", "initViewModel:${  response.data} ")
+//
+//
+//
+//                    }
+//                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
+//                    else -> { }
+//                }
+//            }
+//        }
     }
+
+
 
     private fun showLoading() {
         binding.progressBar3.visibility = View.VISIBLE
@@ -325,6 +379,35 @@ class CategoryFragment : Fragment() {
         const val ACCESSORIES = "ACCESSORIES"
     }
 
+    override fun getValueconvertCurrency()  : Double{
+
+        allCategoryFactory =
+            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+        var d = 0.0
+
+        allCategoryViewModel.getLatestRates()
+        lifecycleScope.launch {
+            allCategoryViewModel.productCurrency.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> showLoading()
+                    is NetworkState.Success -> {
+                        d= response.data.rates.EGP
+                        Log.i("initViewModel", "initViewModel:${  response.data} ")
+                        val exchangeRate = response.data.rates?.EGP ?: 1.0 // Default to 1.0 if rate is not available
+                        updateCurrencyRates(exchangeRate)
+
+
+                    }
+                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
+                    else -> { }
+                }
+            }
+        }
+        Log.i("d", "${d}: ")
+
+        return   d
+    }
 
 
 }

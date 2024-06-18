@@ -11,6 +11,8 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.ExchangeRatesResponse
+import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderBody
@@ -25,18 +27,22 @@ import com.example.fashionshop.Model.UpdateCustomerRequest
 
 
 interface Repository {
-    suspend fun getcustomers(): OneCustomer
+    suspend fun getcustomers(id:Long): OneCustomer
     suspend fun createCustomer(customer: CustomerRequest): CustomerResponse
     suspend fun getBrands(): Response<BrandResponse>
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
     suspend fun getProducts(): Response<ProductResponse>
-    suspend fun getCustomerByEmail(email: String): customers
-    suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest
+    suspend fun getCustomerByEmail(email: String): CustomerResponse
+    //suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest
+    //suspend fun getCustomerByEmail(email: String): customers
+    suspend fun AddSingleCustomerAdreess(id:Long,addressRequest: AddressRequest): AddressRequest
+
     suspend fun editSingleCustomerAddress(
+        customerID:Long,
         id: Long,
         addressRequest: AddressDefultRequest
     ): AddressUpdateRequest
-    suspend fun deleteSingleCustomerAddress(id:Long)
+    suspend fun deleteSingleCustomerAddress(customerID: Long,id: Long)
     suspend fun getDraftOrders(): DraftOrders
     suspend fun deleteSingleCustomerDrafOrder(id:Long)
     suspend fun editSingleCustomerAddressDraftOrder(id:Long,addressRequest: editAddressBody): DraftOrders
@@ -51,6 +57,7 @@ interface Repository {
     suspend fun updateCustomer(id: Long, customer: UpdateCustomerRequest): CustomerResponse
     suspend fun getProductImage(@Path("id") id: Long): Images
     suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse
+    suspend  fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX
 
     suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
 

@@ -24,6 +24,14 @@ import com.example.fashionshop.Modules.Home.viewModel.HomeFactory
 import com.example.fashionshop.Modules.Home.viewModel.HomeViewModel
 import com.example.fashionshop.Modules.Home.viewModel.OrderInfoFactory
 import com.example.fashionshop.Modules.Home.viewModel.OrderInfoViewModel
+import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
+import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
+import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
+import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
+import com.example.fashionshop.Modules.Home.viewModel.HomeFactory
+import com.example.fashionshop.Modules.Home.viewModel.HomeViewModel
+import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
+import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartViewModel
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
@@ -44,7 +52,8 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
     private lateinit var sliderView: SliderView
     private lateinit var allProductFactory: HomeFactory
     private lateinit var allProductViewModel: HomeViewModel
-
+    private lateinit var allCategoryFactory: CategoryFactory
+    private lateinit var allCategoryViewModel: CategoryViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,6 +64,21 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        allCategoryFactory =
+            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+
+
+
+
+
+
+
+
+
+
+
         sliderView = view.findViewById(R.id.imageSlider)
         setUpRV()
         initViewModel()
@@ -67,6 +91,11 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
             "onViewCreated", "onViewCreated: ${CustomerData.getInstance(requireContext()).cartListId}"
 
         )
+
+
+        Log.i("onViewCreated", "onViewCreated:${CustomerData.getInstance(requireContext()).currency} ")
+        Log.i("onViewCreated", "onViewCreated:${CustomerData.getInstance(requireContext()).id} ")
+
 //        viewModel.getAdsCount()
 //        viewModel.products.observe(viewLifecycleOwner, Observer { value ->
 //            value?.let {

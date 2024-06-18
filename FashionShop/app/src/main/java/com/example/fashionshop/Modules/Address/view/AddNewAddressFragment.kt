@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Modules.Address.viewModel.AddNewAddressFactory
+import com.example.fashionshop.Modules.Address.viewModel.AddNewAddressViewModel
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.FragmentAddNewAddressBinding
-import com.example.fashionshop.viewModels.AddNewAddressFactory
-import com.example.fashionshop.viewModels.AddNewAddressViewModel
 
 class AddNewAddressFragment : Fragment() {
 
@@ -105,7 +106,7 @@ class AddNewAddressFragment : Fragment() {
                 country_code = binding.etCountryCode.text.toString(),
                 country_name = binding.etCountryName.text.toString(),
                 id = 3, // Adjust as needed
-                customer_id = 7371713577180, // Adjust as needed
+                customer_id = CustomerData.getInstance(requireContext()).id, // Adjust as needed
                 default = false
             )
             findNavController().navigate(R.id.action_from_map_to_newAddresses)

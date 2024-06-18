@@ -9,6 +9,8 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.ExchangeRatesResponse
+import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderBody
@@ -38,9 +40,9 @@ class RepositoryImp constructor(
         }
     }
 
-    override suspend fun getcustomers(): OneCustomer {
-        return networkManager.getcutomers()
 
+    override suspend fun getcustomers(id:Long): OneCustomer {
+        return networkManager.getcutomers(id)
     }
 
     override suspend fun createCustomer(
@@ -62,23 +64,25 @@ class RepositoryImp constructor(
     }
 
 
-    override suspend fun getCustomerByEmail(email: String): customers {
+    override suspend fun getCustomerByEmail(email: String): CustomerResponse {
         return networkManager.getCustomerByEmail(email)
     }
 
-    override suspend fun AddSingleCustomerAdreess(addressRequest: AddressRequest): AddressRequest {
-        return networkManager.AddSingleCustomerAdreess(addressRequest)
+
+    override suspend fun AddSingleCustomerAdreess(id:Long,addressRequest: AddressRequest): AddressRequest {
+        return networkManager.AddSingleCustomerAdreess(id,addressRequest)
     }
 
     override suspend fun editSingleCustomerAddress(
+        customerID:Long,
         id: Long,
         addressRequest: AddressDefultRequest
     ): AddressUpdateRequest {
-        return networkManager.editSingleCustomerAddress(id, addressRequest)
+        return networkManager.editSingleCustomerAddress(customerID,id, addressRequest)
     }
 
-    override suspend fun deleteSingleCustomerAddress(id: Long) {
-        return networkManager.deleteSingleCustomerAddress(id)
+    override suspend fun deleteSingleCustomerAddress(customerID: Long,id: Long) {
+        return networkManager.deleteSingleCustomerAddress(customerID,id)
     }
 
     override suspend fun getDraftOrders(): DraftOrders {
@@ -150,5 +154,9 @@ class RepositoryImp constructor(
 
     override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
         return networkManager.getSingleOrder(orderId)
+
+
+    override suspend fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX{
+        return networkManager.getExchangeRates(apiKey,symbols,base)
     }
 }

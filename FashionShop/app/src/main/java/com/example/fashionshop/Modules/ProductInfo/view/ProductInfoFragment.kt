@@ -22,6 +22,8 @@ import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductDetails
+import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
+import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModelFactory
 import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModel
@@ -43,7 +45,8 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class ProductInfoFragment : Fragment() {
-
+    private lateinit var allCategoryFactory: CategoryFactory
+    private lateinit var allCategoryViewModel: CategoryViewModel
     private lateinit var binding: FragmentProductInfoBinding
     private lateinit var viewModel: ProductInfoViewModel
     private lateinit var favViewModel: FavViewModel
@@ -51,6 +54,7 @@ class ProductInfoFragment : Fragment() {
     private var isReviewsVisible = false
     private lateinit var adapter: ProductAdapter
     private var isFav = false
+    private var currencyConversionRate: Double = 1.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +66,29 @@ class ProductInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        allCategoryFactory =
+            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+        var d = 0.0
 
+        allCategoryViewModel.getLatestRates()
+        lifecycleScope.launch {
+            allCategoryViewModel.productCurrency.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> ""
+                    is NetworkState.Success -> {
+                        d= response.data.rates.EGP
+                        Log.i("initViewModel", "initViewModel:${  response.data} ")
+                        currencyConversionRate = response.data.rates?.EGP ?: 1.0
+
+
+
+                    }
+                    is NetworkState.Failure -> ""
+                    else -> { }
+                }
+            }
+        }
         val navController = NavHostFragment.findNavController(this)
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
@@ -167,16 +193,30 @@ class ProductInfoFragment : Fragment() {
             }
         }
     }
-
+    private fun convertCurrency(amount: Double?): String {
+        amount ?: return "" // Handle null or undefined amount gracefully
+        val convertedPrice = amount / currencyConversionRate
+        return String.format("%.2f", convertedPrice)
+    }
     private fun setData(product: ProductDetails) {
 
         binding.apply {
             Log.i("TAG", "${
                 product.id}: ")
-
-            name.text = product.title
-            price.text = product.variants?.get(0)?.price
             val customer = CustomerData.getInstance(requireContext())
+            name.text = product.title
+           // price.text = product.variants?.get(0)?.price
+            if (customer.currency=="USD"){
+                val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
+                price.text = convertCurrency(priceDouble)
+
+            }else
+            {
+              price.text = product.variants?.get(0)?.price
+
+
+            }
+
             currency.text = customer.currency
             description.text = product.body_html
 

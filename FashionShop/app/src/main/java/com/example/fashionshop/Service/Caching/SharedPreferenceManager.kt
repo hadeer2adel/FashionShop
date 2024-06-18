@@ -14,7 +14,9 @@ class SharedPreferenceManager(private val context: Context) {
         CURRENCY,
         IS_LOGGED_IN,
         FavListID,
-        CartListID
+        CartListID,
+        Language,
+        LanguageCode
     }
     private var sharedPreferences: SharedPreferences? = null
     private var editor: SharedPreferences.Editor? = null
@@ -57,19 +59,6 @@ class SharedPreferenceManager(private val context: Context) {
         return sharedPreferences.contains(key.name)
     }
 
-
-    fun saveBoolean(key: Key, value: Boolean) {
-        val sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            putBoolean(key.name, value)
-            apply()
-        }
-    }
-
-    fun retrieveBoolean(key: Key, defaultValue: Boolean): Boolean {
-        val sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
-        return sharedPreferences.getBoolean(key.name, defaultValue)
-    }
     fun saveLanguage(languageCode: String) {
         editor?.putString("language", languageCode)?.apply()
     }
@@ -84,5 +73,4 @@ class SharedPreferenceManager(private val context: Context) {
     fun getLanguageUnit(): String? {
         return sharedPreferences?.getString("languageCode", "en")
     }
-
 }

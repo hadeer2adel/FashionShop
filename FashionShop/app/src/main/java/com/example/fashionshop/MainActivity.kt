@@ -9,7 +9,8 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.example.fashionshop.Modules.Login.view.LoginActivity
+import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Modules.Authentication.view.LoginActivity
 import com.example.fashionshop.Service.Caching.SharedPreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.Locale
@@ -21,8 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        val sharedPreferencesManager = SharedPreferenceManager.getInstance(this)
-        val savedLanguage = sharedPreferencesManager.getLanguage()
+        val savedLanguage =   CustomerData.getInstance(this).language
         if (!savedLanguage.isNullOrBlank()) {
             val locale = Locale(savedLanguage)
             Locale.setDefault(locale)

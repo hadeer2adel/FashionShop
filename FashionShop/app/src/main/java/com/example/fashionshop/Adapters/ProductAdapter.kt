@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
+import com.example.fashionshop.Modules.Category.view.CategoryListener
 import com.example.fashionshop.R
 import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.CardProductBinding
@@ -26,7 +27,13 @@ class ProductAdapter (
     lateinit var binding: CardProductBinding
 
     class ProductViewHolder(var binding: CardProductBinding) : RecyclerView.ViewHolder(binding.root)
+    private var currencyConversionRate: Double = 1.0 // Default rate
 
+
+    fun updateCurrencyConversionRate(rate: Double) {
+        currencyConversionRate = rate
+        notifyDataSetChanged() // Refresh all items with new currency rate
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val inflater: LayoutInflater =
             parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -51,9 +58,20 @@ class ProductAdapter (
 
         holder.binding.apply {
             title.text = data.title
-            price.text = "${data.variants?.get(0)?.price}"
+          //  price.text = "${data.variants?.get(0)?.price}"
+          //  price.text = convertCurrency(data.variants?.get(0)?.price)
+            if (CustomerData.getInstance(context).currency == "USD") {
+                val priceDouble = data.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
+                price.text = convertCurrency(priceDouble)
+            } else{ price.text = data.variants?.get(0)?.price
+            }
             val customer = CustomerData.getInstance(context)
+            Log.i("customer", "${customer.currency}")
+//            if (customer.currency == "EGY") {
+
             currency.text = customer.currency
+//        }
+
             Glide
                 .with(binding.root)
                 .load(data.image?.src)
@@ -86,6 +104,11 @@ class ProductAdapter (
                 data.id?.let { it1 -> onCardClick(it1) }
             }
         }
+    }
+    private fun convertCurrency(amount: Double?): String {
+        amount ?: return "" // Handle null or undefined amount gracefully
+        val convertedPrice = amount / currencyConversionRate
+        return String.format("%.2f", convertedPrice)
     }
 }
 

@@ -95,6 +95,38 @@ class CartViewModel (private val repo: Repository, private var listId: Long
             }
         }
     }
+    fun deleteAllCartProducts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _productCard.value = NetworkState.Loading
+            val draftOrder = repo.getDraftOrder(listId).draft_order
+
+            // Create an empty list of line items
+            val updatedDraftOrder = draftOrder.copy(line_items = emptyList())
+
+            try {
+                val updatedResponse = repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                _productCard.value = NetworkState.Success(updatedResponse)
+            } catch (e: Exception) {
+                _productCard.value = NetworkState.Failure(e)
+            }
+        }
+    }
+
+//    fun deteteDrafOrder(id: Long)
+//    {
+//
+//        viewModelScope.launch(Dispatchers.IO){
+//            try {
+//            repo.deleteSingleCustomerDrafOrder(id)
+//                getCardProducts()
+//            } catch (e: HttpException) {
+//                _productCardImage.value = NetworkState.Failure(e)
+//            }catch (e: Exception) {
+//                _productCardImage.value = NetworkState.Failure(e)
+//            }
+//        }
+//
+//    }
 }
 
 

@@ -1,26 +1,57 @@
 package com.example.fashionshop
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.fashionshop.databinding.FragmentPaymentBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class PaymentFragment : Fragment() {
-
+    val titlesList = mutableListOf<String>()
     private var _binding: FragmentPaymentBinding? = null
     private val binding get() = _binding!!
 
 
+    lateinit var allCodesFactory: OrderDetailsFactory
+    private lateinit var allCodesViewModel: OrderDetailsViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPaymentBinding.inflate(inflater, container, false)
-        val view = binding.root
+        return binding.root
+    }
+
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        allCodesFactory = OrderDetailsFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCodesViewModel = ViewModelProvider(this, allCodesFactory).get(OrderDetailsViewModel::class.java)
+        lifecycleScope.launch {
+            allCodesViewModel.productCode.collectLatest { response ->
+                when(response) {
+                    is NetworkState.Loading -> {}
+                    is NetworkState.Success -> {
+                        val value = response.data.price_rules
+                        titlesList.addAll(value.map { it.title })
+                        Log.i("getAdsCode", "titlesList: $titlesList")
+
+                    }
+                    is NetworkState.Failure -> {
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
 
         binding.visaCardCheckBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -35,7 +66,10 @@ class PaymentFragment : Fragment() {
         }
 
         binding.paymentButton.setOnClickListener {
-            findNavController().navigate(R.id.action_Payment_to_orderDetailsFragment)
+            val bundle = Bundle().apply {
+                putStringArrayList("titlesList", ArrayList(titlesList))
+            }
+            findNavController().navigate(R.id.action_Payment_to_orderDetailsFragment,bundle)
 
             when {
                 binding.visaCardCheckBox.isChecked -> {
@@ -50,10 +84,9 @@ class PaymentFragment : Fragment() {
             }
         }
 
-        return view
+
+
     }
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
