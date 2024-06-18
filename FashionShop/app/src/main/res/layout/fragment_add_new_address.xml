@@ -81,7 +81,7 @@
         android:id="@+id/etCountry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Country Name"
+        android:hint="Country"
         android:minHeight="48dp" />
     <EditText
         android:id="@+id/etCountryName"

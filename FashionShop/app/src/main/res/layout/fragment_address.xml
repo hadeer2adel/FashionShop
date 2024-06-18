@@ -25,7 +25,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp"
         android:layout_below="@id/toolbar">
         <ProgressBar
             android:id="@+id/progressBar"
@@ -37,10 +36,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewAddresses"
             android:layout_width="match_parent"
+            android:layout_marginTop="12dp"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:clipToPadding="false"
-            android:paddingBottom="16dp"
             tools:listitem="@layout/address_card" />
 
         <Button

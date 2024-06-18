@@ -77,6 +77,10 @@
     <string name="newAddressAdded">Send Request</string>
     <string name="chooseAddressOrder">Choose Address for Your Order</string>
     <string name="Address">Address</string>
+    <string name="country">Country:</string>
+    <string name="address_1">First Address:</string>
+    <string name="address_2">Second Address:</string>
+    <string name="phone">Phone:</string>
 
 
 
