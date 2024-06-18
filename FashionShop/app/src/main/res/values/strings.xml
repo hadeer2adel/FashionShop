@@ -78,7 +78,6 @@
     <string name="Address">Address</string>
 
 
-
     //payment
     <string name="payment">Continue To Payment</string>
     <string name="checkout">Checkout</string>
@@ -95,5 +94,9 @@
     <string name="Orders">Orders</string>
     <string name="Logout">Logout</string>
     <string name="Settings">Settings</string>
+
+    //cart
+    <string name="DeleteAll">Delete All Cart Items</string>
+    <string name="subTotal">Subtotal:</string>
 
 </resources>

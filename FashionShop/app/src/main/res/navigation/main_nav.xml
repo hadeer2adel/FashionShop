@@ -62,7 +62,7 @@
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/paymentFragment"
-        android:name="com.example.fashionshop.PaymentFragment"
+        android:name="com.example.fashionshop.Modules.Payment.view.PaymentFragment"
         android:label="Payment"
         tools:layout="@layout/fragment_payment" />
     <fragment
@@ -159,4 +159,9 @@
     <action
         android:id="@+id/action_from_map_to_addnewAddresses"
         app:destination="@id/AddAddress" />
+
+    <action android:id="@+id/actiomfromSheet_to_order"
+        app:destination="@+id/orderFragment"/>
+
+
 </navigation>

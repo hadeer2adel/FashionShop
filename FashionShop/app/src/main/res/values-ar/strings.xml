@@ -95,6 +95,8 @@
     <string name="Orders">الطلبات</string>
     <string name="Logout">تسجيل الخروج</string>
     <string name="Settings">الإعدادات</string>
+    <string name="DeleteAll">مسح جميع عناصر عربة التسوق</string>
+    <string name="subTotal">المجموع الكلي:</string>
 
 
 </resources>
