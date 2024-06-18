@@ -144,7 +144,7 @@ class RepositoryImp constructor(
         return networkManager.getProductImage(id)
     }
 
-    override suspend fun createOrder(order: OrderBody): OrderBodyResponse {
+    override suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse {
         return networkManager.createOrder(order)
     }
 

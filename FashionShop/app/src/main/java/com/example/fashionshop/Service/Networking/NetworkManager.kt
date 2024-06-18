@@ -52,7 +52,7 @@ interface NetworkManager {
     suspend fun getProductImage(@Path("id") id: Long): Images
 
     suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
-    suspend fun createOrder(order: OrderBody): OrderBodyResponse
+    suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse
 
     suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
 

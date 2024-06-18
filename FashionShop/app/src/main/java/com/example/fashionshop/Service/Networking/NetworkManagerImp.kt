@@ -146,7 +146,7 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return  networkService.getProductImage(id)
     }
 
-    override suspend fun createOrder(order: OrderBody): OrderBodyResponse {
+    override suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse {
         return networkService.createOrder(order)
     }
 

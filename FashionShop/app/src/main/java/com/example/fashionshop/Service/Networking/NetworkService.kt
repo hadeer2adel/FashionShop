@@ -127,7 +127,7 @@ interface NetworkService {
     suspend fun getProductImage(@Path("id") id: Long): Images
     @POST("orders.json")
     suspend fun createOrder(
-        @Body order: OrderBody
+        @Body order:  Map<String, OrderBody>
     ): OrderBodyResponse
     @GET("orders/{id}.json")
     suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>

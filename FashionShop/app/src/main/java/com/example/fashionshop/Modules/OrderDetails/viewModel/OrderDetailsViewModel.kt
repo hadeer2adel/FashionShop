@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class OrderDetailsViewModel (private var repository: Repository) : ViewModel() {
@@ -34,18 +35,27 @@ class OrderDetailsViewModel (private var repository: Repository) : ViewModel() {
     }
 
     fun createOrder(
-        orderBody: OrderBody,
+        orderBody: Map<String, OrderBody>,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response =repository.createOrder(orderBody)
-                _order.value = NetworkState.Success(response)
+                withContext(Dispatchers.Main) {
+                    _order.value = NetworkState.Success(response)
+                    onSuccess.invoke() // Call the onSuccess callback when successful
+                }
             } catch (e: HttpException) {
-                _order.value = NetworkState.Failure(e)
+                withContext(Dispatchers.Main) {
+                    _order.value = NetworkState.Failure(e)
+                    onError.invoke("HTTP Error: ${e.message}") // Call the onError callback with error message
+                }
             }catch (e: Exception) {
-                _order.value = NetworkState.Failure(e)
+                withContext(Dispatchers.Main) {
+                    _order.value = NetworkState.Failure(e)
+                    onError.invoke("Error: ${e.message}") // Call the onError callback with error message
+                }
             }
         }
     }

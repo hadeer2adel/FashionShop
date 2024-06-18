@@ -18,10 +18,12 @@ import androidx.navigation.ui.NavigationUI
 import com.example.fashionshop.Model.AddressBody
 import com.example.fashionshop.Model.CustomerBody
 import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Model.DefaultAddressBody
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.EmailMarketingConsentBody
 import com.example.fashionshop.Model.LineItemBody
-import com.example.fashionshop.Model.MarketingConsent
 import com.example.fashionshop.Model.OrderBody
+import com.example.fashionshop.Model.SmsMarketingConsentBody
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsFactory
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsViewModel
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
@@ -161,12 +163,11 @@ class OrderDetailsFragment() : Fragment()  {
             placeOrder()
         }
     }
-    /*private fun placeOrder() {
+    private fun placeOrder() {
         // Calculate subtotal
         val subtotal = lineItemsList.sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
 
-        // Example of creating an OrderBody (adjust as per your actual data structure)
-        val orderBody = OrderBody(
+        /*val orderBody = OrderBody(
             shipping_address = AddressBody(
                 first_name = "John",
                 last_name = "Doe",
@@ -184,7 +185,7 @@ class OrderDetailsFragment() : Fragment()  {
                 company = null, // Optional, adjust as per your needs
                 province_code = null // Optional, adjust as per your needs
             ),
-            billing_address =AddressBody(
+            billing_address = AddressBody(
                 first_name = "John",
                 last_name = "Doe",
                 address1 = "123 Main St",
@@ -204,10 +205,18 @@ class OrderDetailsFragment() : Fragment()  {
             customer = CustomerBody(
                 id = 1, // Replace with actual customer ID
                 email = "customer@example.com", // Replace with actual customer email
+                created_at = "2024-06-13T09:49:18-04:00", // Replace with actual creation date
+                updated_at = "2024-06-14T09:54:02-04:00", // Replace with actual update date
                 first_name = "John", // Replace with actual customer first name
                 last_name = "Doe", // Replace with actual customer last name
+                state = "disabled", // Replace with actual state
+                verified_email = true, // Replace with actual verification status
+                tags = "sample-tag", // Replace with actual tags
                 currency = "USD", // Replace with actual currency
-                default_address = AddressBody(
+                admin_graphql_api_id = "gid://shopify/Customer/1", // Replace with actual GraphQL API ID
+                default_address = DefaultAddressBody(
+                    id = 1, // Replace with actual default address ID
+                    customer_id = 1, // Replace with actual customer ID
                     first_name = "John",
                     last_name = "Doe",
                     address1 = "123 Street",
@@ -215,15 +224,18 @@ class OrderDetailsFragment() : Fragment()  {
                     zip = "12345",
                     country = "Country",
                     phone = "1234567890",
-                    latitude = 0.0,
-                    longitude = 0.0,
+                    name = "John Doe",
+                    country_code = "US",
+                    country_name = "Country",
                     province = null,
                     address2 = null,
                     company = null,
-                    name = "John Doe",
-                    country_code = "US",
-                    province_code = null
-                )
+                    province_code = null,
+                    default = true
+                ),
+                note = null, // Optional, adjust as per your needs
+                multipass_identifier = null, // Optional, adjust as per your needs
+                tax_exempt = false // Replace with actual tax exempt status
             ),
             line_items = lineItemsList.map { lineItem ->
                 LineItemBody(
@@ -234,78 +246,187 @@ class OrderDetailsFragment() : Fragment()  {
                     price = lineItem.price
                 )
             },
-            total_tax = "0", // Replace with actual total tax
+            total_tax = 13.5, // Replace with actual total tax
             currency = "USD" // Replace with actual currency
-        )
-
-        // Example call to ViewModel method to create order
-        allCodesViewModel.createOrder(orderBody,
-            onSuccess = {
-                Toast.makeText(requireContext(), "Order placed successfully", Toast.LENGTH_LONG).show()
-                Log.d("placeOrder", "success")
-                // Handle success, e.g., navigate to a success screen if needed
-            },
-            onError = { errorMessage ->
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
-                Log.d("placeOrder", "error: $errorMessage")
-                // Handle error, e.g., show an error message to the user
-            }
-        )
-    }*/
-    private fun placeOrder() {
-        // Calculate subtotal
-        val subtotal = lineItemsList.sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
-
-        // Construct shipping address (and billing address if applicable)
-        val shippingAddress = AddressBody(
-            first_name = "John",
-            last_name = "Doe",
-            address1 = "123 Main St",
-            phone = "123-456-7890",
-            city = "Anytown",
-            zip = "12345",
-            province = "Province",
-            country = "Country",
-            latitude = 0.0,
-            longitude = 0.0,
-            name = "John Doe",
-            country_code = "US",
-            address2 = null,
-            company = null,
-            province_code = null
-        )
-
-        // Example of creating an OrderBody instance
-        val orderBody = OrderBody(
-            shipping_address = shippingAddress,
-            billing_address = shippingAddress, // Replace with actual billing address if different
+        )*/
+        //latest version
+       /* val orderBody = OrderBody(
+            shipping_address = AddressBody(
+                first_name = "John",
+                last_name = "Doe",
+                address1 = "123 Main St",
+                phone = "123-456-7890",
+                city = "Anytown",
+                zip = "12345",
+                province = "Province",
+                country = "Country",
+                latitude = 0.0,
+                longitude = 0.0,
+                name = "John Doe",
+                country_code = "US",
+                address2 = null, // Optional, adjust as per your needs
+                company = null, // Optional, adjust as per your needs
+                province_code = null // Optional, adjust as per your needs
+            ),
+            billing_address = AddressBody(
+                first_name = "John",
+                last_name = "Doe",
+                address1 = "123 Main St",
+                phone = "123-456-7890",
+                city = "Anytown",
+                zip = "12345",
+                province = "Province",
+                country = "Country",
+                latitude = 0.0,
+                longitude = 0.0,
+                name = "John Doe",
+                country_code = "US",
+                address2 = null, // Optional, adjust as per your needs
+                company = null, // Optional, adjust as per your needs
+                province_code = null // Optional, adjust as per your needs
+            ),
             customer = CustomerBody(
-                id = CustomerData.getInstance(requireContext()).id,
-                email = CustomerData.getInstance(requireContext()).email,
-                first_name = CustomerData.getInstance(requireContext()).name,
-                last_name = CustomerData.getInstance(requireContext()).name,
-                state = "State", // Replace with actual state
-                email_marketing_consent = MarketingConsent("state", "opt_in_level", "consent_updated_at"), // Replace with actual MarketingConsent
-                sms_marketing_consent = MarketingConsent("state", "opt_in_level", "consent_updated_at"), // Replace with actual MarketingConsent
-                tags = "tags", // Replace with actual tags
-                currency = CustomerData.getInstance(requireContext()).currency,
-                default_address = shippingAddress // Replace with actual default address
+                id = 1, // Replace with actual customer ID
+                email = "customer@example.com", // Replace with actual customer email
+                created_at = "2024-06-13T09:49:18-04:00", // Replace with actual creation date
+                updated_at = "2024-06-14T09:54:02-04:00", // Replace with actual update date
+                first_name = "John", // Replace with actual customer first name
+                last_name = "Doe", // Replace with actual customer last name
+                state = "disabled", // Replace with actual state
+                verified_email = true, // Replace with actual verification status
+                tags = "sample-tag", // Replace with actual tags
+                currency = "USD", // Replace with actual currency
+                admin_graphql_api_id = "gid://shopify/Customer/1", // Replace with actual GraphQL API ID
+                default_address = DefaultAddressBody(
+                    id = 1, // Replace with actual default address ID
+                    customer_id = 1, // Replace with actual customer ID
+                    first_name = "John",
+                    last_name = "Doe",
+                    address1 = "123 Street",
+                    city = "City",
+                    zip = "12345",
+                    country = "Country",
+                    phone = "1234567890",
+                    name = "John Doe",
+                    country_code = "US",
+                    country_name = "Country",
+                    province = null,
+                    address2 = null,
+                    company = null,
+                    province_code = null,
+                    default = true
+                ),
+                note = null, // Optional, adjust as per your needs
+                multipass_identifier = null, // Optional, adjust as per your needs
+                tax_exempt = false // Replace with actual tax exempt status
             ),
             line_items = lineItemsList.map { lineItem ->
                 LineItemBody(
                     variant_id = lineItem.variant_id,
                     quantity = lineItem.quantity,
                     id = lineItem.id,
-                    title = lineItem.title ?: "dummy",
-                    price = lineItem.price?.toDouble()
+                    title = lineItem.title,
+                    price = lineItem.price
                 )
             },
             total_tax = 13.5, // Replace with actual total tax
-            currency = CustomerData.getInstance(requireContext()).currency // Replace with actual currency
+            currency = "USD" // Replace with actual currency
+        )*/
+
+        val address = AddressBody(
+            first_name = "Isaiah",
+            address1 = "P.O. Box 835, 451 Vulputate Road",
+            phone = "+62361752305",
+            city = "Broken Arrow",
+            zip = "5416",
+            province = null,
+            country = "Indonesia",
+            last_name = "Orr",
+            address2 = null,
+            company = null,
+            latitude = -0.789275,
+            longitude = 113.921327,
+            name = "Isaiah Orr",
+            country_code = "ID",
+            province_code = null
         )
 
+        val emailMarketingConsent = EmailMarketingConsentBody(
+            state = "not_subscribed",
+            opt_in_level = "single_opt_in",
+            consent_updated_at = null
+        )
+
+        val smsMarketingConsent = SmsMarketingConsentBody(
+            state = "not_subscribed",
+            opt_in_level = "single_opt_in",
+            consent_updated_at = null,
+            consent_collected_from = "OTHER"
+        )
+
+        val defaultAddress = DefaultAddressBody(
+            id = 8747727093931,
+            customer_id = 7395407659179,
+            first_name = "Isaiah",
+            last_name = "Orr",
+            company = null,
+            address1 = "P.O. Box 835, 451 Vulputate Road",
+            address2 = null,
+            city = "Broken Arrow",
+            province = null,
+            country = "Indonesia",
+            zip = "5416",
+            phone = "+62361752305",
+            name = "Isaiah Orr",
+            province_code = null,
+            country_code = "ID",
+            country_name = "Indonesia",
+            default = true
+        )
+
+        val customer = CustomerBody(
+            id = CustomerData.getInstance(requireContext()).id,
+            email = CustomerData.getInstance(requireContext()).email,
+            created_at = "2024-06-13T09:49:18-04:00",
+            updated_at = "2024-06-14T09:54:02-04:00",
+            first_name = CustomerData.getInstance(requireContext()).name,
+            last_name = CustomerData.getInstance(requireContext()).name,
+            state = "disabled",
+            note = null,
+            verified_email = true,
+            multipass_identifier = null,
+            tax_exempt = false,
+            email_marketing_consent = emailMarketingConsent,
+            sms_marketing_consent = smsMarketingConsent,
+            tags = "egnition-sample-data, referral",
+            currency = CustomerData.getInstance(requireContext()).currency,
+            tax_exemptions = listOf(),
+            admin_graphql_api_id = "gid://shopify/Customer/7395407659179",
+            default_address = defaultAddress
+        )
+
+        val lineItem = lineItemsList.map { lineItem ->
+            LineItemBody(
+                variant_id = lineItem.variant_id,
+                quantity = lineItem.quantity,
+                id = lineItem.id,
+                title = lineItem.title,
+                price = lineItem.price
+            )
+        }
+
+        val orderBody = OrderBody(
+            billing_address = address,
+            customer = customer,
+            line_items = lineItem,
+            total_tax = 13.5,
+            currency = CustomerData.getInstance(requireContext()).currency
+        )
+        // Wrapping the orderBody within an "order" object
+        val wrappedOrderBody = mapOf("order" to orderBody)
+
         // Example call to ViewModel method to create order
-        allCodesViewModel.createOrder(orderBody,
+        allCodesViewModel.createOrder(wrappedOrderBody,
             onSuccess = {
                 Toast.makeText(requireContext(), "Order placed successfully", Toast.LENGTH_LONG).show()
                 Log.d("placeOrder", "success")
@@ -318,15 +439,6 @@ class OrderDetailsFragment() : Fragment()  {
             }
         )
     }
-
-
-
-
-
-
-
-
-
 
 
 }

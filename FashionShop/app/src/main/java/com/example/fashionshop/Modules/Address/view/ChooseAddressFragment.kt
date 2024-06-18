@@ -60,16 +60,6 @@ class ChooseAddressFragment : Fragment() , AddressListener{
 
         binding.buttonContinueToPayment.setOnClickListener {
            findNavController().navigate(R.id.action_AdressFragment_to_paymentFragment )
-//            val action = ChooseAddressFragmentDirections.actionChooseAddressFragmentToDestinationFragment(dynamicAddresse)
-//            findNavController().navigate(action)
-            //error when i click
-            if (dynamicAddresse != null) {
-                //val action = ChooseAddressFragmentDirections.actionAdressFragmentToPaymentFragment(dynamicAddresse!!)
-                //findNavController().navigate(action)
-            } else {
-                Log.e("ChooseAddressFragment", "dynamicAddresse is null")
-                Toast.makeText(requireContext(), "Address is not available", Toast.LENGTH_SHORT).show()
-            }
         }
         return view
     }

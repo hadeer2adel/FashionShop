@@ -136,7 +136,8 @@ class OrdersFragment : Fragment() {
         val factory = OrdersFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(OrdersViewModel::class.java)
         val id = CustomerData.getInstance(requireContext()).id
-        viewModel.getOrders(7371713577180)
+        //viewModel.getOrders(7371713577180)
+        viewModel.getOrders(id)
         lifecycleScope.launch {
             viewModel.orders.collectLatest { response ->
                 when(response){
