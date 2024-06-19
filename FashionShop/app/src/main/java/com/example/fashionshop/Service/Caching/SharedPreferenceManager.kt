@@ -18,28 +18,6 @@ class SharedPreferenceManager(private val context: Context) {
         Language,
         LanguageCode
     }
-    private var sharedPreferences: SharedPreferences? = null
-    private var editor: SharedPreferences.Editor? = null
-
-    init {
-        sharedPreferences = context.getSharedPreferences("LocationPrefs", Context.MODE_PRIVATE)
-        editor = sharedPreferences?.edit()
-    }
-
-    companion object {
-        @Volatile
-        private var INSTANCE : SharedPreferenceManager? = null
-
-        fun getInstance(context: Context) : SharedPreferenceManager {
-            return INSTANCE ?: synchronized(context){
-                val instance = SharedPreferenceManager(context)
-                INSTANCE = instance
-
-                instance
-            }
-
-        }
-    }
 
     fun save(key: Key, value: String) {
         val sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
@@ -54,23 +32,11 @@ class SharedPreferenceManager(private val context: Context) {
         return sharedPreferences.getString(key.name, defaultValue) ?: defaultValue
     }
 
-    fun isContains(key: Key): Boolean {
+    fun clear(){
         val sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
-        return sharedPreferences.contains(key.name)
-    }
-
-    fun saveLanguage(languageCode: String) {
-        editor?.putString("language", languageCode)?.apply()
-    }
-
-    fun getLanguage(): String? {
-        return sharedPreferences?.getString("language", null)
-    }
-    fun saveLanguageUnit(language: String) {
-        editor?.putString("languageCode", language)?.apply()
-    }
-
-    fun getLanguageUnit(): String? {
-        return sharedPreferences?.getString("languageCode", "en")
+        with(sharedPreferences.edit()) {
+            clear()
+            apply()
+        }
     }
 }

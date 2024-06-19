@@ -93,5 +93,7 @@ class CustomerData private constructor(_context: Context) {
         }
     }
 
-    fun isLogedIn() = manager.isContains(SharedPreferenceManager.Key.ID)
-}
+    fun logOut() {
+        instance = null
+        manager.clear()
+    }}

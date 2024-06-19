@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
@@ -20,7 +21,9 @@ import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentProfileBinding
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -101,7 +104,17 @@ class ProfileFragment : Fragment() {
         }
 
         binding.logout.setOnClickListener {
-            Toast.makeText(requireContext(), "Logout!", Toast.LENGTH_SHORT).show()
+            val onAllow: () -> Unit = {
+                FirebaseAuth.getInstance().signOut()
+                CustomerData.getInstance(requireContext()).logOut()
+                findNavController().navigate(R.id.homeFragment)
+            }
+            showDialog(
+                requireContext(),
+                R.string.Logout,
+                R.string.logout_body,
+                onAllow
+            )
         }
     }
 

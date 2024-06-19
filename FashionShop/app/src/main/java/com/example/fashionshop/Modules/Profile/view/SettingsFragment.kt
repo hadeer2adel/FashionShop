@@ -184,8 +184,6 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
         val currentLocale = Locale.getDefault()
         val newLocale = Locale(languageCode)
 
-        val sharedPreferencesManager = SharedPreferenceManager.getInstance(requireContext())
-       // sharedPreferencesManager.saveLanguage(languageCode)
         CustomerData.getInstance(requireContext()).language = languageCode
         if (currentLocale != newLocale && !isLanguageChanging) {
             isLanguageChanging = true

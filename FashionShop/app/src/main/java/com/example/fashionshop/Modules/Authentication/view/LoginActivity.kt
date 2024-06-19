@@ -45,8 +45,9 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //if(CustomerData.getInstance(this).isLogged){
-          //  startActivity(Intent(this, MainActivity::class.java))}
+        if(CustomerData.getInstance(this).isLogged){
+            startActivity(Intent(this, MainActivity::class.java))
+        }
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.client_id))

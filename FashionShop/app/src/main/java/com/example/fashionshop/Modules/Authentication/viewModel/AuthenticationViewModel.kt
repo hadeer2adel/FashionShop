@@ -45,7 +45,6 @@ class AuthenticationViewModel(private var repository: Repository) : ViewModel(){
                         cart.draft_order.id
                     ))
                 val response = repository.updateCustomer(id, updateCustomerRequest)
-                Log.i("TAG", response.toString())
                 _customer.value = NetworkState.Success(response)
             } catch (e: HttpException) {
                 _customer.value = NetworkState.Failure(e)
@@ -68,7 +67,6 @@ class AuthenticationViewModel(private var repository: Repository) : ViewModel(){
                         cart.draft_order.id
                     ))
                 val response = repository.updateCustomer(id, updateCustomerRequest)
-                Log.i("TAG", response.toString())
 
                 _customer.value = NetworkState.Success(response)
             } catch (e: HttpException) {
@@ -83,7 +81,6 @@ class AuthenticationViewModel(private var repository: Repository) : ViewModel(){
         viewModelScope.launch(Dispatchers.IO){
             try {
                 val response = repository.getCustomerByEmail(email)
-                Log.i("TAG", response.toString())
                 _customers.value = NetworkState.Success(response)
             } catch (e: HttpException) {
                 _customers.value = NetworkState.Failure(e)

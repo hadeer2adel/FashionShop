@@ -1,7 +1,6 @@
 package com.example.fashionshop.Modules.FavProductList.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,18 +8,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.fashionshop.Adapters.FavProductAdapter
-import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.CustomerData
-import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModelFactory
-import com.example.fashionshop.Modules.Products.view.ProductsFragmentDirections
-import com.example.fashionshop.Modules.Products.viewModel.ProductsFactory
-import com.example.fashionshop.Modules.Products.viewModel.ProductsViewModel
+import com.example.fashionshop.Modules.FavProductList.view.FavoriteFragmentDirections
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
@@ -31,7 +25,6 @@ import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentFavoriteBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 
 class FavoriteFragment : Fragment() {
@@ -71,8 +64,8 @@ class FavoriteFragment : Fragment() {
         }
         val onCardClick: (id: Long) -> Unit = {
             val navController = NavHostFragment.findNavController(this)
-//            val action = FavoriteFragmentDirections.actionToProductInfoFragment(it)
-//            navController.navigate(action)
+            val action = FavoriteFragmentDirections.actionToProductInfoFragment(it)
+            navController.navigate(action)
         }
 
         adapter = FavProductAdapter(requireContext(), true, onClick, onCardClick)
