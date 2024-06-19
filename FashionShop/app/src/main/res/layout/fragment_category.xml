@@ -5,6 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="80dp"
     tools:context=".Modules.Category.view.CategoryFragment">
 
     <!--
@@ -124,7 +125,6 @@
         android:id="@+id/rv_products"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -139,7 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="90dp"
+        android:layout_marginBottom="10dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:elevation="16dp"

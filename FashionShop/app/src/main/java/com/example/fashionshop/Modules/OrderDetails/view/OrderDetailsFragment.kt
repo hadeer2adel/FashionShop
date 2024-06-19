@@ -1,6 +1,7 @@
 package com.example.fashionshop.Modules.OrderDetails.view
 
 import android.app.AlertDialog
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -232,6 +234,9 @@ class OrderDetailsFragment() : Fragment() {
                             val value = response.data
                             for (rule in value.price_rules) {
                                 if (rule.title == coupon) {
+                                    val greenColor = ContextCompat.getColor(requireContext(), R.color.green)
+                                    binding.validate.backgroundTintList = ColorStateList.valueOf(greenColor)
+                                    binding.validate.text = requireContext().getString(R.string.valid)
                                     val valueOfDis = rule.value.toDoubleOrNull() ?: 0.0
                                     val subtotal = binding.subTotalValue.text.toString().toDoubleOrNull() ?: 0.0
                                     val discountAmount = subtotal * (valueOfDis / 100)
@@ -251,6 +256,10 @@ class OrderDetailsFragment() : Fragment() {
             }
         } else {
             showInvalidCouponDialog()
+            val greenColor = ContextCompat.getColor(requireContext(), R.color.gray)
+            binding.validate.backgroundTintList = ColorStateList.valueOf(greenColor)
+            binding.validate.text = requireContext().getString(R.string.validate)
+
         }
     }
 

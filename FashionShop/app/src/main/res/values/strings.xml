@@ -11,6 +11,7 @@
     <string name="kid">KID</string>
     <string name="men">MEN</string>
     <string name="sale">SALE</string>
+    <string name="pieces">Pieces</string>
 
     //login page
     <string name="login_title1">Welcome Back</string>
@@ -70,12 +71,13 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="validate">Validate</string>
+    <string name="valid">Valid</string>
     <string name="sure">Sure</string>
 
     //Address
     <string name="newAddress">Add New Address</string>
     <string name="newAddressAdded">Send Request</string>
-    <string name="chooseAddressOrder">Choose Address for Your Order</string>
+    <string name="chooseAddressOrder">Choose Address: </string>
     <string name="Address">Address</string>
     <string name="country">Country:</string>
     <string name="address_1">First Address:</string>
@@ -85,6 +87,7 @@
 
     //payment
     <string name="payment">Continue To Payment</string>
+    <string name="next">Next</string>
     <string name="checkout">Checkout</string>
 
     //settings
@@ -111,8 +114,8 @@
     <string name="total_price">Total Price</string>
     <string name="_100">100$</string>
     <string name="ahmed_gmail_com">ahmed@gmail.com</string>
-    <string name="contact_email">Contact Email</string>
-    <string name="phone_number">Phone Number</string>
+    <string name="contact_email">Email</string>
+    <string name="phone_number">Phone</string>
     <string name="quantity">quantity</string>
 
     //auth message
