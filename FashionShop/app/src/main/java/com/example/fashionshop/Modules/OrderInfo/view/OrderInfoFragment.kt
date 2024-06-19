@@ -14,6 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fashionshop.Adapters.SingleOrderAdapter
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.LineItem
 import com.example.fashionshop.Model.LineItemBody
@@ -84,6 +85,7 @@ class OrderInfoFragment : Fragment() {
                                 binding.tvOrderPhome.text = order.billing_address?.phone
                                 binding.tvOrderAddress.text = order.billing_address?.address1
                                 binding.tvOrderPrice.text = order.total_price
+                                binding.currency.text = CustomerData.getInstance(requireContext()).currency
                                 // Convert and submit the list
                                 val lineItemBodies = order.line_items?.map { convertToLineItemBody(it) }?.toMutableList()
                                 adapter.submitList(lineItemBodies)

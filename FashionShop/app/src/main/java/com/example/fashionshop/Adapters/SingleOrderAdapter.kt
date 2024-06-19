@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.LineItemBody
 import com.example.fashionshop.R
 import com.example.fashionshop.databinding.CardOrderDetailBinding
@@ -30,6 +31,7 @@ class SingleOrderAdapter(private val context: Context)
             tvTitle.text = order.title
             tvQuantity.text = order.quantity.toString()
             tvPrice.text = order.price
+            currency.text = CustomerData.getInstance(context).currency
 //            val values = order.sku?.split("*")
 //            val imageUrl = values?.get(1)
 //            Glide
@@ -44,7 +46,7 @@ class SingleOrderAdapter(private val context: Context)
                     .load(imageUrls[0])
                     .placeholder(R.drawable.adidas) // Optional: add a placeholder
                     .error(R.drawable.logout) // Optional: add an error image
-                    .into(ivProduct)
+                    .into(cvImage)
             } else {
                 Log.i("Glide", "No image URLs found in SKU: ${order.sku}")
             }
