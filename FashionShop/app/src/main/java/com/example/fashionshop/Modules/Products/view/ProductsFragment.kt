@@ -6,26 +6,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.fashionshop.Adapters.BrandAdapter
 import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
-import com.example.fashionshop.Model.ProductDetails
-import com.example.fashionshop.Model.SmartCollection
-import com.example.fashionshop.Modules.FavProductList.view.FavoriteFragmentDirections
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModelFactory
-import com.example.fashionshop.Modules.Home.viewModel.HomeFactory
-import com.example.fashionshop.Modules.Home.viewModel.HomeViewModel
 import com.example.fashionshop.Modules.Products.viewModel.ProductsFactory
 import com.example.fashionshop.Modules.Products.viewModel.ProductsViewModel
-import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
@@ -51,7 +43,7 @@ class ProductsFragment : Fragment()  {
         // Inflate the layout for this fragment
         _binding = FragmentProductsBinding.inflate(inflater, container, false)
         val view = binding.root
-        Toast.makeText(requireContext(), "Clicked on ${args.brandName}", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(requireContext(), "Clicked on ${args.brandName}", Toast.LENGTH_SHORT).show()
         return view
     }
 

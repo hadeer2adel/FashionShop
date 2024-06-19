@@ -13,6 +13,9 @@ import com.example.fashionshop.Model.ExchangeRatesResponse
 import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.OrderBody
+import com.example.fashionshop.Model.OrderBodyResponse
+import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.ProductResponse
@@ -95,6 +98,9 @@ interface NetworkService {
         @Body QuantityRequest: editOrderQuantityBody
     ): DraftOrders
 
+    @GET("customers/{id}/orders.json")
+    suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
+
 
     @GET("price_rules.json")
     suspend fun getDiscountCodes(): PriceRule
@@ -143,6 +149,12 @@ interface NetworkService {
         @Field("payment_method_types[0]") paymentMethodType: String
     ): CheckoutSessionResponse
 
+    @POST("orders.json")
+    suspend fun createOrder(
+        @Body order:  Map<String, OrderBody>
+    ): OrderBodyResponse
+    @GET("orders/{id}.json")
+    suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
 }
 
 

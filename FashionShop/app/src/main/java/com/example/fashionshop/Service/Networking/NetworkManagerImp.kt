@@ -15,6 +15,9 @@ import com.example.fashionshop.Model.ExchangeRatesResponse
 import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.OrderBody
+import com.example.fashionshop.Model.OrderBodyResponse
+import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.UpdateCustomerRequest
@@ -115,6 +118,10 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return networkService.getCustomerByEmail(email)
     }
 
+    override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
+        return networkService.getCustomerOrders(userId)
+    }
+
     override suspend fun getDiscountCodesCount(): PriceRuleCount {
         return networkService.getDiscountCodesCount()
     }
@@ -149,6 +156,13 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return  networkService.getProductImage(id)
     }
 
+    override suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse {
+        return networkService.createOrder(order)
+    }
+
+    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
+        return networkService.getSingleOrder(orderId)
+    }
     override suspend fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX{
         return networkServiceExchanges.getExchangeRates(apiKey,symbols,base)
     }
@@ -167,5 +181,6 @@ class NetworkManagerImp private constructor(): NetworkManager {
     ): CheckoutSessionResponse {
       return   networkServicePayment.createCheckoutSession(successUrl,cancelUrl,customerEmail,currency,productName,productDescription,unitAmountDecimal,quantity,mode,paymentMethodType)
         }
+
 
 }

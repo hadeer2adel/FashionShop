@@ -103,6 +103,8 @@ class FavoriteFragment : Fragment() {
                         binding.progressBar.visibility = View.GONE
                         Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    else -> {}
                 }
             }
         }

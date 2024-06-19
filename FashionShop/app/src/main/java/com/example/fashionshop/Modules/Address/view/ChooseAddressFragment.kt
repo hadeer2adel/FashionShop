@@ -14,7 +14,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.AddressAdapter
+import com.example.fashionshop.Model.Addresse
 import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Model.LineItem
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.FragmentChooseAddressBinding
@@ -33,6 +35,7 @@ class ChooseAddressFragment : Fragment() , AddressListener{
     private lateinit var mAdapter: AddressAdapter
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var draftOrderIds: List<Long>
+    private var dynamicAddresse: Addresse? = null // Initialize with null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,7 +71,6 @@ class ChooseAddressFragment : Fragment() , AddressListener{
                         mAdapter.setAddressList(filteredAddresses)
                         mAdapter.notifyDataSetChanged()
 
-
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
@@ -89,7 +91,12 @@ class ChooseAddressFragment : Fragment() , AddressListener{
         findNavController().navigate(R.id.action_Payment_to_orderDetailsFragment)
 
     }
-        return view
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
     }
     private fun refreshFragment() {
         allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)

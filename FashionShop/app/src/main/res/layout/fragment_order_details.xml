@@ -149,29 +149,29 @@
         app:layout_constraintEnd_toEndOf="@+id/validate"
         app:layout_constraintTop_toTopOf="@+id/discountTitle" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/ShippingFeeTitle"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        android:padding="10dp"-->
-<!--        android:textSize="20sp"-->
-<!--        android:textStyle="bold"-->
-<!--        android:text="@string/shipping_fee"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/discountTitle"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/discountTitle" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/ShippingFeeTitle"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:padding="10dp"-->
+    <!--        android:textSize="20sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        android:text="@string/shipping_fee"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/discountTitle"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/discountTitle" />-->
 
-<!--    <TextView-->
-<!--        android:id="@+id/ShippingFeeValue"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/_0"-->
-<!--        android:padding="10dp"-->
-<!--        android:textSize="20sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/ShippingFeeTitle"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/discountValue"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/ShippingFeeTitle" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/ShippingFeeValue"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="@string/_0"-->
+    <!--        android:padding="10dp"-->
+    <!--        android:textSize="20sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/ShippingFeeTitle"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/discountValue"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/ShippingFeeTitle" />-->
 
     <TextView
         android:id="@+id/totalTitle"

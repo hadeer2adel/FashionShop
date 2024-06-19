@@ -1,5 +1,7 @@
 package com.example.fashionshop.Model
 
+import android.os.Parcelable
+
 data class LineItem(
     val admin_graphql_api_id: String,
     val applied_discount: Any,

@@ -17,11 +17,15 @@ import com.example.fashionshop.Model.ExchangeRatesResponse
 import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.OrderBody
+import com.example.fashionshop.Model.OrderBodyResponse
+import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Model.editOrderQuantityBody
+import retrofit2.http.Body
 import retrofit2.http.Path
 
 interface NetworkManager {
@@ -53,4 +57,12 @@ interface NetworkManager {
     suspend fun createCheckoutSession(successUrl: String,cancelUrl: String,customerEmail: String,currency: String,productName: String,productDescription: String,
                                       unitAmountDecimal: Int, quantity: Int,mode: String, paymentMethodType: String
     ): CheckoutSessionResponse
+
+    suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
+    suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse
+
+    suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
+
+
+    suspend  fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX
 }

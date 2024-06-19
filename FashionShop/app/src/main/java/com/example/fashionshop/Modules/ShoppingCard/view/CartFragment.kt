@@ -60,7 +60,6 @@ class CartFragment : Fragment() ,CartListener {
             CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
         allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
         var d = 0.0
-      //  allProductViewModel.getCardProducts()
         allCategoryViewModel.getLatestRates()
         lifecycleScope.launch {
             allCategoryViewModel.productCurrency.collectLatest { response ->
@@ -99,6 +98,8 @@ class CartFragment : Fragment() ,CartListener {
                         if (customer.currency=="USD"){
                          //   val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
                            // price.text = convertCurrency(subtotal)
+                            //   val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
+                            // price.text = convertCurrency(subtotal)
                             binding.textViewSubtotal.text = "${convertCurrency(subtotal)}"
 
                         }
@@ -118,27 +119,27 @@ class CartFragment : Fragment() ,CartListener {
                     }
                 }
             } }
-            lifecycleScope.launch {
-                allProductViewModel.productCardImage.collectLatest { response ->
-                    when(response){
-                        is NetworkState.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
-                            binding.recyclerViewCartItems.visibility = View.GONE
-                        }
-                        is NetworkState.Success -> {
-                            binding.progressBar.visibility = View.GONE
-                            binding.recyclerViewCartItems.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            allProductViewModel.productCardImage.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.recyclerViewCartItems.visibility = View.GONE
+                    }
+                    is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.recyclerViewCartItems.visibility = View.VISIBLE
 //                            mAdapter.setCardImages(response.data.images[0].src)
 //                            response.data.images[0].src
-                              //  allProductViewModel.getCardProductsImages(item.id)
-                            }
+                        //  allProductViewModel.getCardProductsImages(item.id)
+                    }
 
-                        is NetworkState.Failure -> {
-                            binding.progressBar.visibility = View.GONE
-                            Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
-                        }
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
         }
 
 
@@ -268,6 +269,13 @@ class CartFragment : Fragment() ,CartListener {
 //        super.onDestroyView()
 //        _binding = null
 //    }
+    private fun updateCurrencyRates(newRate: Double) {
+        mAdapter.updateCurrencyConversionRate(newRate)
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully
         val convertedPrice = amount / currencyConversionRate

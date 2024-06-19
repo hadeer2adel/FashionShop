@@ -14,6 +14,9 @@ import com.example.fashionshop.Model.ExchangeRatesResponse
 import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.OrderBody
+import com.example.fashionshop.Model.OrderBodyResponse
+import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.UpdateCustomerRequest
@@ -106,6 +109,9 @@ class RepositoryImp constructor(
 
     }
 
+    override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
+        return  networkManager.getCustomerOrders(userId)
+    }
 
     override suspend fun getDiscountCodesCount(): PriceRuleCount {
         return networkManager.getDiscountCodesCount()
@@ -143,6 +149,13 @@ class RepositoryImp constructor(
         return networkManager.getProductImage(id)
     }
 
+    override suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse {
+        return networkManager.createOrder(order)
+    }
+
+    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
+        return networkManager.getSingleOrder(orderId)
+    }
 
 
     override suspend fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX{

@@ -115,6 +115,7 @@
 at least one upper letter, one lowercase letter, and one digit</string>
     <string name="error_not_match">Password and confirm password doesn\'t match</string>
 
+
 <!--    <string name="Orders">الطلبات</string>-->
 <!--    <string name="Logout">تسجيل الخروج</string>-->
 <!--    <string name="Settings">الإعدادات</string>-->

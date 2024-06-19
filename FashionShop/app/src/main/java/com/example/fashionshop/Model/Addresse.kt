@@ -1,5 +1,7 @@
 package com.example.fashionshop.Model
 
+import java.io.Serializable
+
 data class Addresse(
     val address1: String,
     val address2: Any,
@@ -18,4 +20,4 @@ data class Addresse(
     val province: Any,
     val province_code: Any,
     val zip: String
-)
+) : Serializable
