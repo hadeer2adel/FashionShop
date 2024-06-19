@@ -10,6 +10,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsFactory
+import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsViewModel
+import com.example.fashionshop.Repository.RepositoryImp
+import com.example.fashionshop.Service.Networking.NetworkManagerImp
+import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentPaymentBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

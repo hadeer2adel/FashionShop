@@ -44,13 +44,9 @@
         android:name="com.example.fashionshop.Modules.Orders.view.OrdersFragment"
         android:label="Orders"
         tools:layout="@layout/fragment_orders" >
-        <action
-            android:id="@+id/action_orderFragment_to_orderInfoFragment"
-            app:destination="@id/orderInfoFragment" >
-            <argument
-                android:name="orderId"
-                app:argType="long" />
-        </action>
+        <argument
+            android:name="orderId"
+            app:argType="long" />
     </fragment>
 
     <fragment
@@ -174,7 +170,7 @@
     <fragment
         android:id="@+id/orderInfoFragment"
         android:name="com.example.fashionshop.Modules.OrderInfo.view.OrderInfoFragment"
-        android:label="fragment_order_info"
+        android:label="Order Info"
         tools:layout="@layout/fragment_order_info" >
         <argument
             android:name="orderId"
@@ -188,4 +184,10 @@
     <action
         android:id="@+id/action_cartFragment_to_ChooseAddressFragment"
         app:destination="@id/chooseAdress" />
+
+    <action
+        android:id="@+id/action_orderFragment_to_orderInfoFragment"
+        app:destination="@id/orderInfoFragment" >
+
+    </action>
 </navigation>

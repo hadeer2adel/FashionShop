@@ -3,11 +3,13 @@ package com.example.fashionshop.Modules.ShoppingCard.view
 import CartFragmentArgs
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.CartAdapter
 import com.example.fashionshop.Model.CustomerData
-import com.example.fashionshop.Model.LineItem
 import com.example.fashionshop.Model.TaxLineX
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
@@ -59,7 +60,7 @@ class CartFragment : Fragment() ,CartListener {
             CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
         allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
         var d = 0.0
-
+        //allProductViewModel.getCardProducts()
         allCategoryViewModel.getLatestRates()
         lifecycleScope.launch {
             allCategoryViewModel.productCurrency.collectLatest { response ->
@@ -92,13 +93,12 @@ class CartFragment : Fragment() ,CartListener {
                     is NetworkState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         binding.recyclerViewCartItems.visibility = View.VISIBLE
-                        val lineItemsList = response.data.draft_order.line_items.drop(1)
-                        mAdapter.setCartList(lineItemsList)
+                        mAdapter.setCartList(response.data.draft_order.line_items.drop(1))
                         val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
                         val customer = CustomerData.getInstance(requireContext())
                         if (customer.currency=="USD"){
-                         //   val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
-                           // price.text = convertCurrency(subtotal)
+                            //   val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
+                            // price.text = convertCurrency(subtotal)
                             binding.textViewSubtotal.text = "${convertCurrency(subtotal)}"
 
                         }
@@ -118,33 +118,32 @@ class CartFragment : Fragment() ,CartListener {
                     }
                 }
             } }
-            lifecycleScope.launch {
-                allProductViewModel.productCardImage.collectLatest { response ->
-                    when(response){
-                        is NetworkState.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
-                            binding.recyclerViewCartItems.visibility = View.GONE
-                        }
-                        is NetworkState.Success -> {
-                            binding.progressBar.visibility = View.GONE
-                            binding.recyclerViewCartItems.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            allProductViewModel.productCardImage.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.recyclerViewCartItems.visibility = View.GONE
+                    }
+                    is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.recyclerViewCartItems.visibility = View.VISIBLE
 //                            mAdapter.setCardImages(response.data.images[0].src)
 //                            response.data.images[0].src
-                              //  allProductViewModel.getCardProductsImages(item.id)
-                            }
+                        //  allProductViewModel.getCardProductsImages(item.id)
+                    }
 
-                        is NetworkState.Failure -> {
-                            binding.progressBar.visibility = View.GONE
-                            Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
-                        }
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
         }
 
 
         binding.buttonCheckout.setOnClickListener {
             val args = CartFragmentArgs(draftOrderIds).toBundle() // Convert CartFragmentArgs to Bundle
-
             findNavController().navigate(R.id.action_cartFragment_to_paymentFragment, args)
         }
         binding.deleteall.setOnClickListener {
@@ -152,6 +151,7 @@ class CartFragment : Fragment() ,CartListener {
         }
         return view
     }
+
     private fun updateCurrencyRates(newRate: Double) {
         mAdapter.updateCurrencyConversionRate(newRate)
     }
@@ -185,7 +185,5 @@ class CartFragment : Fragment() ,CartListener {
         allProductViewModel.editCardQuantityProduct(id,quantity,price)
         Toast.makeText(requireContext(), "sendeditChoosenQuantityRequest Successfully", Toast.LENGTH_LONG).show()
     }
-
-
 
 }

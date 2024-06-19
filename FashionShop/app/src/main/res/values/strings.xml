@@ -121,6 +121,7 @@
     <string name="error_password_format">At least contains 8 characters
 at least one upper letter, one lowercase letter, and one digit</string>
     <string name="error_not_match">Password and confirm password doesn\'t match</string>
+    <string name="quantity">quantity</string>
 
 
 </resources>

@@ -78,14 +78,8 @@ class ChooseAddressFragment : Fragment() , AddressListener{
                         Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
                     }
                 }
-            } }
-//        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-//            value?.let {
-//                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
-//                mAdapter.setAddressList(value.customer.addresses)
-//                mAdapter.notifyDataSetChanged()
-//            }
-//        })
+            }
+        }
 
         binding.buttonContinueToPayment.setOnClickListener {
            findNavController().navigate(R.id.action_AdressFragment_to_paymentFragment )

@@ -154,6 +154,7 @@ class RepositoryImp constructor(
 
     override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
         return networkManager.getSingleOrder(orderId)
+    }
 
 
     override suspend fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX{

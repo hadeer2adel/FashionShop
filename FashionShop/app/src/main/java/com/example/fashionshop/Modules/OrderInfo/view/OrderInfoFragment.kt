@@ -1,7 +1,6 @@
 package com.example.fashionshop.Modules.OrderInfo.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +12,13 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.example.fashionshop.Model.CustomerData
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.fashionshop.Adapters.SingleOrderAdapter
+import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.LineItem
+import com.example.fashionshop.Model.LineItemBody
 import com.example.fashionshop.Modules.Home.viewModel.OrderInfoFactory
 import com.example.fashionshop.Modules.Home.viewModel.OrderInfoViewModel
-import com.example.fashionshop.Modules.Orders.viewModel.OrdersFactory
 import com.example.fashionshop.Modules.Orders.viewModel.OrdersViewModel
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
@@ -38,6 +40,8 @@ class OrderInfoFragment : Fragment() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var viewModel:OrderInfoViewModel
     private val args:OrderInfoFragmentArgs by navArgs()
+    private lateinit var adapter: SingleOrderAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,6 +60,7 @@ class OrderInfoFragment : Fragment() {
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
         initViewModel()
+        setUpRV()
     }
 
     private fun initViewModel() {
@@ -79,6 +84,9 @@ class OrderInfoFragment : Fragment() {
                                 binding.tvOrderPhome.text = order.phone
                                 binding.tvOrderAddress.text = order.shipping_address?.address1
                                 binding.tvOrderPrice.text = order.total_price
+                                // Convert and submit the list
+                                val lineItemBodies = order.line_items?.map { convertToLineItemBody(it) }?.toMutableList()
+                                adapter.submitList(lineItemBodies)
 
                             }
 
@@ -93,5 +101,26 @@ class OrderInfoFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun setUpRV(){
+        adapter = SingleOrderAdapter(requireContext())
+        binding.rvProducts.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvProducts.adapter = adapter
+
+    }
+
+    private fun convertToLineItemBody(lineItem: LineItemBody): LineItemBody {
+        return LineItemBody(
+            // Map properties from lineItem to LineItemBody
+            // Assuming similar properties in both classes for this example
+            id = lineItem.id,
+            title = lineItem.title,
+            quantity = lineItem.quantity,
+            price = lineItem.price,
+            sku = lineItem.sku,
+            variant_id = lineItem.variant_id
+
+        )
     }
 }

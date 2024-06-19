@@ -26,10 +26,6 @@ import retrofit2.HttpException
 
 class AddressViewModel (private val repo: Repository
 ): ViewModel() {
-    private var _products2: MutableLiveData<DraftOrders> =
-        MutableLiveData<DraftOrders>()
-    val products2: LiveData<DraftOrders> = _products2
-
     private var _products = MutableStateFlow<NetworkState<OneCustomer>>(NetworkState.Loading)
     var products: StateFlow<NetworkState<OneCustomer>> = _products
 
@@ -47,11 +43,6 @@ class AddressViewModel (private val repo: Repository
             }catch (e: Exception) {
                 _products.value = NetworkState.Failure(e)
             }
-
-
-
-
-
         }
     }
 
@@ -82,24 +73,6 @@ class AddressViewModel (private val repo: Repository
 
 
     }
-//    fun sendeditChoosenAddressRequest(
-//        id: Long, address1: String, address2: String, city: String, company: String,
-//        country: String, country_code: String, first_name: String, last_name: String,
-//        latitude: Any, longitude: Any, name: String, phone: String, province: String,
-//        province_code: Any, zip: String
-//    ) {
-//        val billingAddress = BillingAddressX(
-//            address1, address2, city, company, country, country_code, first_name, last_name,
-//            latitude, longitude, name, phone, province, province_code, zip
-//        )
-//        val shippingAddress = ShippingAddressX(
-//            address1, address2, city, company, country, country_code, first_name, last_name,
-//            latitude, longitude, name, phone, province, province_code, zip
-//        )
-//        val draftOrder = DraftOrderX(billingAddress, shippingAddress)
-//        val addressRequest = editAddressBody(draftOrder)
-//        editSingleCustomerAddressDraftOrder(id, addressRequest)
-//    }
     fun senddeleteAddressRequest(
         id: Long,
         customerId: Long
@@ -110,17 +83,6 @@ class AddressViewModel (private val repo: Repository
             getAllcustomer(customerId)
         }
     }
-
-//    fun editSingleCustomerAddressDraftOrder(id: Long, addressRequest: editAddressBody)
-//    {
-//        viewModelScope.launch(Dispatchers.IO) {
-//
-//        val result = repo.editSingleCustomerAddressDraftOrder(id, addressRequest)
-//        _products2.postValue(result)
-//
-//    }
-//
-//    }
 
 }
 

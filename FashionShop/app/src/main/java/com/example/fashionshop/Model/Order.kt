@@ -55,7 +55,7 @@ data class Order (
     val updated_at: String? = null,
     val billing_address: Address? = null,
     val shipping_address: Address? = null,
-    val line_items: List<LineItem>? = null
+    val line_items: List<LineItemBody>? = null
 ): Serializable
 
 data class Address (

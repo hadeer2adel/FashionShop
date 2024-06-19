@@ -112,22 +112,5 @@ class CartViewModel (private val repo: Repository, private var listId: Long
         }
     }
 
-//    fun deteteDrafOrder(id: Long)
-//    {
-//
-//        viewModelScope.launch(Dispatchers.IO){
-//            try {
-//            repo.deleteSingleCustomerDrafOrder(id)
-//                getCardProducts()
-//            } catch (e: HttpException) {
-//                _productCardImage.value = NetworkState.Failure(e)
-//            }catch (e: Exception) {
-//                _productCardImage.value = NetworkState.Failure(e)
-//            }
-//        }
-//
-//    }
+
 }
-
-
-
