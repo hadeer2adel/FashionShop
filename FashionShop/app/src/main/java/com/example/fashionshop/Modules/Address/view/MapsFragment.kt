@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
@@ -128,8 +129,8 @@ class MapsFragment : Fragment() {
                 country = addresses[0].countryName
                 country_code = addresses[0].countryCode
                 default = false
-                first_name = "hader"
-                last_name = "mo"
+                first_name = CustomerData.getInstance(requireContext()).name
+                last_name = CustomerData.getInstance(requireContext()).name
                 company = addresses[0].featureName
                 name = addresses[0].adminArea
                 country_name = addresses[0].countryName
@@ -171,47 +172,5 @@ class MapsFragment : Fragment() {
         mapFragment?.getMapAsync(callback)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         getCurrentLocation()
-    }
-
-    private fun showPhoneNumberDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Add Phone Number")
-
-        // Set up the input
-        val input = EditText(requireContext())
-        builder.setView(input)
-
-        // Set up the buttons
-        builder.setPositiveButton("OK") { dialog, _ ->
-            val phoneNumber = input.text.toString()
-            allProductViewModel.sendAddressRequest(
-                address1,
-                address2,
-                city,
-                company,
-                first_name,
-                last_name,
-                phoneNumber,
-                province,
-                country,
-                zip,
-                name,
-                province_code,
-                country_code,
-                country_name,
-                id,
-                customer_id,
-                default
-            )
-            findNavController().navigate(R.id.action_from_map_to_newAddresses)
-            Toast.makeText(requireContext(), "Address Added Successfully", Toast.LENGTH_LONG).show()
-
-            dialog.dismiss()
-        }
-        builder.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.cancel()
-        }
-
-        builder.show()
     }
 }

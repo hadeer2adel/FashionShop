@@ -19,7 +19,34 @@
         android:theme="@style/CustomToolbarTheme"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
 
+        <!-- Optionally add a Lottie animation here -->
+        <!-- Replace @raw/empty_animation with your animation file -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/emptyAnimationView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp"
+            app:lottie_rawRes="@raw/e"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
+
+        <TextView
+            android:id="@+id/emptyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="lets Add Your Addresses"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

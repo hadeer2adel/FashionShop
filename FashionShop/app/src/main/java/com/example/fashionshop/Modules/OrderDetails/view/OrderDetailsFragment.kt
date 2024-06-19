@@ -396,6 +396,7 @@ class OrderDetailsFragment() : Fragment() {
                 Toast.makeText(requireContext(), "Order placed successfully", Toast.LENGTH_LONG).show()
                 Log.d("placeOrder", "success")
                 // Handle success, e.g., navigate to a success screen if needed
+                allProductViewModel.deleteAllCartProducts()
             },
             onError = { errorMessage ->
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()

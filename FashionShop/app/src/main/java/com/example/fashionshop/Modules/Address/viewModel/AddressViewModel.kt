@@ -45,11 +45,6 @@ class AddressViewModel (private val repo: Repository
             }catch (e: Exception) {
                 _products.value = NetworkState.Failure(e)
             }
-
-
-
-
-
         }
     }
 

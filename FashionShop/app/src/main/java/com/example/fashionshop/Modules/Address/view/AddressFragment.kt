@@ -59,11 +59,8 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
         super.onViewCreated(view, savedInstanceState)
         navController = NavHostFragment.findNavController(this)
         appBarConfiguration = AppBarConfiguration(navController.graph)
-
-        // Set up the toolbar
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
-
         mLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         mAdapter = AddressAdapter(this,true)
         binding.recyclerViewAddresses.apply {
@@ -74,50 +71,7 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
         allProductFactory =
             AddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
         allProductViewModel = ViewModelProvider(this, allProductFactory).get(AddressViewModel::class.java)
-        allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
-        lifecycleScope.launch {
-            allProductViewModel.products.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        binding.recyclerViewAddresses.visibility = View.GONE
-                    }
-                    is NetworkState.Success -> {
-                        binding.recyclerViewAddresses.visibility = View.VISIBLE
-                        binding.progressBar.visibility = View.GONE
-                        Log.i("TAG", "Data updated. Size: ${response.data.customer.id}")
-                        val (defaultAddresses, nonDefaultAddresses) = response.data.customer.addresses.partition { it.default }
-                        val filteredAddresses = defaultAddresses + nonDefaultAddresses
-                        mAdapter.setAddressList(filteredAddresses)
-                        mAdapter.notifyDataSetChanged()
-
-
-                    }
-                    is NetworkState.Failure -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } }
-
-
-
-
-//
-//        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-//            value?.let {
-//                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
-//                // Split addresses into two lists: defaultAddresses and nonDefaultAddresses
-//                val (defaultAddresses, nonDefaultAddresses) = value.customer.addresses.partition { it.default }
-//                // Concatenate the lists with defaultAddresses first
-//
-//                val filteredAddresses = defaultAddresses + nonDefaultAddresses
-//                mAdapter.setAddressList(filteredAddresses)
-//                mAdapter.notifyDataSetChanged()
-//            }
-//        })
-
-
+        fetchAddressesData()
         binding.buttonAddAddress.setOnClickListener {
         findNavController().navigate(R.id.Adress_to_AddAddressFragment)
         }
@@ -149,6 +103,49 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
                 }
             } }
     }
+
+
+    private fun fetchAddressesData() {
+        allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
+        lifecycleScope.launch {
+            allProductViewModel.products.collectLatest { response ->
+                when(response) {
+                    is NetworkState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.recyclerViewAddresses.visibility = View.GONE
+                        binding.emptyView.visibility = View.GONE
+                    }
+                    is NetworkState.Success -> {
+                        val addresses = response.data.customer.addresses
+
+                        if (addresses.isEmpty()) {
+                            binding.recyclerViewAddresses.visibility = View.GONE
+                            binding.emptyView.visibility = View.VISIBLE
+                        } else {
+                            binding.recyclerViewAddresses.visibility = View.VISIBLE
+                            binding.emptyView.visibility = View.GONE
+
+                            val (defaultAddresses, nonDefaultAddresses) = addresses.partition { it.default }
+                            val filteredAddresses = defaultAddresses + nonDefaultAddresses
+
+                            mAdapter.setAddressList(filteredAddresses)
+                            mAdapter.notifyDataSetChanged()
+                        }
+
+                        binding.progressBar.visibility = View.GONE
+                    }
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
     companion object {
 
     }

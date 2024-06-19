@@ -91,27 +91,22 @@ class CartFragment : Fragment() ,CartListener {
                     }
                     is NetworkState.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        binding.recyclerViewCartItems.visibility = View.VISIBLE
-                        mAdapter.setCartList(response.data.draft_order.line_items.drop(1))
-                        val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
-                        val customer = CustomerData.getInstance(requireContext())
-                        if (customer.currency=="USD"){
-                         //   val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
-                           // price.text = convertCurrency(subtotal)
-                            //   val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
-                            // price.text = convertCurrency(subtotal)
-                            binding.textViewSubtotal.text = "${convertCurrency(subtotal)}"
-
+                        val lineItems = response.data.draft_order.line_items
+                        if (lineItems.size <= 1) {
+                            binding.recyclerViewCartItems.visibility = View.GONE
+                            binding.emptyView.visibility = View.VISIBLE
+                        } else {
+                            binding.recyclerViewCartItems.visibility = View.VISIBLE
+                            binding.emptyView.visibility = View.GONE
+                            mAdapter.setCartList(lineItems.drop(1))
+                            val subtotal = lineItems.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
+                            val customer = CustomerData.getInstance(requireContext())
+                            if (customer.currency == "USD") {
+                                binding.textViewSubtotal.text = "${convertCurrency(subtotal)}"
+                            } else {
+                                binding.textViewSubtotal.text = "${String.format("%.2f", subtotal)}"
+                            }
                         }
-                        else
-                        {
-                            binding.textViewSubtotal.text = "${String.format("%.2f", subtotal)}"
-
-
-                        }
-
-
-
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
@@ -119,29 +114,6 @@ class CartFragment : Fragment() ,CartListener {
                     }
                 }
             } }
-        lifecycleScope.launch {
-            allProductViewModel.productCardImage.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        binding.recyclerViewCartItems.visibility = View.GONE
-                    }
-                    is NetworkState.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.recyclerViewCartItems.visibility = View.VISIBLE
-//                            mAdapter.setCardImages(response.data.images[0].src)
-//                            response.data.images[0].src
-                        //  allProductViewModel.getCardProductsImages(item.id)
-                    }
-
-                    is NetworkState.Failure -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-
 
         binding.buttonCheckout.setOnClickListener {
             val args = CartFragmentArgs(draftOrderIds).toBundle() // Convert CartFragmentArgs to Bundle

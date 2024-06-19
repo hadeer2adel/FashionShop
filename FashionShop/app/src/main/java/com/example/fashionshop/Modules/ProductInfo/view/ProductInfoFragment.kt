@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -117,23 +118,65 @@ class ProductInfoFragment : Fragment() {
             }
         }
 
+//        binding.addToCartBtn.setOnClickListener {
+//            val networkManager: NetworkManager = NetworkManagerImp.getInstance()
+//            val repository: Repository = RepositoryImp(networkManager)
+//            val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
+//            viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
+//            val product = (viewModel.product.value as? NetworkState.Success)?.data?.product
+//            if (product != null) {
+//                Log.i("product", "onViewCreated: ${product} ")
+//                viewModel.insertCardProduct(requireContext(),product)
+//                Toast.makeText(requireContext(), "Product Added Successfully", Toast.LENGTH_SHORT).show()
+//
+//
+//            } else {
+//                Toast.makeText(requireContext(), "Product information not available", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//
+
+
+
+
         binding.addToCartBtn.setOnClickListener {
-            val networkManager: NetworkManager = NetworkManagerImp.getInstance()
-            val repository: Repository = RepositoryImp(networkManager)
-            val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
-            viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
             val product = (viewModel.product.value as? NetworkState.Success)?.data?.product
             if (product != null) {
-                viewModel.insertCardProduct(product)
-                Toast.makeText(requireContext(), "Product Added Successfully", Toast.LENGTH_SHORT).show()
-                viewModel.insertCardProductImage(product)
-
+                Log.i("ProductInfoFragment", "onViewCreated: $product")
+                viewModel.insertCardProduct(requireContext(), product)
             } else {
                 Toast.makeText(requireContext(), "Product information not available", Toast.LENGTH_SHORT).show()
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.productCard.collectLatest { response ->
+                when (response) {
+                    is NetworkState.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), "Product added successfully", Toast.LENGTH_SHORT).show()
+//findNavController().navigate(R.id.action_cartFragment)
+                    }
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    //    findNavController().navigate(R.id.action_cartFragment)
+
+                    }
+                }
+            }
+        }
+
+
+
+
     }
+
+
+
+
+
 
     private fun setUpRecycleView(){
         val onClick: (isFav: Boolean, product: Product) -> Unit = { isFav, product ->

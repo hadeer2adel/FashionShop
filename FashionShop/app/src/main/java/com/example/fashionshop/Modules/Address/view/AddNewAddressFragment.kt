@@ -73,40 +73,22 @@ class AddNewAddressFragment : Fragment() {
         }
         binding.buttonSendRequest.setOnClickListener {
             allProductViewModel.sendAddressRequest(
-//                address1 = "1 Mahada St",
-//                address2 = "34 building",
-//                city = "Cairo",
-//                company = "Fancy Co.",
-//                first_name = "John",
-//                last_name = "Doe",
-//                phone = "819-555-5555",
-//                province = "",
-//                country = "Egypt",
-//                zip = "G1R 4P5",
-//                name = "John Doe",
-//                province_code = "", // Adjust if needed
-//                country_code = "EG", // Adjust if needed
-//                country_name = "Egypt", // Adjust if needed
-//                id = 3 ,
-//                customer_id = 7371713577180 ,
-//                default = false
-
                 address1 = binding.etAddress1.text.toString(),
                 address2 = binding.etAddress2.text.toString(),
                 city = binding.etCity.text.toString(),
                 company = binding.etCompany.text.toString(),
                 first_name = binding.etFirstName.text.toString(),
                 last_name = binding.etLastName.text.toString(),
-                phone = binding.etPhone.text.toString(), // Adjust as needed
-                province = "", // Adjust as needed
+                phone = binding.etPhone.text.toString(),
+                province = "",
                 country = binding.etCountry.text.toString(),
                 zip = binding.etZip.text.toString(),
                 name = binding.etName.text.toString(),
                 province_code = "", // Adjust as needed
                 country_code = binding.etCountryCode.text.toString(),
                 country_name = binding.etCountryName.text.toString(),
-                id = 3, // Adjust as needed
-                customer_id = CustomerData.getInstance(requireContext()).id, // Adjust as needed
+                id = 3,
+                customer_id = CustomerData.getInstance(requireContext()).id,
                 default = false
             )
             findNavController().navigate(R.id.action_from_map_to_newAddresses)

@@ -1,6 +1,8 @@
 package com.example.fashionshop.Modules.ProductInfo.viewModel
 import android.content.Context
 import android.util.Log
+import android.view.Gravity
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -73,12 +75,7 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
             product.images.toString()
         )
     }
-    private fun convertProductImageToNote(product: ProductDetails): DraftOrderResponse.DraftOrder.Note{
-        return DraftOrderResponse.DraftOrder.Note(
-            null,
-            "1",
-        )
-    }
+
 
 //    fun insertCardProduct(product: ProductDetails) {
 //        viewModelScope.launch(Dispatchers.IO) {
@@ -99,14 +96,14 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
 //        }
 //    }
 
-
-
-
-    fun insertCardProduct(product: ProductDetails) {
+    fun insertCardProduct(context: Context, product: ProductDetails) {
         viewModelScope.launch(Dispatchers.IO) {
             _productCard.value = NetworkState.Loading
             val draftOrder = repository.getDraftOrder(listId).draft_order
-            val existingLineItem = draftOrder.line_items.find { it.id == product.id }
+            Log.i("ProductInfoViewModel", "product: ${product.id  } ")
+            Log.i("ProductInfoViewModel", "it: ${draftOrder.line_items}")
+
+            val existingLineItem = draftOrder.line_items.find { it.title == product.title }
 
             if (existingLineItem == null) {
                 val updatedLineItems = draftOrder.line_items.toMutableList().apply {
@@ -115,16 +112,20 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
                 val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
 
                 try {
-                    val updatedResponse =
-                        repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                    val updatedResponse = repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
                     _productCard.value = NetworkState.Success(updatedResponse)
                 } catch (e: Exception) {
                     _productCard.value = NetworkState.Failure(e)
                 }
             } else {
-//                // Show toast message indicating the item is already in the cart
-//                showToast("Item is already in the cart")
-//                _productCard.value = NetworkState.Failure(Exception("Product already in cart"))
+                viewModelScope.launch(Dispatchers.Main) {
+                   val t = Toast.makeText(context, "Item is already in the cart", Toast.LENGTH_SHORT)
+                    t.setGravity(Gravity.TOP, 0, 0);
+
+                    t.show()
+                    Log.i("ProductInfoViewModel", "insertCardProduct: Already in cart")
+                }
+                _productCard.value = NetworkState.Failure(Exception("Product already in cart"))
             }
         }
     }
@@ -133,29 +134,7 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
 
 
 
-    fun insertCardProductImage(product: ProductDetails) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _productCard.value = NetworkState.Loading
-            val draftOrder = repository.getDraftOrder(listId).draft_order
-            val imageUrl = product.images?.firstOrNull()?.src ?: ""
-            val newNote = DraftOrderResponse.DraftOrder.Note(
-                value = imageUrl,
-                name = "product_image"
-            )
-            val updatedNoteAttributes = draftOrder.note_attributes.toMutableList().apply {
-                add(newNote)
-            }
-            val updatedDraftOrder = draftOrder.copy(note_attributes = updatedNoteAttributes)
 
-            try {
-                val updatedResponse =
-                    repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
-                _productCard.value = NetworkState.Success(updatedResponse)
-            } catch (e: Exception) {
-                _product.value = NetworkState.Failure(e)
-            }
-        }
-    }
 
     override fun onCleared() {
         super.onCleared()

@@ -64,8 +64,8 @@ class FavoriteFragment : Fragment() {
         }
         val onCardClick: (id: Long) -> Unit = {
             val navController = NavHostFragment.findNavController(this)
-            val action = FavoriteFragmentDirections.actionToProductInfoFragment(it)
-            navController.navigate(action)
+//            val action = FavoriteFragmentDirections.actionToProductInfoFragment(it)
+//            navController.navigate(action)
         }
 
         adapter = FavProductAdapter(requireContext(), true, onClick, onCardClick)

@@ -99,10 +99,13 @@ class CartViewModel (private val repo: Repository, private var listId: Long
         viewModelScope.launch(Dispatchers.IO) {
             _productCard.value = NetworkState.Loading
             val draftOrder = repo.getDraftOrder(listId).draft_order
-
-            // Create an empty list of line items
-            val updatedDraftOrder = draftOrder.copy(line_items = emptyList())
-
+            val updatedLineItems = if (draftOrder.line_items.isNotEmpty()) {
+                listOf(draftOrder.line_items.first())
+            } else {
+                emptyList()
+            }
+            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+            Log.i("updatedDraftOrder", "deleteAllCartProducts: ${updatedDraftOrder} ")
             try {
                 val updatedResponse = repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
                 _productCard.value = NetworkState.Success(updatedResponse)
