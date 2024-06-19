@@ -174,7 +174,8 @@ class RepositoryImp constructor(
         mode: String,
         paymentMethodType: String
     ): CheckoutSessionResponse {
-     return   networkManager.createCheckoutSession(successUrl,cancelUrl,customerEmail,currency,productName,productDescription,unitAmountDecimal,quantity,mode,paymentMethodType)    }
+     return   networkManager.createCheckoutSession(successUrl,cancelUrl,customerEmail,currency,productName,productDescription,unitAmountDecimal,quantity,mode,paymentMethodType)
+    }
 
 
 }

@@ -62,7 +62,6 @@ interface Repository {
                                       unitAmountDecimal: Int, quantity: Int,mode: String, paymentMethodType: String
     ): CheckoutSessionResponse
     suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse
-    suspend  fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX
 
     suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
 

@@ -41,27 +41,30 @@ class ChooseAddressFragment : Fragment() , AddressListener{
         savedInstanceState: Bundle?
     ): View {
         val args = ChooseAddressFragmentArgs.fromBundle(requireArguments())
-         draftOrderIds = args.draftOrderIds
+        draftOrderIds = args.draftOrderIds
         _binding = FragmentChooseAddressBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.recyclerChooseAddrees.layoutManager = LinearLayoutManager(requireContext())
-        mAdapter = AddressAdapter(this,false)
+        mAdapter = AddressAdapter(this, false)
         mLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.recyclerChooseAddrees.apply {
             adapter = mAdapter
             layoutManager = mLayoutManager
         }
 
-        allProductFactroy = AddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allProductViewModel = ViewModelProvider(this, allProductFactroy).get(AddressViewModel::class.java)
-       allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
+        allProductFactroy =
+            AddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allProductViewModel =
+            ViewModelProvider(this, allProductFactroy).get(AddressViewModel::class.java)
+        allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
         lifecycleScope.launch {
             allProductViewModel.products.collectLatest { response ->
-                when(response){
+                when (response) {
                     is NetworkState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                         binding.recyclerChooseAddrees.visibility = View.GONE
                     }
+
                     is NetworkState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         binding.recyclerChooseAddrees.visibility = View.VISIBLE
@@ -72,26 +75,23 @@ class ChooseAddressFragment : Fragment() , AddressListener{
                         mAdapter.notifyDataSetChanged()
 
                     }
+
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
-            } }
-//        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-//            value?.let {
-//                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
-//                mAdapter.setAddressList(value.customer.addresses)
-//                mAdapter.notifyDataSetChanged()
-//            }
-//        })
+            }
+        }
 
-    binding.buttonContinueToPayment.setOnClickListener {
-   // findNavController().navigate(R.id.action_AdressFragment_to_paymentFragment)
-        findNavController().navigate(R.id.action_Payment_to_orderDetailsFragment)
+        binding.buttonContinueToPayment.setOnClickListener {
+            // findNavController().navigate(R.id.action_AdressFragment_to_paymentFragment)
+            findNavController().navigate(R.id.action_Payment_to_orderDetailsFragment)
 
+        }
+        return view
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -141,4 +141,5 @@ class ChooseAddressFragment : Fragment() , AddressListener{
     }
 
 }
+
 

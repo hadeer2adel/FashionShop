@@ -63,6 +63,4 @@ interface NetworkManager {
 
     suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
 
-
-    suspend  fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX
 }

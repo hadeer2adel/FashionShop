@@ -180,7 +180,7 @@ class NetworkManagerImp private constructor(): NetworkManager {
         paymentMethodType: String
     ): CheckoutSessionResponse {
       return   networkServicePayment.createCheckoutSession(successUrl,cancelUrl,customerEmail,currency,productName,productDescription,unitAmountDecimal,quantity,mode,paymentMethodType)
-        }
+    }
 
 
 }

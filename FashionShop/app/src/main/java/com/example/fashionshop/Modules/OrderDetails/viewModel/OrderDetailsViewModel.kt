@@ -11,7 +11,9 @@ import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class OrderDetailsViewModel (private var repository: Repository) : ViewModel() {

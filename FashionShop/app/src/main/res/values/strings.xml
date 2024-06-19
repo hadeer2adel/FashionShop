@@ -110,23 +110,8 @@
     <string name="ahmed_gmail_com">ahmed@gmail.com</string>
     <string name="contact_email">Contact Email</string>
     <string name="phone_number">Phone Number</string>
-
-    //auth message
-    <string name="auth">Authentication</string>
-    <string name="error_login">Login failed, please try again"</string>
-    <string name="error_signup">Create account failed, please try again</string>
-    <string name="email_message">Please verify your email, then try to login again</string>
-    <string name="error_email_verify">Login failed, please verify your email first</string>
-    <string name="exist">Already Exist</string>
-    <string name="not_exist">Not Exist</string>
-    <string name="empty">Empty Field</string>
-    <string name="error_email_format">Invalid email format</string>
-    <string name="error_password_format">At least contains 8 characters
-at least one upper letter, one lowercase letter, and one digit</string>
-    <string name="error_not_match">Password and confirm password doesn\'t match</string>
     <string name="quantity">quantity</string>
 
-
     //auth message
     <string name="auth">Authentication</string>
     <string name="error_login">Login failed, please try again"</string>
@@ -140,6 +125,10 @@ at least one upper letter, one lowercase letter, and one digit</string>
     <string name="error_password_format">At least contains 8 characters
 at least one upper letter, one lowercase letter, and one digit</string>
     <string name="error_not_match">Password and confirm password doesn\'t match</string>
+
+
+
+
 
 
     //cart

@@ -265,13 +265,7 @@ class CartFragment : Fragment() ,CartListener {
     private fun updateCurrencyRates(newRate: Double) {
         mAdapter.updateCurrencyConversionRate(newRate)
     }
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
-    private fun updateCurrencyRates(newRate: Double) {
-        mAdapter.updateCurrencyConversionRate(newRate)
-    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

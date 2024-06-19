@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Modules.Orders.view.OrdersFragment">
+    tools:context=".Modules.Orders.view.OrdersFragment"
+    android:layout_marginBottom="80dp">
 
     <!-- Toolbar Section -->
     <androidx.appcompat.widget.Toolbar

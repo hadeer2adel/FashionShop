@@ -81,8 +81,8 @@ class OrderInfoFragment : Fragment() {
                         response.data.order.let { order ->
                             if (order != null) {
                                 binding.tvOrderEmail.text = order.email
-                                binding.tvOrderPhome.text = order.phone
-                                binding.tvOrderAddress.text = order.shipping_address?.address1
+                                binding.tvOrderPhome.text = order.billing_address?.phone
+                                binding.tvOrderAddress.text = order.billing_address?.address1
                                 binding.tvOrderPrice.text = order.total_price
                                 // Convert and submit the list
                                 val lineItemBodies = order.line_items?.map { convertToLineItemBody(it) }?.toMutableList()

@@ -32,10 +32,10 @@ class AddressAdapter(private val listener: AddressListener ,private val showDele
 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
         val currentAddress = addressList[position]
-        holder.countryTextView.text = "Country: ${currentAddress.country}"
-        holder.addressTextView.text = "Address 1: ${currentAddress.address1}"
-        holder.addressTextView2.text = "Address 2: ${currentAddress.address2}"
-        holder.phoneTextView.text = "Phone: ${currentAddress.phone}"
+        holder.countryTextView.text = currentAddress.country
+        holder.addressTextView.text = currentAddress.address1
+        holder.addressTextView2.text = "${currentAddress.address2}"
+        holder.phoneTextView.text = currentAddress.phone
         holder.itemView.isSelected = selectedItemPosition == position
 
         if (currentAddress.default) {
