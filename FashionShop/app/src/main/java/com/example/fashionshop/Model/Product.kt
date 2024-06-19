@@ -17,7 +17,8 @@ data class Product(
     ) : Serializable
 
 data class Variant(
-    val price: String? = null
+    val price: String? = null,
+    val inventory_quantity:Int = 1
 )
 
 data class ProductImage(

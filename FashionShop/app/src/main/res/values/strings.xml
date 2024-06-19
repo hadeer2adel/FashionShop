@@ -137,7 +137,8 @@ at least one upper letter, one lowercase letter, and one digit</string>
     //cart
     <string name="DeleteAll">Delete All Cart Items</string>
     <string name="subTotal">Subtotal:</string>
-
+    <string name="fav">Add Items To Your Favorite List</string>
+    <string name="map">Empty Addresses List!,Add Your Addresses</string>
 
 
 

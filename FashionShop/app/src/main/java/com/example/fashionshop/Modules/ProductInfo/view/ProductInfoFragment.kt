@@ -23,6 +23,7 @@ import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductDetails
+import com.example.fashionshop.Model.inventoryQuantities
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
@@ -81,7 +82,6 @@ class ProductInfoFragment : Fragment() {
                         d= response.data.rates.EGP
                         Log.i("initViewModel", "initViewModel:${  response.data} ")
                         currencyConversionRate = response.data.rates?.EGP ?: 1.0
-
 
 
                     }
@@ -144,6 +144,10 @@ class ProductInfoFragment : Fragment() {
             if (product != null) {
                 Log.i("ProductInfoFragment", "onViewCreated: $product")
                 viewModel.insertCardProduct(requireContext(), product)
+                product.variants?.get(0)?.inventory_quantity?.let {
+                    inventoryQuantities.add(it)
+                }
+
             } else {
                 Toast.makeText(requireContext(), "Product information not available", Toast.LENGTH_SHORT).show()
             }
@@ -217,6 +221,8 @@ class ProductInfoFragment : Fragment() {
                     is NetworkState.Success -> {
                         onSuccess()
                         response.data.product?.let { setData(it) }
+                        Log.i("adapter", ":${response.data.product} ")
+
                     }
                     is NetworkState.Failure -> onFailure(response.error.message)
                 }

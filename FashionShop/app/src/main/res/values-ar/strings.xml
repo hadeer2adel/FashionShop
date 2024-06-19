@@ -126,4 +126,7 @@ at least one upper letter, one lowercase letter, and one digit</string>
     <string name="address_1">العنوان الأول :</string>
     <string name="address_2">العنوان الثاني ::</string>
     <string name="phone">الهاتف :</string>
+    <string name="fav">أضف عناصر للمفضلة</string>
+    <string name="map">أضف عنوانك لقائمه العناوين</string>
+
 </resources>

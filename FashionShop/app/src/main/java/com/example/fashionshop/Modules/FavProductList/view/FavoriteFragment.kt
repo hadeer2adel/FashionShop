@@ -88,9 +88,13 @@ class FavoriteFragment : Fragment() {
                         binding.recycleView.visibility = View.GONE
                     }
                     is NetworkState.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.recycleView.visibility = View.VISIBLE
-                        adapter.submitList(response.data.draft_order.line_items.drop(1))
+                        if (response.data.draft_order.line_items.size > 1) {
+                            binding.recycleView.visibility = View.VISIBLE
+                            adapter.submitList(response.data.draft_order.line_items.drop(1))
+                        } else {
+                            binding.recycleView.visibility = View.GONE
+                            binding.emptyView.visibility = View.VISIBLE
+                        }
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE

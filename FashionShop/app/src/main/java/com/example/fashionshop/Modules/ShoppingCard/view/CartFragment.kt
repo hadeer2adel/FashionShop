@@ -116,12 +116,22 @@ class CartFragment : Fragment() ,CartListener {
             } }
 
         binding.buttonCheckout.setOnClickListener {
-            val args = CartFragmentArgs(draftOrderIds).toBundle() // Convert CartFragmentArgs to Bundle
+            val args = CartFragmentArgs(draftOrderIds).toBundle()
             findNavController().navigate(R.id.action_cartFragment_to_paymentFragment, args)
         }
         binding.deleteall.setOnClickListener {
-            allProductViewModel.deleteAllCartProducts()
+            AlertDialog.Builder(requireContext())
+                .setTitle("Delete All Cart Items")
+                .setMessage("Are you sure you want to delete all cart items?")
+                .setPositiveButton("Yes") { dialog, which ->
+                    allProductViewModel.deleteAllCartProducts()
+                }
+                .setNegativeButton("No") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .show()
         }
+
         return view
     }
 
@@ -175,6 +185,7 @@ class CartFragment : Fragment() ,CartListener {
                         binding.progressBar.visibility = View.GONE
                         binding.recyclerViewCartItems.visibility = View.VISIBLE
                         mAdapter.setCartList(response.data.draft_order.line_items.drop(1))
+                        Log.i("mAdapter", "${response.data.draft_order.line_items.drop(1)} ")
                         val subtotal = response.data.draft_order.line_items.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
                         val customer = CustomerData.getInstance(requireContext())
                         if (customer.currency=="USD"){

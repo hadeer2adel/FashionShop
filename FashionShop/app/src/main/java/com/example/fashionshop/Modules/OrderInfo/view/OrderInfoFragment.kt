@@ -1,6 +1,7 @@
 package com.example.fashionshop.Modules.OrderInfo.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -87,7 +88,6 @@ class OrderInfoFragment : Fragment() {
                                 // Convert and submit the list
                                 val lineItemBodies = order.line_items?.map { convertToLineItemBody(it) }?.toMutableList()
                                 adapter.submitList(lineItemBodies)
-
                             }
 
                         }

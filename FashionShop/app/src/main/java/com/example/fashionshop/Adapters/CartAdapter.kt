@@ -4,11 +4,13 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.DraftOrder
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.inventoryQuantities
 import com.example.fashionshop.Modules.ShoppingCard.view.CartListener
 import com.example.fashionshop.R
 import com.example.fashionshop.databinding.CartItemBinding
@@ -64,6 +66,8 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
         holder.binding.itemName.text = item.title
         holder.binding.quantityText.text = item.quantity.toString()
         holder.binding.deleteIcon.setOnClickListener {
+                inventoryQuantities.removeAt(position)
+
             item.id?.let { nonNullId ->
                 Log.i("CartAdapter", "deleteIcon: $nonNullId")
                 listener.deleteCart(nonNullId)
@@ -82,15 +86,27 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
             }
         }
 
+//        holder.binding.increaseButton.setOnClickListener {
+//            val currentQuantity = item.quantity ?: 0
+//            val newQuantity = currentQuantity + 1
+//            item.quantity = newQuantity // Update item's quantity
+//            holder.binding.quantityText.text = newQuantity.toString()
+//            holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
+//
+//            listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
+//        }
         holder.binding.increaseButton.setOnClickListener {
             val currentQuantity = item.quantity ?: 0
             val newQuantity = currentQuantity + 1
-            item.quantity = newQuantity // Update item's quantity
-            holder.binding.quantityText.text = newQuantity.toString()
-            holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
-
-            listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
+            if (newQuantity <= inventoryQuantities[position]) {
+                item.quantity = newQuantity // Update item's quantity
+                holder.binding.quantityText.text = newQuantity.toString()
+                holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
+                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")            } else {
+                Toast.makeText(context, "Maximum quantity reached", Toast.LENGTH_SHORT).show()
+            }
         }
+
     }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully

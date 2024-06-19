@@ -72,7 +72,8 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
             product.id,
             product.title,
             product.variants?.get(0)?.price,
-            product.images.toString()
+            product.images.toString(),
+//            inventory_quantity = product.variants?.get(0)?.inventory_quantity
         )
     }
 

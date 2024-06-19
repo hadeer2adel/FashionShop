@@ -43,7 +43,7 @@
             android:id="@+id/emptyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="lets Add Your Addresses"
+            android:text="@string/map"
             android:textSize="18sp"
             android:textColor="@android:color/black"/>
     </LinearLayout>
