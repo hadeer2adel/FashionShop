@@ -102,12 +102,21 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
 
         viewModel.getAdsCode()
-        viewModel.products2.observe(viewLifecycleOwner, Observer { value ->
-            value?.let {
-                val count = value.price_rules
-                setUpSlider(sliderView, count.size,count)
+        lifecycleScope.launch {
+            viewModel.products.collectLatest { response ->
+                when(response) {
+                    is NetworkState.Loading -> {}
+                    is NetworkState.Success -> {
+                        val count = response.data.price_rules
+                        setUpSlider(sliderView, count.size,count)
+
+                    }
+                    is NetworkState.Failure -> {
+                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
-        })
+        }
 
     }
 
