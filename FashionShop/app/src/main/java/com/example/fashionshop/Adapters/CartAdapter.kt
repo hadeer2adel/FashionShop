@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.CustomerData
-import com.example.fashionshop.Model.DraftOrder
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.inventoryQuantities
 import com.example.fashionshop.Modules.ShoppingCard.view.CartListener
@@ -73,18 +72,18 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
                 listener.deleteCart(nonNullId)
             }
         }
-        holder.binding.decreaseButton.setOnClickListener {
-            val currentQuantity = item.quantity
-            if (currentQuantity != null && currentQuantity > 1) {
-                val newQuantity = currentQuantity - 1
-                item.quantity = newQuantity // Update item's quantity
-                holder.binding.quantityText.text = newQuantity.toString()
-                holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
-                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
-            } else {
-                Log.i("CartAdapter", "Cannot decrease below 1 quantity")
-            }
-        }
+//        holder.binding.decreaseButton.setOnClickListener {
+//            val currentQuantity = item.quantity
+//            if (currentQuantity != null && currentQuantity > 1) {
+//                val newQuantity = currentQuantity - 1
+//                item.quantity = newQuantity // Update item's quantity
+//                holder.binding.quantityText.text = newQuantity.toString()
+//                holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
+//                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
+//            } else {
+//                Log.i("CartAdapter", "Cannot decrease below 1 quantity")
+//            }
+//        }
 
 //        holder.binding.increaseButton.setOnClickListener {
 //            val currentQuantity = item.quantity ?: 0
@@ -95,6 +94,21 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
 //
 //            listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
 //        }
+
+
+        holder.binding.decreaseButton.setOnClickListener {
+            val currentQuantity = item.quantity ?: 0
+            if (currentQuantity > 1) {
+                val newQuantity = currentQuantity - 1
+                item.quantity = newQuantity // Update item's quantity
+                holder.binding.quantityText.text = newQuantity.toString()
+                holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
+                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString())
+            } else {
+                Log.i("CartAdapter", "Cannot decrease below 1 quantity")
+            }
+        }
+
         holder.binding.increaseButton.setOnClickListener {
             val currentQuantity = item.quantity ?: 0
             val newQuantity = currentQuantity + 1
@@ -102,10 +116,12 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
                 item.quantity = newQuantity // Update item's quantity
                 holder.binding.quantityText.text = newQuantity.toString()
                 holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
-                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")            } else {
+                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString())
+            } else {
                 Toast.makeText(context, "Maximum quantity reached", Toast.LENGTH_SHORT).show()
             }
         }
+
 
     }
     private fun convertCurrency(amount: Double?): String {
@@ -113,6 +129,14 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
         val convertedPrice = amount / currencyConversionRate
         return String.format("%.2f", convertedPrice)
     }
+//    private fun calculateTotalPrice(price: String?, quantity: Int?): String {
+//        val itemPrice = price?.toDoubleOrNull() ?: 0.0
+//        val total = itemPrice * (quantity ?: 0)
+//        return String.format("%.2f", total) // Format total price to 2 decimal places
+//    }
+
+
+
     private fun calculateTotalPrice(price: String?, quantity: Int?): String {
         val itemPrice = price?.toDoubleOrNull() ?: 0.0
         val total = itemPrice * (quantity ?: 0)

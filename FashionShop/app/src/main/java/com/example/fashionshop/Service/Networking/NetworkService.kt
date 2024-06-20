@@ -7,29 +7,21 @@ import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.CheckoutSessionResponse
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
-import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
-import com.example.fashionshop.Model.ExchangeRatesResponse
-import com.example.fashionshop.Model.ExchangeRatesResponseX
-import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderBody
 import com.example.fashionshop.Model.OrderBodyResponse
 import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
-import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Model.customers
-import com.example.fashionshop.Model.editAddressBody
-import com.example.fashionshop.Model.editOrderQuantityBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -76,28 +68,6 @@ interface NetworkService {
         @Path("CustomerId") CustomerId: Long,
         @Path("id") id: Long,
         )
-
-
-    @GET("draft_orders.json")
-    suspend fun getDraftOrders(): DraftOrders
-
-
-    @DELETE("draft_orders/{id}.json")
-    suspend fun deleteSingleCustomerDrafOrder(
-        @Path("id") id: Long,
-    )
-
-    @PUT("draft_orders/{id}.json")
-    suspend fun editSingleCustomerAddressDraftOrder(
-        @Path("id") id: Long,
-        @Body addressRequest: editAddressBody
-    ): DraftOrders
-    @PUT("draft_orders/{id}.json")
-    suspend fun editSingleCustomerAddressDraftOrderQuantity(
-        @Path("id") id: Long,
-        @Body QuantityRequest: editOrderQuantityBody
-    ): DraftOrders
-
     @GET("customers/{id}/orders.json")
     suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
 
@@ -106,10 +76,6 @@ interface NetworkService {
     suspend fun getDiscountCodes(): PriceRule
     @GET("products/{id}.json")
     suspend fun getProductById(@Path("id") id: Long): ProductResponse
-
-
-    @GET("price_rules/count.json")
-    suspend fun getDiscountCodesCount(): PriceRuleCount
     @POST("draft_orders.json")
     suspend fun createDraftOrders(
         @Body draftOrder: DraftOrderResponse
@@ -129,11 +95,6 @@ interface NetworkService {
         @Path("id") id: Long,
         @Body customer: UpdateCustomerRequest
     ): CustomerResponse
-
-
-    @GET("products/{id}/images.json")
-    suspend fun getProductImage(@Path("id") id: Long): Images
-
     @FormUrlEncoded
     @POST("v1/checkout/sessions")
     suspend fun createCheckoutSession(

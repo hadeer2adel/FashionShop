@@ -23,6 +23,7 @@ import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentFavoriteBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -98,7 +99,9 @@ class FavoriteFragment : Fragment() {
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                      //  Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
+
                     }
 
                     else -> {}

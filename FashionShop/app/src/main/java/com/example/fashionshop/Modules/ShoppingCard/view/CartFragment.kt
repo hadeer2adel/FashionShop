@@ -27,6 +27,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentCartBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -110,7 +111,7 @@ class CartFragment : Fragment() ,CartListener {
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
                     }
                 }
             } }
@@ -206,40 +207,26 @@ class CartFragment : Fragment() ,CartListener {
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
                     }
                 }
             } }
-        lifecycleScope.launch {
-            allProductViewModel.productCardImage.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        binding.recyclerViewCartItems.visibility = View.GONE
-                    }
-                    is NetworkState.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.recyclerViewCartItems.visibility = View.VISIBLE
-//                            mAdapter.setCardImages(response.data.images[0].src)
-//                            response.data.images[0].src
-                        //  allProductViewModel.getCardProductsImages(item.id)
-                    }
-
-                    is NetworkState.Failure -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-
 
         binding.buttonCheckout.setOnClickListener {
             val args = CartFragmentArgs(draftOrderIds).toBundle() // Convert CartFragmentArgs to Bundle
             findNavController().navigate(R.id.action_cartFragment_to_paymentFragment, args)
         }
         binding.deleteall.setOnClickListener {
-            allProductViewModel.deleteAllCartProducts()
+            AlertDialog.Builder(requireContext())
+                .setTitle("Delete All Cart Items")
+                .setMessage("Are you sure you want to delete all cart items?")
+                .setPositiveButton("Yes") { dialog, which ->
+                    allProductViewModel.deleteAllCartProducts()
+                }
+                .setNegativeButton("No") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .show()
         }
 
     }
@@ -264,7 +251,7 @@ class CartFragment : Fragment() ,CartListener {
         builder.setMessage("Are you sure you want to delete this item from your shopping cart?")
         builder.setPositiveButton("Yes") { dialog, which ->
             allProductViewModel.deleteCardProduct(id)
-            Toast.makeText(requireContext(), "Deleted Successfully", Toast.LENGTH_LONG).show()
+            Snackbar.make(requireView(),"Item Deleted Successfully", Snackbar.LENGTH_SHORT).show()
         }
 
         builder.setNegativeButton("No") { dialog, which ->
@@ -277,7 +264,7 @@ class CartFragment : Fragment() ,CartListener {
 
     override  fun sendeditChoosenQuantityRequest(id: Long, quantity: Int,price:String){
         allProductViewModel.editCardQuantityProduct(id,quantity,price)
-        Toast.makeText(requireContext(), "sendeditChoosenQuantityRequest Successfully", Toast.LENGTH_LONG).show()
+        Snackbar.make(requireView(),"Quantity Changed Successfully", Snackbar.LENGTH_SHORT).show()
     }
 
 }

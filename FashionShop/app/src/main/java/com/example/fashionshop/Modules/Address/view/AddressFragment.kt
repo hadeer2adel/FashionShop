@@ -28,6 +28,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentAddressBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -98,7 +99,8 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Log.i("AddressFragment", "refreshFragment: ${response.error.message}")
+                      //  Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             } }
@@ -136,7 +138,9 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Log.i("AddressFragment", "refreshFragment: ${response.error.message}")
+
+                      //  Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -182,7 +186,8 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
 
     override fun setAddressDefault(id:Long,default: Boolean) {
         allProductViewModel.sendeditAddressRequest(id,default,CustomerData.getInstance(requireContext()).id)
-        Toast.makeText(requireContext(), "Address Preeesed Successfully", Toast.LENGTH_LONG).show()
+        Snackbar.make(binding.root, "Default Address Successfully", Snackbar.LENGTH_SHORT).show()
+    //    Toast.makeText(requireContext(), "Address Preeesed Successfully", Toast.LENGTH_LONG).show()
         refreshFragment()
 
     }

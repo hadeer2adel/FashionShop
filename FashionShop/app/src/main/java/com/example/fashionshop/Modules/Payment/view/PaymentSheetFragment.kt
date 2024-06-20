@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.fashionshop.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 
 class PaymentSheetFragment : BottomSheetDialogFragment() {
 
@@ -57,20 +58,15 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun handleSuccess() {
-        showToast("Payment successful")
+        Snackbar.make(requireView(),"Payment successful", Snackbar.LENGTH_SHORT).show()
         dismiss()
         findNavController().navigate(R.id.actiomfromSheet_to_order)
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        showToast("Payment process finished")
+        Snackbar.make(requireView(),"Payment process finished", Snackbar.LENGTH_SHORT).show()
     }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-
     companion object {
         fun newInstance(paymentUrl: String): PaymentSheetFragment {
             val fragment = PaymentSheetFragment()

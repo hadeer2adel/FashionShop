@@ -35,6 +35,7 @@ import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentOrdersBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -84,7 +85,7 @@ class OrdersFragment : Fragment() {
 
     private fun setUpRV(){
         val onCardClick: (order : Order) -> Unit = {
-           Toast.makeText(requireContext(), "Clicked on ${it.order_number}", Toast.LENGTH_SHORT).show()
+            Snackbar.make(binding.root,"Clicked on ${it.order_number}", Snackbar.LENGTH_SHORT).show()
 //            val action = it.id?.let { it1 ->
 //                OrdersFragmentDirections.actionOrderFragmentToOrderInfoFragment(
 //                    it1

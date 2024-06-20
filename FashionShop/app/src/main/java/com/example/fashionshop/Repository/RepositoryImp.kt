@@ -3,25 +3,18 @@ import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.ProductResponse
-import com.example.fashionshop.Model.customers
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.CheckoutSessionResponse
-import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
-import com.example.fashionshop.Model.ExchangeRatesResponse
 import com.example.fashionshop.Model.ExchangeRatesResponseX
-import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderBody
 import com.example.fashionshop.Model.OrderBodyResponse
 import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
-import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.UpdateCustomerRequest
-import com.example.fashionshop.Model.editAddressBody
-import com.example.fashionshop.Model.editOrderQuantityBody
 import com.example.fashionshop.Service.Networking.NetworkManager
 import retrofit2.Response
 
@@ -86,36 +79,8 @@ class RepositoryImp constructor(
         return networkManager.deleteSingleCustomerAddress(customerID,id)
     }
 
-    override suspend fun getDraftOrders(): DraftOrders {
-        return networkManager.getDraftOrders()
-    }
-
-    override suspend fun deleteSingleCustomerDrafOrder(id: Long) {
-        return networkManager.deleteSingleCustomerDrafOrder(id)
-    }
-
-    override suspend fun editSingleCustomerAddressDraftOrder(
-        id: Long,
-        addressRequest: editAddressBody
-    ): DraftOrders {
-        return networkManager.editSingleCustomerAddressDraftOrder(id, addressRequest)
-    }
-
-    override suspend fun editSingleCustomerAddressDraftOrderQuantity(
-        id: Long,
-        quantityRequest: editOrderQuantityBody
-    ): DraftOrders {
-        return networkManager.editSingleCustomerAddressDraftOrderQuantity(id, quantityRequest)
-
-    }
-
     override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
         return  networkManager.getCustomerOrders(userId)
-    }
-
-    override suspend fun getDiscountCodesCount(): PriceRuleCount {
-        return networkManager.getDiscountCodesCount()
-
     }
 
     override suspend fun getDiscountCodes(): PriceRule {
@@ -143,10 +108,6 @@ class RepositoryImp constructor(
         customer: UpdateCustomerRequest
     ): CustomerResponse {
         return networkManager.updateCustomer(id, customer)
-    }
-
-    override suspend fun getProductImage(id: Long): Images {
-        return networkManager.getProductImage(id)
     }
 
     override suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse {

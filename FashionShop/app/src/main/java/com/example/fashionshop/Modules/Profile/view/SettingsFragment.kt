@@ -20,6 +20,7 @@ import com.example.fashionshop.OnBackPressedListener
 import com.example.fashionshop.R
 import com.example.fashionshop.Service.Caching.SharedPreferenceManager
 import com.example.fashionshop.databinding.FragmentSettingsBinding
+import com.google.android.material.snackbar.Snackbar
 import java.util.Locale
 
 class SettingsFragment : Fragment() , OnBackPressedListener {
@@ -108,8 +109,7 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
             .setItems(options) { dialog, which ->
                 val selectedCurrency = options[which]
                 CustomerData.getInstance(requireContext()).currency = selectedCurrency
-                Toast.makeText(requireContext(), "Selected: $selectedCurrency", Toast.LENGTH_SHORT).show()
-                // Handle the selection (e.g., store the selected currency or update the UI)
+                Snackbar.make(requireView(),"Selected: $selectedCurrency", Snackbar.LENGTH_SHORT).show()
             }
         builder.create().show()
     }
