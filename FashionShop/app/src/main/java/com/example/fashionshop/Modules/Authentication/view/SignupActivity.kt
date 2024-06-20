@@ -18,6 +18,7 @@ import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.ActivitySignupBinding
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -159,6 +160,8 @@ class SignupActivity : AppCompatActivity() {
     private fun onFailure(messageId: Int){
         binding.progressBar.visibility = View.GONE
         binding.screen.visibility = View.VISIBLE
-        Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show()
+        Snackbar.make(binding.root,  getString(messageId), Snackbar.LENGTH_SHORT).show()
+
     }
 }

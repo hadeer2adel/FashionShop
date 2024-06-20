@@ -1,21 +1,12 @@
 package com.example.fashionshop.Modules.Address.viewModel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fashionshop.Model.AddressDefault
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
-import com.example.fashionshop.Model.Addresse
-import com.example.fashionshop.Model.BillingAddressX
-import com.example.fashionshop.Model.DraftOrderResponse
-import com.example.fashionshop.Model.DraftOrderX
-import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.OneCustomer
-import com.example.fashionshop.Model.ShippingAddressX
-import com.example.fashionshop.Model.editAddressBody
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers

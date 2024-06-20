@@ -2,6 +2,7 @@ package com.example.fashionshop.Modules.ProductInfo.viewModel
 import android.content.Context
 import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -15,8 +16,11 @@ import com.example.fashionshop.Model.ProductDetails
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.Review
 import com.example.fashionshop.Model.Reviews
+import com.example.fashionshop.Model.inventoryQuantities
+import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -72,31 +76,12 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
             product.id,
             product.title,
             product.variants?.get(0)?.price,
-            product.images.toString()
+            product.images.toString(),
+//            inventory_quantity = product.variants?.get(0)?.inventory_quantity
         )
     }
 
-
-//    fun insertCardProduct(product: ProductDetails) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _productCard.value = NetworkState.Loading
-//            val draftOrder = repository.getDraftOrder(listId).draft_order
-//            val updatedLineItems = draftOrder.line_items.toMutableList().apply {
-//                add(convertProductToLineItem(product))
-//            }
-//            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
-//
-//            try {
-//                val updatedResponse =
-//                    repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
-//                _productCard.value = NetworkState.Success(updatedResponse)
-//            } catch (e: Exception) {
-//                _product.value = NetworkState.Failure(e)
-//            }
-//        }
-//    }
-
-    fun insertCardProduct(context: Context, product: ProductDetails) {
+    fun insertCardProduct(context: View, product: ProductDetails) {
         viewModelScope.launch(Dispatchers.IO) {
             _productCard.value = NetworkState.Loading
             val draftOrder = repository.getDraftOrder(listId).draft_order
@@ -117,15 +102,18 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
                 } catch (e: Exception) {
                     _productCard.value = NetworkState.Failure(e)
                 }
+                product.variants?.get(0)?.inventory_quantity?.let {
+                    inventoryQuantities.add(it)
+                }
+                product.variants?.get(0)?.price?.let {
+                    originalPrices.add(it)
+                }
             } else {
                 viewModelScope.launch(Dispatchers.Main) {
-                   val t = Toast.makeText(context, "Item is already in the cart", Toast.LENGTH_SHORT)
-                    t.setGravity(Gravity.TOP, 0, 0);
-
-                    t.show()
+                    Snackbar.make(context,"Item is already in the cart", Snackbar.LENGTH_SHORT).show()
                     Log.i("ProductInfoViewModel", "insertCardProduct: Already in cart")
                 }
-                _productCard.value = NetworkState.Failure(Exception("Product already in cart"))
+                _productCard.value = NetworkState.Failure(Exception("Item is already in the cart"))
             }
         }
     }

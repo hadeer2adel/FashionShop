@@ -30,7 +30,7 @@
             android:id="@+id/emptyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your cart is empty."
+            android:text="@string/cart"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Subtotal"
+            android:text="@string/subTotal"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />

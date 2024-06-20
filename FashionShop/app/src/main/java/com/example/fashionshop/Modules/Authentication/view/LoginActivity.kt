@@ -23,6 +23,7 @@ import com.example.fashionshop.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.flow.collectLatest
@@ -191,7 +192,9 @@ class LoginActivity : AppCompatActivity() {
     private fun onFailure(messageId: Int){
         binding.progressBar.visibility = View.GONE
         binding.screen.visibility = View.VISIBLE
-        Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show()
+      //  Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show()
+        Snackbar.make(binding.root,  getString(messageId), Snackbar.LENGTH_SHORT).show()
+
     }
 
 }

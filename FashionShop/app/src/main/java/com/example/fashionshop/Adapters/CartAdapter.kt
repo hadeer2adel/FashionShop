@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.CustomerData
-import com.example.fashionshop.Model.DraftOrder
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.inventoryQuantities
+import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.ShoppingCard.view.CartListener
 import com.example.fashionshop.R
 import com.example.fashionshop.databinding.CartItemBinding
@@ -41,7 +42,7 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
 //                .load(imageUrl)
 //                .into(holder.binding.imageView)
 //        }
-      //  Log.i("CartAdapter", "item: ${item.line_items}")
+        //  Log.i("CartAdapter", "item: ${item.line_items}")
         Log.i("Glide", "onBindViewHolder:${item.sku} ")
         val imageUrls = parseSkuString(item.sku)
         Log.i("Glide", "Parsed Image URLs: $imageUrls")
@@ -55,9 +56,9 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
         } else {
             Log.i("Glide", "No image URLs found in SKU: ${item.sku}")
         }
-    if (CustomerData.getInstance(context).currency == "USD"){
-        val priceDouble = item.price?.toDoubleOrNull() ?: 0.0
-        holder.binding.itemPrice.text =  convertCurrency(priceDouble)}
+        if (CustomerData.getInstance(context).currency == "USD"){
+            val priceDouble = item.price?.toDoubleOrNull() ?: 0.0
+            holder.binding.itemPrice.text =  convertCurrency(priceDouble)}
         else{   holder.binding.itemPrice.text = item.price}
         val customer = CustomerData.getInstance(context)
         holder.binding.currency.text = customer.currency
@@ -68,15 +69,27 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
                 Log.i("CartAdapter", "deleteIcon: $nonNullId")
                 listener.deleteCart(nonNullId)
             }
+            originalPrices.removeAt(position)
+            inventoryQuantities.removeAt(position)
+            Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
+
         }
         holder.binding.decreaseButton.setOnClickListener {
-            val currentQuantity = item.quantity
-            if (currentQuantity != null && currentQuantity > 1) {
+            val currentQuantity = item.quantity ?: 0
+            if (currentQuantity > 1) {
                 val newQuantity = currentQuantity - 1
                 item.quantity = newQuantity // Update item's quantity
                 holder.binding.quantityText.text = newQuantity.toString()
-                holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
-                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
+
+                // Recalculate and update item's price
+                holder.binding.itemPrice.text = calculateTotalPrice(originalPrices[position], newQuantity)
+                item.price = holder.binding.itemPrice.text.toString() // Update item's price in the model
+
+                // Notify listener and adapter about the updated quantity and price
+                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString())
+
+                // Notify adapter about data change for this item
+                notifyItemChanged(position)
             } else {
                 Log.i("CartAdapter", "Cannot decrease below 1 quantity")
             }
@@ -84,13 +97,19 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
 
         holder.binding.increaseButton.setOnClickListener {
             val currentQuantity = item.quantity ?: 0
-            val newQuantity = currentQuantity + 1
-            item.quantity = newQuantity // Update item's quantity
-            holder.binding.quantityText.text = newQuantity.toString()
-            holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
+            if (currentQuantity < inventoryQuantities[position]) {
+                val newQuantity = currentQuantity + 1
+                item.quantity = newQuantity // Update item's quantity
+                holder.binding.quantityText.text = newQuantity.toString()
+                holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
 
-            listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
+                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
+            } else {
+                Log.i("CartAdapter", "Cannot increase above 5 quantity")
+                // Optionally, you can show a toast or handle this situation as per your app's UX design
+            }
         }
+
     }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully

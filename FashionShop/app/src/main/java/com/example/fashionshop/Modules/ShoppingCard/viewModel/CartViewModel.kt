@@ -1,17 +1,9 @@
 package com.example.fashionshop.Modules.ShoppingCard.viewModel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fashionshop.Model.DraftOrderEditingQuntity
 import com.example.fashionshop.Model.DraftOrderResponse
-import com.example.fashionshop.Model.DraftOrders
-import com.example.fashionshop.Model.Images
-import com.example.fashionshop.Model.LineItem
-import com.example.fashionshop.Model.TaxLineX
-import com.example.fashionshop.Model.editOrderQuantityBody
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
@@ -25,8 +17,6 @@ class CartViewModel (private val repo: Repository, private var listId: Long
 
     private var _productCard = MutableStateFlow<NetworkState<DraftOrderResponse>>(NetworkState.Loading)
     var productCard: StateFlow<NetworkState<DraftOrderResponse>> = _productCard
-    private var _productCardImage = MutableStateFlow<NetworkState<Images>>(NetworkState.Loading)
-    var productCardImage : StateFlow<NetworkState<Images>> = _productCardImage
     init {
         getCardProducts()
     }
@@ -40,18 +30,6 @@ class CartViewModel (private val repo: Repository, private var listId: Long
                 _productCard.value = NetworkState.Failure(e)
             }catch (e: Exception) {
                 _productCard.value = NetworkState.Failure(e)
-            }
-        }
-    }
-    fun getCardProductsImages(id: Long){
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                val response = repo.getProductImage(id)
-                _productCardImage.value = NetworkState.Success(response)
-            } catch (e: HttpException) {
-                _productCardImage.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
-                _productCardImage.value = NetworkState.Failure(e)
             }
         }
     }
@@ -115,20 +93,5 @@ class CartViewModel (private val repo: Repository, private var listId: Long
         }
     }
 
-//    fun deteteDrafOrder(id: Long)
-//    {
-//
-//        viewModelScope.launch(Dispatchers.IO){
-//            try {
-//            repo.deleteSingleCustomerDrafOrder(id)
-//                getCardProducts()
-//            } catch (e: HttpException) {
-//                _productCardImage.value = NetworkState.Failure(e)
-//            }catch (e: Exception) {
-//                _productCardImage.value = NetworkState.Failure(e)
-//            }
-//        }
-//
-//    }
 
 }

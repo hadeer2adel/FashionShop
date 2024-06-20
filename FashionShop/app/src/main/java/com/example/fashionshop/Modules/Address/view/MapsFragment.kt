@@ -29,6 +29,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 
 class MapsFragment : Fragment() {
     private val egyptLatLng = LatLng(26.8206, 30.8025) // Center of Egypt
@@ -75,7 +76,9 @@ class MapsFragment : Fragment() {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 getCurrentLocation()
             } else {
-                Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), "Permission Denied", Snackbar.LENGTH_SHORT).show()
+
+                // Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -98,7 +101,9 @@ class MapsFragment : Fragment() {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
                 googleMap.addMarker(MarkerOptions().position(currentLatLng).title("Your Location"))
             } else {
-                Toast.makeText(requireContext(), "Unable to get current location", Toast.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), "Unable to get current location, please turn your Location Setting", Snackbar.LENGTH_SHORT).show()
+
+             //   Toast.makeText(requireContext(), "Unable to get current location", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -137,7 +142,7 @@ class MapsFragment : Fragment() {
                 val cityName = addresses[0].getAddressLine(0)
                 val lat = addresses[0].latitude
                 val lon = addresses[0].longitude
-                Toast.makeText(requireContext(), "City: $cityName, Longitude: $lon", Toast.LENGTH_LONG).show()
+            //    Toast.makeText(requireContext(), "City: $cityName, Longitude: $lon", Toast.LENGTH_LONG).show()
             }
             val bundle = Bundle().apply {
                 putString("address1", address1)

@@ -13,8 +13,9 @@ data class DraftOrderResponse(
             var quantity: Int?,
             val id: Long? = null,
             val title: String? = "dummy",
-            val price: String? = "1",
+            var price: String? = "1",
             val sku: String? = null,
+
         )
         data class Note(
             val value: String?,

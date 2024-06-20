@@ -2,22 +2,23 @@ package com.example.fashionshop.Modules.Payment.view
 
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.fashionshop.R
-
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 
 class PaymentSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var webView: WebView
+    private val successUrl = "https://example.com/"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +31,24 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         webView = view.findViewById(R.id.webView)
         webView.settings.javaScriptEnabled = true
-        webView.webViewClient = WebViewClient()
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                val url = request?.url.toString()
+                if (url.startsWith(successUrl)) {
+                    handleSuccess()
+                    return true
+                }
+                return false
+            }
+
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                if (url != null && url.startsWith(successUrl)) {
+                    handleSuccess()
+                    return true
+                }
+                return false
+            }
+        }
         webView.webChromeClient = WebChromeClient()
 
         val paymentUrl = arguments?.getString("paymentUrl")
@@ -39,21 +57,16 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun handleSuccess() {
+        Snackbar.make(requireView(),"Payment successful", Snackbar.LENGTH_SHORT).show()
+        dismiss()
+        findNavController().navigate(R.id.actiomfromSheet_to_order)
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        navigateToSettingsFragment()
-        showToast("Payment successful")
+        Snackbar.make(requireView(),"Payment process finished", Snackbar.LENGTH_SHORT).show()
     }
-
-    private fun navigateToSettingsFragment() {
-        findNavController().navigate(R.id.actiomfromSheet_to_order)
-
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-
     companion object {
         fun newInstance(paymentUrl: String): PaymentSheetFragment {
             val fragment = PaymentSheetFragment()

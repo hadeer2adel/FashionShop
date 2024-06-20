@@ -58,7 +58,6 @@ class AddNewAddressFragment : Fragment() {
             val name = it.getString("name")
             val country_name = it.getString("country_name")
 
-            // Set retrieved values to the input fields if they exist
             if (address1 != null) binding.etAddress1.setText(address1)
             if (address2 != null) binding.etAddress2.setText(address2)
             if (city != null) binding.etCity.setText(city)

@@ -6,18 +6,6 @@
     android:layout_marginBottom="80dp"
     tools:context=".Modules.Profile.view.ProfileFragment">
 
-    <!--    &lt;!&ndash; Toolbar Section &ndash;&gt;-->
-    <!--    <androidx.appcompat.widget.Toolbar-->
-    <!--        android:id="@+id/toolbar"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:background="?attr/colorPrimary"-->
-    <!--        android:elevation="4dp"-->
-    <!--        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"-->
-    <!--        android:popupTheme="@style/ThemeOverlay.AppCompat.Light" />-->
-
-    <!-- User Profile Section -->
-
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"

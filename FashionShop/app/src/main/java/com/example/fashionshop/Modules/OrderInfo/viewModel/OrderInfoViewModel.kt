@@ -1,14 +1,9 @@
 package com.example.fashionshop.Modules.Home.viewModel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.OrderResponse
-import com.example.fashionshop.Model.PriceRule
-import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers

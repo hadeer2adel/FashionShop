@@ -35,6 +35,7 @@ import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentHomeBinding
+import com.google.android.material.snackbar.Snackbar
 import com.smarteist.autoimageslider.SliderView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -102,12 +103,22 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
 
         viewModel.getAdsCode()
-        viewModel.products2.observe(viewLifecycleOwner, Observer { value ->
-            value?.let {
-                val count = value.price_rules
-                setUpSlider(sliderView, count.size,count)
+        lifecycleScope.launch {
+            viewModel.products.collectLatest { response ->
+                when(response) {
+                    is NetworkState.Loading -> {}
+                    is NetworkState.Success -> {
+                        val count = response.data.price_rules
+                        setUpSlider(sliderView, count.size,count)
+
+                    }
+                    is NetworkState.Failure -> {
+                        Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
+                        //  Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
-        })
+        }
 
     }
 
@@ -155,8 +166,10 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
 
     override fun onItemClicked(brand: SmartCollection) {
-        Toast.makeText(requireContext(), "Clicked on ${brand.title}", Toast.LENGTH_SHORT).show()
-        val title: String? = brand.title // Get the title from somewhere
+        //Toast.makeText(requireContext(), "Clicked on ${brand.title}", Toast.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, "Clicked on ${brand.title}", Snackbar.LENGTH_SHORT).show()
+
+        val title: String? = brand.title
         val action = HomeFragmentDirections.actionHomeFragmentToProductsFragment4(title ?: "Default Title")
         findNavController().navigate(action)
     }
@@ -203,14 +216,12 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
         val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-        // Create a ClipData object to hold the discount code
         val clip = ClipData.newPlainText("Discount Code", discount)
 
-        // Set the ClipData object to the clipboard
         clipboardManager.setPrimaryClip(clip)
 
-        // Notify the user that the discount code has been copied
-        Toast.makeText(context, "Discount code copied to clipboard", Toast.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, "Discount code copied to clipboard", Snackbar.LENGTH_SHORT).show()
+        //Toast.makeText(context, "Discount code copied to clipboard", Toast.LENGTH_SHORT).show()
 
 }
     }

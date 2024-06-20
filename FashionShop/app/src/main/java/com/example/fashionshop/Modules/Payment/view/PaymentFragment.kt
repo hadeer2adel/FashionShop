@@ -25,6 +25,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentPaymentBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -72,7 +73,7 @@ class PaymentFragment : Fragment() {
 
                     }
                     is NetworkState.Failure -> {
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -95,7 +96,7 @@ class PaymentFragment : Fragment() {
 
                     }
                     is NetworkState.Failure -> {
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -127,13 +128,13 @@ class PaymentFragment : Fragment() {
 
             when {
                 binding.visaCardCheckBox.isChecked -> {
-                    Toast.makeText(activity, "Visa Card selected", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root,"Visa Card selected", Snackbar.LENGTH_SHORT).show()
                 }
                 binding.cashOnDeliveryCheckBox.isChecked -> {
-                    Toast.makeText(activity, "Cash on Delivery selected", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root,"Cash on Delivery selected", Snackbar.LENGTH_SHORT).show()
                 }
                 else -> {
-                    Toast.makeText(activity, "Please select a payment method", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root,"Please select a payment method", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

@@ -6,3 +6,7 @@ data class SmsMarketingConsent(
     val opt_in_level: String,
     val state: String
 )
+
+var inventoryQuantities: MutableList<Int> = mutableListOf()
+
+var originalPrices:MutableList<String> = mutableListOf()

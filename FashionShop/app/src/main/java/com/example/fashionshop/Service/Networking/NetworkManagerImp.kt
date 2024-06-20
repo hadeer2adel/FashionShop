@@ -3,26 +3,19 @@ import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.ProductResponse
-import com.example.fashionshop.Model.customers
 import retrofit2.Response
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.CheckoutSessionResponse
-import com.example.fashionshop.Model.DraftOrders
 import com.example.fashionshop.Model.DraftOrderResponse
-import com.example.fashionshop.Model.ExchangeRatesResponse
 import com.example.fashionshop.Model.ExchangeRatesResponseX
-import com.example.fashionshop.Model.Images
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderBody
 import com.example.fashionshop.Model.OrderBodyResponse
 import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
-import com.example.fashionshop.Model.PriceRuleCount
 import com.example.fashionshop.Model.UpdateCustomerRequest
-import com.example.fashionshop.Model.editAddressBody
-import com.example.fashionshop.Model.editOrderQuantityBody
 
 
 class NetworkManagerImp private constructor(): NetworkManager {
@@ -69,32 +62,6 @@ class NetworkManagerImp private constructor(): NetworkManager {
         networkService.deleteSingleCustomerAddress(customerId,id)
     }
 
-    override suspend fun deleteSingleCustomerDrafOrder(id: Long)
-    {
-        networkService.deleteSingleCustomerDrafOrder(id)
-
-    }
-
-    override suspend fun getDraftOrders(): DraftOrders {
-        val responce= networkService.getDraftOrders()
-        return responce        }
-
-    override suspend fun editSingleCustomerAddressDraftOrder(
-        id: Long,
-        addressRequest: editAddressBody
-    ): DraftOrders {
-        val responce= networkService.editSingleCustomerAddressDraftOrder(id,addressRequest)
-        return responce
-    }
-
-    override suspend fun editSingleCustomerAddressDraftOrderQuantity(
-        id: Long,
-        quantityRequest: editOrderQuantityBody
-    ): DraftOrders {
-        val responce =networkService.editSingleCustomerAddressDraftOrderQuantity(id,quantityRequest)
-        return responce
-    }
-
     override suspend fun createCustomer(
         customer: CustomerRequest
     ): CustomerResponse {
@@ -122,10 +89,6 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return networkService.getCustomerOrders(userId)
     }
 
-    override suspend fun getDiscountCodesCount(): PriceRuleCount {
-        return networkService.getDiscountCodesCount()
-    }
-
     override suspend fun getDiscountCodes(): PriceRule {
         return networkService.getDiscountCodes()
         }
@@ -151,11 +114,6 @@ class NetworkManagerImp private constructor(): NetworkManager {
     ): CustomerResponse {
         return networkService.updateCustomer(id, customer)
     }
-
-    override suspend fun getProductImage(id: Long): Images {
-        return  networkService.getProductImage(id)
-    }
-
     override suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse {
         return networkService.createOrder(order)
     }

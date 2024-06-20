@@ -23,6 +23,7 @@ import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentProfileBinding
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -80,20 +81,12 @@ class ProfileFragment : Fragment() {
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
                     }
                 }
             } }
-//        allProductViewModel.products.observe(viewLifecycleOwner, Observer { value ->
-//            value?.let {
-//                Log.i("TAG", "Data updated. Size: ${value.customer.id}")
-//                binding.nameCustomer.text = value.customer.first_name + " " + value.customer.last_name
-//                binding.emailCustomer.text = value.customer.email
-//            }
-//        })
+
         binding.ordersButton.setOnClickListener {
-//            binding.ordersButton.
-            Toast.makeText(requireContext(), "Orders!", Toast.LENGTH_SHORT).show()
             navController.navigate(R.id.action_profileFragment_to_ordersFragment)
         }
 

@@ -76,8 +76,8 @@
 
     //Address
     <string name="newAddress">Add New Address</string>
-    <string name="newAddressAdded">Send Request</string>
-    <string name="chooseAddressOrder">Choose Address: </string>
+    <string name="newAddressAdded">Add This Address</string>
+    <string name="chooseAddressOrder">Choose Address for Your Order</string>
     <string name="Address">Address</string>
     <string name="country">Country:</string>
     <string name="address_1">First Address:</string>
@@ -133,16 +133,35 @@ at least one upper letter, one lowercase letter, and one digit</string>
     <string name="error_not_match">Password and confirm password doesn\'t match</string>
 
 
-
-
-
-
     //cart
     <string name="DeleteAll">Delete All Cart Items</string>
     <string name="subTotal">Subtotal:</string>
-
-
-
+    <string name="fav">Add Items To Your Favorite List</string>
+    <string name="map">Empty Addresses List!,Add Your Addresses</string>
+    <string name="cart">Your Shopping cart is empty !</string>
+    <string name="a1">Address Line 1</string>
+    <string name="a2">Address Line 2</string>
+    <string name="c">City</string>
+    <string name="co">Company</string>
+    <string name="cu">Country</string>
+    <string name="cu1">Country Name</string>
+    <string name="cu2">Country Code</string>
+    <string name="zip">Zip</string>
+    <string name="name">Name</string>
+    <string name="ffname">First Name</string>
+    <string name="llname">Last Name</string>
+    <string name="phonee">Phone</string>
+    <string name="ph">Province</string>
+    <string name="delete_all_cart_items_title">Delete All Cart Items</string>
+    <string name="delete_all_cart_items_message">Are you sure you want to delete all cart items?</string>
+    <string name="confirm_deletion_title">Confirm Deletion</string>
+    <string name="confirm_deletion_message">Are you sure you want to delete this item from your shopping cart?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="item_deleted_successfully">Item Deleted Successfully</string>
+    <string name="choose_currency_title">Choose Currency</string>
+    <string name="selected_currency">Selected: </string>
+    <string name="orderEmpty">Let\'s Create Your First Order !</string>
 
 
 </resources>

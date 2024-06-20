@@ -14,7 +14,7 @@ import com.example.fashionshop.R
 class AddressAdapter(private val listener: AddressListener ,private val showDeleteIcon: Boolean) : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() {
 
     private var addressList: List<Addresse> = emptyList()
-    private var selectedItemPosition = -1 // Default no item selected
+    private var selectedItemPosition = -1
 
     fun setAddressList(addressList: List<Addresse>) {
         this.addressList = addressList
@@ -40,18 +40,20 @@ class AddressAdapter(private val listener: AddressListener ,private val showDele
 
         if (currentAddress.default) {
             holder.cardView.setCardBackgroundColor(holder.itemView.context.getColor(R.color.default_address_color))
+            holder.deleteIcon.visibility = View.GONE
         } else {
             holder.cardView.setCardBackgroundColor(holder.itemView.context.getColor(R.color.non_default_address_color))
+            holder.deleteIcon.visibility = if (showDeleteIcon) View.VISIBLE else View.GONE
+
         }
 
         holder.itemView.setOnLongClickListener {
-            // Set the current item as selected
             selectedItemPosition = holder.adapterPosition
             listener.setAddressDefault(currentAddress.id, true)
             notifyDataSetChanged() // Notify adapter that data set has changed
             true // Consume the long click
         }
-        holder.deleteIcon.visibility = if (showDeleteIcon) View.VISIBLE else View.GONE
+       // holder.deleteIcon.visibility = if (showDeleteIcon) View.VISIBLE else View.GONE
 
         holder.deleteIcon.setOnClickListener {
             listener.deleteAddress(currentAddress.id)

@@ -20,6 +20,7 @@ import com.example.fashionshop.OnBackPressedListener
 import com.example.fashionshop.R
 import com.example.fashionshop.Service.Caching.SharedPreferenceManager
 import com.example.fashionshop.databinding.FragmentSettingsBinding
+import com.google.android.material.snackbar.Snackbar
 import java.util.Locale
 
 class SettingsFragment : Fragment() , OnBackPressedListener {
@@ -47,12 +48,6 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
         binding.AddressButton.setOnClickListener {
-//            val secondFragment = AddressFragment()
-//            fragmentManager?.beginTransaction()?.apply {
-//                replace(R.id.fragmentContainerView, secondFragment)
-//                addToBackStack(null)
-//                commit()
-//            }
             navController.navigate(R.id.action_profileFragment_to_addressFragment)
 
         }
@@ -62,33 +57,12 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
         }
 
         binding.AboutUsButton.setOnClickListener {
-//            val secondFragment = AboutFragment()
-//            fragmentManager?.beginTransaction()?.apply {
-//                replace(R.id.fragmentContainerView, secondFragment)
-//                addToBackStack(null)
-//                commit()
-//            }
             navController.navigate(R.id.action_profileFragment_to_AboutFragment)
 
         }
         binding.LanguagesButton.setOnClickListener {
             showLanguageDialog()
         }
-//        binding.switchLanguageArabic.setOnCheckedChangeListener { _, isChecked ->
-//            if (isChecked) {
-//                CustomerData.getInstance(requireContext()).languageCode = "ar"
-//                setAppLanguage("ar")
-//                startActivity(Intent(requireContext(), MainActivity::class.java))
-//            }
-//        }
-//        binding.switchLanguageEnglish.setOnCheckedChangeListener { _, isChecked ->
-//            if (isChecked) {
-//                CustomerData.getInstance(requireContext()).languageCode = "en"
-//                setAppLanguage("en")
-//                startActivity(Intent(requireContext(), MainActivity::class.java))
-//            }
-//
-//        }
 
 
     }
@@ -104,12 +78,11 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
     private fun showCurrencyDialog() {
         val options = arrayOf("EGY", "USD")
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Choose Currency")
+        builder.setTitle(getString(R.string.choose_currency_title))
             .setItems(options) { dialog, which ->
                 val selectedCurrency = options[which]
                 CustomerData.getInstance(requireContext()).currency = selectedCurrency
-                Toast.makeText(requireContext(), "Selected: $selectedCurrency", Toast.LENGTH_SHORT).show()
-                // Handle the selection (e.g., store the selected currency or update the UI)
+                Snackbar.make(requireView(),"Selected: $selectedCurrency", Snackbar.LENGTH_SHORT).show()
             }
         builder.create().show()
     }
@@ -162,24 +135,6 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
         }
     }
 
-//    private fun showLanguageDialog() {
-//        val options = arrayOf("Arabic", "English")
-//        val builder = AlertDialog.Builder(requireContext())
-//        builder.setTitle("Choose Language")
-//            .setItems(options) { dialog, which ->
-//                val selectedLanguage = when (which) {
-//                    0 -> "ar"
-//                    1 -> "en"
-//                    else -> "en" // Default to English if unexpected selection
-//                }
-//                SharedPreferenceManager.getInstance(requireContext()).saveLanguageUnit(selectedLanguage)
-//
-//                setAppLanguage(selectedLanguage)
-//                startActivity(Intent(requireContext(), MainActivity::class.java))
-//
-//            }
-//        builder.create().show()
-//    }
     private fun setAppLanguage(languageCode: String) {
         val currentLocale = Locale.getDefault()
         val newLocale = Locale(languageCode)

@@ -35,6 +35,7 @@ import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentOrdersBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -84,15 +85,15 @@ class OrdersFragment : Fragment() {
 
     private fun setUpRV(){
         val onCardClick: (order : Order) -> Unit = {
-           Toast.makeText(requireContext(), "Clicked on ${it.order_number}", Toast.LENGTH_SHORT).show()
-            val action = it.id?.let { it1 ->
-                OrdersFragmentDirections.actionOrderFragmentToOrderInfoFragment(
-                    it1
-                )
-            }
-            if (action != null) {
-                findNavController().navigate(action)
-            }
+            Snackbar.make(binding.root,"Clicked on ${it.order_number}", Snackbar.LENGTH_SHORT).show()
+//            val action = it.id?.let { it1 ->
+//                OrdersFragmentDirections.actionOrderFragmentToOrderInfoFragment(
+//                    it1
+//                )
+//            }
+//            if (action != null) {
+//                findNavController().navigate(action)
+//            }
         }
         adapter = OrdersAdapter(requireContext(), onCardClick)
         binding.rvOrders.layoutManager =  LinearLayoutManager(requireContext())
@@ -102,13 +103,19 @@ class OrdersFragment : Fragment() {
     private fun showLoading() {
         binding.progressBar5.visibility = View.VISIBLE
         binding.rvOrders.visibility = View.INVISIBLE
-
+        binding.emptyView.visibility = View.GONE
     }
 
     private fun showSuccess(orders: List<Order>) {
         binding.progressBar5.visibility = View.INVISIBLE
-        binding.rvOrders.visibility = View.VISIBLE
-        adapter.submitList(orders)
+        if (orders.isEmpty()) {
+            binding.rvOrders.visibility = View.GONE
+            binding.emptyView.visibility = View.VISIBLE
+        } else {
+            binding.rvOrders.visibility = View.VISIBLE
+            binding.emptyView.visibility = View.GONE
+            adapter.submitList(orders)
+        }
     }
 
     private fun showError(title: String, message: String) {

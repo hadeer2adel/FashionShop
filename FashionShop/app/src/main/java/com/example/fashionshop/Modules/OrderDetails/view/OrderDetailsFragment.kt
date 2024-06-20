@@ -42,6 +42,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentOrderDetailsBinding
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -152,8 +153,8 @@ class OrderDetailsFragment() : Fragment() {
 
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT)
-                            .show()
+                        Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
+
                     }
                 }
             }
@@ -211,7 +212,7 @@ class OrderDetailsFragment() : Fragment() {
                         binding.validate.isEnabled = true // Enable validate button
                     }
                     is NetworkState.Failure -> {
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -225,7 +226,9 @@ class OrderDetailsFragment() : Fragment() {
 
         if (couponCode in titlesList) {
             val coupon = couponCode
-            Toast.makeText(requireContext(), "Coupon Applied Successfully", Toast.LENGTH_LONG).show()
+           // Toast.makeText(requireContext(), "Coupon Applied Successfully", Toast.LENGTH_LONG).show()
+            Snackbar.make(binding.root,"Coupon Applied Successfully", Snackbar.LENGTH_SHORT).show()
+
             lifecycleScope.launch {
                 allCodesViewModel.productCode.collectLatest { response ->
                     when (response) {
@@ -249,7 +252,7 @@ class OrderDetailsFragment() : Fragment() {
                             }
                         }
                         is NetworkState.Failure -> {
-                            Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                            Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -275,7 +278,8 @@ class OrderDetailsFragment() : Fragment() {
             }
         }
         alertDialogBuilder.create().show()
-        Toast.makeText(requireContext(), "Coupon Code is Invalid", Toast.LENGTH_LONG).show()
+        Snackbar.make(binding.root,"Coupon Code is Invalid", Snackbar.LENGTH_SHORT).show()
+      //  Toast.makeText(requireContext(), "Coupon Code is Invalid", Toast.LENGTH_LONG).show()
         Log.i("Coupon", "False: ")
     }
 
@@ -330,7 +334,7 @@ class OrderDetailsFragment() : Fragment() {
             }
             "Cash" -> {
                 findNavController().navigate(R.id.actiomfromSheet_to_order)
-                Toast.makeText(requireContext(),"You Choose Cash Method Succssed Order", Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root,"You Choose Cash Method Succssed Orde", Snackbar.LENGTH_SHORT).show()
 
             }
             else -> {
@@ -340,7 +344,6 @@ class OrderDetailsFragment() : Fragment() {
     }
 
     private fun placeOrder() {
-        // Calculate subtotal
         val subtotal = lineItemsList.sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
 
         val address = AddressBody(
@@ -396,21 +399,17 @@ class OrderDetailsFragment() : Fragment() {
             total_tax = 13.5,
             currency = CustomerData.getInstance(requireContext()).currency
         )
-        // Wrapping the orderBody within an "order" object
         val wrappedOrderBody = mapOf("order" to orderBody)
 
-        // Example call to ViewModel method to create order
         allCodesViewModel.createOrder(wrappedOrderBody,
             onSuccess = {
-                Toast.makeText(requireContext(), "Order placed successfully", Toast.LENGTH_LONG).show()
+                Snackbar.make(binding.root,"Order placed successfully", Snackbar.LENGTH_SHORT).show()
                 Log.d("placeOrder", "success")
-                // Handle success, e.g., navigate to a success screen if needed
                 allProductViewModel.deleteAllCartProducts()
             },
             onError = { errorMessage ->
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+                Snackbar.make(binding.root,errorMessage, Snackbar.LENGTH_SHORT).show()
                 Log.d("placeOrder", "error: $errorMessage")
-                // Handle error, e.g., show an error message to the user
             }
         )
     }

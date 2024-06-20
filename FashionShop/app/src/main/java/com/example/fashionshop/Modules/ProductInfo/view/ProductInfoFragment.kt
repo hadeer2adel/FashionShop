@@ -23,6 +23,8 @@ import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductDetails
+import com.example.fashionshop.Model.inventoryQuantities
+import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
@@ -39,6 +41,7 @@ import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentProductInfoBinding
+import com.google.android.material.snackbar.Snackbar
 import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
 import kotlinx.coroutines.flow.collectLatest
@@ -83,7 +86,6 @@ class ProductInfoFragment : Fragment() {
                         currencyConversionRate = response.data.rates?.EGP ?: 1.0
 
 
-
                     }
                     is NetworkState.Failure -> ""
                     else -> { }
@@ -118,34 +120,16 @@ class ProductInfoFragment : Fragment() {
             }
         }
 
-//        binding.addToCartBtn.setOnClickListener {
-//            val networkManager: NetworkManager = NetworkManagerImp.getInstance()
-//            val repository: Repository = RepositoryImp(networkManager)
-//            val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
-//            viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
-//            val product = (viewModel.product.value as? NetworkState.Success)?.data?.product
-//            if (product != null) {
-//                Log.i("product", "onViewCreated: ${product} ")
-//                viewModel.insertCardProduct(requireContext(),product)
-//                Toast.makeText(requireContext(), "Product Added Successfully", Toast.LENGTH_SHORT).show()
-//
-//
-//            } else {
-//                Toast.makeText(requireContext(), "Product information not available", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-
-
-
-
         binding.addToCartBtn.setOnClickListener {
             val product = (viewModel.product.value as? NetworkState.Success)?.data?.product
             if (product != null) {
                 Log.i("ProductInfoFragment", "onViewCreated: $product")
-                viewModel.insertCardProduct(requireContext(), product)
+                viewModel.insertCardProduct(requireView(), product)
+
+                Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
+
             } else {
-                Toast.makeText(requireContext(), "Product information not available", Toast.LENGTH_SHORT).show()
+                Snackbar.make(requireView(),"Product information not available", Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -155,12 +139,12 @@ class ProductInfoFragment : Fragment() {
                     is NetworkState.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is NetworkState.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), "Product added successfully", Toast.LENGTH_SHORT).show()
-//findNavController().navigate(R.id.action_cartFragment)
+                        Snackbar.make(requireView(),"Product added successfully", Snackbar.LENGTH_SHORT).show()
+                    //findNavController().navigate(R.id.action_cartFragment)
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
                     //    findNavController().navigate(R.id.action_cartFragment)
 
                     }
@@ -217,6 +201,8 @@ class ProductInfoFragment : Fragment() {
                     is NetworkState.Success -> {
                         onSuccess()
                         response.data.product?.let { setData(it) }
+                        Log.i("adapter", ":${response.data.product} ")
+
                     }
                     is NetworkState.Failure -> onFailure(response.error.message)
                 }
@@ -330,6 +316,6 @@ class ProductInfoFragment : Fragment() {
     }
     private fun onFailure(message: String?){
         binding.progressBar.visibility = View.GONE
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        Snackbar.make(requireView(),message.toString(), Snackbar.LENGTH_SHORT).show()
     }
 }

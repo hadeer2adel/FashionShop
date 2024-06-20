@@ -23,6 +23,7 @@ import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentFavoriteBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -66,6 +67,7 @@ class FavoriteFragment : Fragment() {
             val navController = NavHostFragment.findNavController(this)
             val action = FavoriteFragmentDirections.actionFavoriteFragmentToProductInfoFragment(it)
             navController.navigate(action)
+
         }
 
         adapter = FavProductAdapter(requireContext(), true, onClick, onCardClick)
@@ -88,13 +90,19 @@ class FavoriteFragment : Fragment() {
                         binding.recycleView.visibility = View.GONE
                     }
                     is NetworkState.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.recycleView.visibility = View.VISIBLE
-                        adapter.submitList(response.data.draft_order.line_items.drop(1))
+                        if (response.data.draft_order.line_items.size > 1) {
+                            binding.recycleView.visibility = View.VISIBLE
+                            adapter.submitList(response.data.draft_order.line_items.drop(1))
+                        } else {
+                            binding.recycleView.visibility = View.GONE
+                            binding.emptyView.visibility = View.VISIBLE
+                        }
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                      //  Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
+
                     }
 
                     else -> {}
