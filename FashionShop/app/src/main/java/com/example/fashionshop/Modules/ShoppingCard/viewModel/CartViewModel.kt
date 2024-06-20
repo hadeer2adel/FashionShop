@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fashionshop.Model.DraftOrderResponse
+import com.example.fashionshop.Model.inventoryQuantities
+import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +45,7 @@ class CartViewModel (private val repo: Repository, private var listId: Long
             }
             val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
             try {
+
                 val updatedResponse = repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
                 _productCard.value = NetworkState.Success(updatedResponse)
             } catch (e: Exception) {
@@ -86,6 +89,8 @@ class CartViewModel (private val repo: Repository, private var listId: Long
             Log.i("updatedDraftOrder", "deleteAllCartProducts: ${updatedDraftOrder} ")
             try {
                 val updatedResponse = repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                inventoryQuantities.clear()
+                originalPrices.clear()
                 _productCard.value = NetworkState.Success(updatedResponse)
             } catch (e: Exception) {
                 _productCard.value = NetworkState.Failure(e)

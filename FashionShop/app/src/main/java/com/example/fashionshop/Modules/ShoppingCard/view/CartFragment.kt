@@ -133,8 +133,6 @@ class CartFragment : Fragment() ,CartListener {
                     dialog.dismiss()
                 }
                 .show()
-            originalPrices.clear()
-            inventoryQuantities.clear()
             Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
         }
 
@@ -233,8 +231,6 @@ class CartFragment : Fragment() ,CartListener {
                     dialog.dismiss()
                 }
                 .show()
-            originalPrices.clear()
-            inventoryQuantities.clear()
         }
 
 

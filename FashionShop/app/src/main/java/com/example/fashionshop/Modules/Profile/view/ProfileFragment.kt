@@ -15,6 +15,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Model.inventoryQuantities
+import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
 import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
 import com.example.fashionshop.R
@@ -108,6 +110,8 @@ class ProfileFragment : Fragment() {
                 R.string.logout_body,
                 onAllow
             )
+            inventoryQuantities.clear()
+            originalPrices.clear()
         }
     }
 

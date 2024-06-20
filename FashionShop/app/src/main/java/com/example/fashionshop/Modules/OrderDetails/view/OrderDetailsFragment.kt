@@ -26,6 +26,8 @@ import com.example.fashionshop.Model.DefaultAddressBody
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.LineItemBody
 import com.example.fashionshop.Model.OrderBody
+import com.example.fashionshop.Model.inventoryQuantities
+import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
 import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
