@@ -142,15 +142,22 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
         viewModel.getBrands()
         lifecycleScope.launch {
             viewModel.brand.collectLatest { response ->
-                when(response){
+                when (response) {
                     is NetworkState.Loading -> showLoading()
-                    is NetworkState.Success -> response.data.smart_collections?.let { showSuccess(it) }
-                    is NetworkState.Failure -> showError("Network Error", "Failed to load data. Please try again.")
-                    else -> { }
+                    is NetworkState.Success -> response.data.smart_collections?.let {
+                        showSuccess(
+                            it
+                        )
+                    }
+                    is NetworkState.Failure -> showError(
+                        "Network Error",
+                        "Failed to load data. Please try again."
+                    )
+
+                    else -> {}
                 }
             }
         }
-
     }
 
 

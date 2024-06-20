@@ -1,5 +1,6 @@
 package com.example.fashionshop.Modules.ProductInfo.view
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,7 @@ import com.example.fashionshop.Adapters.ProductAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductDetails
+import com.example.fashionshop.Modules.Category.view.CategoryFragment
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
@@ -118,18 +120,22 @@ class ProductInfoFragment : Fragment() {
         }
 
         binding.addToCartBtn.setOnClickListener {
-            val networkManager: NetworkManager = NetworkManagerImp.getInstance()
-            val repository: Repository = RepositoryImp(networkManager)
-            val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
-            viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
-            val product = (viewModel.product.value as? NetworkState.Success)?.data?.product
-            if (product != null) {
-                viewModel.insertCardProduct(product)
-                Toast.makeText(requireContext(), "Product Added Successfully", Toast.LENGTH_SHORT).show()
-                viewModel.insertCardProductImage(product)
+            if (CustomerData.getInstance(requireContext()).isLogged) {
+                val networkManager: NetworkManager = NetworkManagerImp.getInstance()
+                val repository: Repository = RepositoryImp(networkManager)
+                val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
+                viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
+                val product = (viewModel.product.value as? NetworkState.Success)?.data?.product
+                if (product != null) {
+                    viewModel.insertCardProduct(product)
+                    Toast.makeText(requireContext(), "Product Added Successfully", Toast.LENGTH_SHORT).show()
+                    viewModel.insertCardProductImage(product)
 
-            } else {
-                Toast.makeText(requireContext(), "Product information not available", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Product information not available", Toast.LENGTH_SHORT).show()
+                }
+            }else {
+                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
             }
         }
 
@@ -137,10 +143,12 @@ class ProductInfoFragment : Fragment() {
 
     private fun setUpRecycleView(){
         val onClick: (isFav: Boolean, product: Product) -> Unit = { isFav, product ->
-            if (isFav) {
-                favViewModel.insertFavProduct(product)
-            } else {
-                product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+            if (CustomerData.getInstance(requireContext()).isLogged){
+                if (isFav) {
+                    favViewModel.insertFavProduct(product)
+                } else {
+                    product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+                }
             }
         }
         val onCardClick: (id: Long) -> Unit = {
@@ -149,7 +157,9 @@ class ProductInfoFragment : Fragment() {
             navController.navigate(action)
         }
         val onStart: (id: Long, onTrue: ()->Unit, onFalse: ()->Unit) ->Unit = { id, onTrue, onFalse ->
-            favViewModel.isFavProduct(id, onTrue, onFalse)
+            if (CustomerData.getInstance(requireContext()).isLogged){
+                favViewModel.isFavProduct(id, onTrue, onFalse)
+            }
         }
         adapter = ProductAdapter(requireContext(), onStart, onClick, onCardClick)
 
@@ -163,10 +173,10 @@ class ProductInfoFragment : Fragment() {
         val repository: Repository = RepositoryImp(networkManager)
         val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
         viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
-
-        val favFactory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
-        favViewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
-
+        if (CustomerData.getInstance(requireContext()).isLogged){
+            val favFactory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
+            favViewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
+        }
         lifecycleScope.launch {
             viewModel.product.collectLatest { response ->
                 when (response) {
@@ -240,7 +250,6 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun handleFavBtn(product: ProductDetails) {
-
         val onTrue: () -> Unit = {
             binding.favBtn.setImageResource(R.drawable.ic_favorite_true)
             isFav = true
@@ -249,32 +258,40 @@ class ProductInfoFragment : Fragment() {
             binding.favBtn.setImageResource(R.drawable.ic_favorite_false)
             isFav = false
         }
-        product.id?.let { favViewModel.isFavProduct(it, onTrue, onFalse) }
-
+        if (CustomerData.getInstance(requireContext()).isLogged) {
+            product.id?.let { favViewModel.isFavProduct(it, onTrue, onFalse) }
+        }
         binding.favBtn.setOnClickListener {
-            isFav = !isFav
-            if (isFav) {
-                binding.favBtn.setImageResource(R.drawable.ic_favorite_true)
-                val newProduct = Product(
-                    product.id,
-                    product.title,
-                    product.image,
-                    product.variants,
-                )
-                favViewModel.insertFavProduct(newProduct)
-            } else {
-                val onAllow: () -> Unit = {
-                    binding.favBtn.setImageResource(R.drawable.ic_favorite_false)
-                    product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+            if (CustomerData.getInstance(requireContext()).isLogged){
+                isFav = !isFav
+                if (isFav) {
+                    binding.favBtn.setImageResource(R.drawable.ic_favorite_true)
+                    val newProduct = Product(
+                        product.id,
+                        product.title,
+                        product.image,
+                        product.variants,
+                    )
+                    favViewModel.insertFavProduct(newProduct)
+                } else {
+                    val onAllow: () -> Unit = {
+                        binding.favBtn.setImageResource(R.drawable.ic_favorite_false)
+                        product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+                    }
+                    showDialog(
+                        requireContext(),
+                        R.string.delete_title,
+                        R.string.delete_body,
+                        onAllow
+                    )
                 }
-                showDialog(
-                    requireContext(),
-                    R.string.delete_title,
-                    R.string.delete_body,
-                    onAllow
-                )
+            }
+            else {
+                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
             }
         }
+
+
     }
 
     private fun onLoading(){
@@ -288,5 +305,16 @@ class ProductInfoFragment : Fragment() {
     private fun onFailure(message: String?){
         binding.progressBar.visibility = View.GONE
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+    private fun showAlertDialog(title: String, message: String) {
+        AlertDialog.Builder(requireContext()).apply {
+            setTitle(title)
+            setMessage(message)
+            setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            create()
+            show()
+        }
     }
 }
