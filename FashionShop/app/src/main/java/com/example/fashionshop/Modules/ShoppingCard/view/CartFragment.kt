@@ -122,16 +122,17 @@ class CartFragment : Fragment() ,CartListener {
         }
         binding.deleteall.setOnClickListener {
             AlertDialog.Builder(requireContext())
-                .setTitle("Delete All Cart Items")
-                .setMessage("Are you sure you want to delete all cart items?")
-                .setPositiveButton("Yes") { dialog, which ->
+                .setTitle(getString(R.string.delete_all_cart_items_title))
+                .setMessage(getString(R.string.delete_all_cart_items_message))
+                .setPositiveButton(getString(R.string.yes)) { dialog, which ->
                     allProductViewModel.deleteAllCartProducts()
                 }
-                .setNegativeButton("No") { dialog, which ->
+                .setNegativeButton(getString(R.string.no)) { dialog, which ->
                     dialog.dismiss()
                 }
                 .show()
         }
+
 
         return view
     }
@@ -218,16 +219,17 @@ class CartFragment : Fragment() ,CartListener {
         }
         binding.deleteall.setOnClickListener {
             AlertDialog.Builder(requireContext())
-                .setTitle("Delete All Cart Items")
-                .setMessage("Are you sure you want to delete all cart items?")
-                .setPositiveButton("Yes") { dialog, which ->
+                .setTitle(getString(R.string.delete_all_cart_items_title))
+                .setMessage(getString(R.string.delete_all_cart_items_message))
+                .setPositiveButton(getString(R.string.yes)) { dialog, which ->
                     allProductViewModel.deleteAllCartProducts()
                 }
-                .setNegativeButton("No") { dialog, which ->
+                .setNegativeButton(getString(R.string.no)) { dialog, which ->
                     dialog.dismiss()
                 }
                 .show()
         }
+
 
     }
 
@@ -247,18 +249,20 @@ class CartFragment : Fragment() ,CartListener {
     }
     override fun deleteCart(id: Long) {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Confirm Deletion")
-        builder.setMessage("Are you sure you want to delete this item from your shopping cart?")
-        builder.setPositiveButton("Yes") { dialog, which ->
+        builder.setTitle(getString(R.string.confirm_deletion_title))
+        builder.setMessage(getString(R.string.confirm_deletion_message))
+        builder.setPositiveButton(getString(R.string.yes)) { dialog, which ->
             allProductViewModel.deleteCardProduct(id)
-            Snackbar.make(requireView(),"Item Deleted Successfully", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(requireView(), getString(R.string.item_deleted_successfully), Snackbar.LENGTH_SHORT).show()
         }
 
-        builder.setNegativeButton("No") { dialog, which ->
+        builder.setNegativeButton(getString(R.string.no)) { dialog, which ->
+            dialog.dismiss()
         }
 
         val dialog = builder.create()
         dialog.show()
+
     }
 
 

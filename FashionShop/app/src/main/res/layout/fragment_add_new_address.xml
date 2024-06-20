@@ -35,89 +35,89 @@
                 android:id="@+id/etAddress1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Address Line 1"
+                android:hint="@string/a1"
                 android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/etAddress2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Address Line 2"
+                android:hint="@string/a2"
                 android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/etCity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="City"
+                android:hint="@string/c"
                 android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/etCompany"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Company"
+                android:hint="@string/co"
                 android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/etFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="First Name"
+                android:hint="@string/ffname"
                 android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/etLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Last Name"
+                android:hint="@string/llname"
                 android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/etPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone"
+                android:hint="@string/phonee"
                 android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/etProvince"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Province"
+                android:hint="@string/ph"
                 android:minHeight="48dp" />
             <EditText
                 android:id="@+id/etCountry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Country"
+                android:hint="@string/cu"
                 android:minHeight="48dp" />
             <EditText
                 android:id="@+id/etCountryName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Country Name"
+                android:hint="@string/cu1"
                 android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/etZip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Zip"
+                android:hint="@string/zip"
                 android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Name"
+                android:hint="@string/name"
                 android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/etCountryCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Country Code"
+                android:hint="@string/cu2"
                 android:minHeight="48dp" />
 
             <Button
