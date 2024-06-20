@@ -157,5 +157,6 @@
     <string name="item_deleted_successfully">تم حذف العنصر بنجاح</string>
     <string name="choose_currency_title">اختر العملة</string>
     <string name="selected_currency">تم اختيار:</string>
+    <string name="orderEmpty">سلة الطلبات فارغة لنقم بإضافة طلب جديد!</string>
 
 </resources>

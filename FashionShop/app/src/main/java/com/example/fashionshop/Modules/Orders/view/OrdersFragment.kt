@@ -103,13 +103,19 @@ class OrdersFragment : Fragment() {
     private fun showLoading() {
         binding.progressBar5.visibility = View.VISIBLE
         binding.rvOrders.visibility = View.INVISIBLE
-
+        binding.emptyView.visibility = View.GONE
     }
 
     private fun showSuccess(orders: List<Order>) {
         binding.progressBar5.visibility = View.INVISIBLE
-        binding.rvOrders.visibility = View.VISIBLE
-        adapter.submitList(orders)
+        if (orders.isEmpty()) {
+            binding.rvOrders.visibility = View.GONE
+            binding.emptyView.visibility = View.VISIBLE
+        } else {
+            binding.rvOrders.visibility = View.VISIBLE
+            binding.emptyView.visibility = View.GONE
+            adapter.submitList(orders)
+        }
     }
 
     private fun showError(title: String, message: String) {

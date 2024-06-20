@@ -158,5 +158,7 @@ at least one upper letter, one lowercase letter, and one digit</string>
     <string name="item_deleted_successfully">Item Deleted Successfully</string>
     <string name="choose_currency_title">Choose Currency</string>
     <string name="selected_currency">Selected: </string>
+    <string name="orderEmpty">Let\'s Create Your First Order !</string>
+
 
 </resources>
