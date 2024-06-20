@@ -86,14 +86,14 @@ class OrdersFragment : Fragment() {
     private fun setUpRV(){
         val onCardClick: (order : Order) -> Unit = {
             Snackbar.make(binding.root,"Clicked on ${it.order_number}", Snackbar.LENGTH_SHORT).show()
-//            val action = it.id?.let { it1 ->
-//                OrdersFragmentDirections.actionOrderFragmentToOrderInfoFragment(
-//                    it1
-//                )
-//            }
-//            if (action != null) {
-//                findNavController().navigate(action)
-//            }
+            val action = it.id?.let { it1 ->
+                OrdersFragmentDirections.actionOrderFragmentToOrderInfoFragment(
+                    it1
+                )
+            }
+            if (action != null) {
+                findNavController().navigate(action)
+            }
         }
         adapter = OrdersAdapter(requireContext(), onCardClick)
         binding.rvOrders.layoutManager =  LinearLayoutManager(requireContext())
