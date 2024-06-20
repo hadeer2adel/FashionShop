@@ -24,6 +24,7 @@ import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductDetails
 import com.example.fashionshop.Model.inventoryQuantities
+import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
@@ -124,9 +125,8 @@ class ProductInfoFragment : Fragment() {
             if (product != null) {
                 Log.i("ProductInfoFragment", "onViewCreated: $product")
                 viewModel.insertCardProduct(requireView(), product)
-                product.variants?.get(0)?.inventory_quantity?.let {
-                    inventoryQuantities.add(it)
-                }
+
+                Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
 
             } else {
                 Snackbar.make(requireView(),"Product information not available", Snackbar.LENGTH_SHORT).show()

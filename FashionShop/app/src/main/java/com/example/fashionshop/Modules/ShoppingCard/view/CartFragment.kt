@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.CartAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.TaxLineX
+import com.example.fashionshop.Model.inventoryQuantities
+import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
@@ -131,6 +133,9 @@ class CartFragment : Fragment() ,CartListener {
                     dialog.dismiss()
                 }
                 .show()
+            originalPrices.clear()
+            inventoryQuantities.clear()
+            Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
         }
 
 
@@ -228,6 +233,8 @@ class CartFragment : Fragment() ,CartListener {
                     dialog.dismiss()
                 }
                 .show()
+            originalPrices.clear()
+            inventoryQuantities.clear()
         }
 
 

@@ -9,4 +9,4 @@ data class SmsMarketingConsent(
 
 var inventoryQuantities: MutableList<Int> = mutableListOf()
 
-
+var originalPrices:MutableList<String> = mutableListOf()

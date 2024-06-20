@@ -16,6 +16,8 @@ import com.example.fashionshop.Model.ProductDetails
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.Review
 import com.example.fashionshop.Model.Reviews
+import com.example.fashionshop.Model.inventoryQuantities
+import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.google.android.material.snackbar.Snackbar
@@ -99,6 +101,12 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
                     _productCard.value = NetworkState.Success(updatedResponse)
                 } catch (e: Exception) {
                     _productCard.value = NetworkState.Failure(e)
+                }
+                product.variants?.get(0)?.inventory_quantity?.let {
+                    inventoryQuantities.add(it)
+                }
+                product.variants?.get(0)?.price?.let {
+                    originalPrices.add(it)
                 }
             } else {
                 viewModelScope.launch(Dispatchers.Main) {
