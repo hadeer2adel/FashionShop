@@ -26,7 +26,7 @@ data class CustomerResponse(
         val email: String,
         val phone: String,
         val currency: String,
-        val note: Long,
-        val multipass_identifier: Long,
+        var note: Long,
+        var multipass_identifier: Long,
     )
 }
