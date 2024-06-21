@@ -187,19 +187,26 @@ class CategoryFragment : Fragment() ,CategoryListener{
 
     private fun setUpRV(){
         val onClick: (isFav: Boolean, product: Product) -> Unit = { isFav, product ->
-            if (isFav) {
-                favViewModel.insertFavProduct(product)
-            } else {
-                product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+            if (CustomerData.getInstance(requireContext()).isLogged){
+                if (isFav) {
+                    favViewModel.insertFavProduct(product)
+                } else {
+                    product.id?.let { it1 -> favViewModel.deleteFavProduct(it1) }
+                }
             }
+            // if you need to make an action here handle it
         }
         val onCardClick: (id: Long) -> Unit = {
-            val navController = NavHostFragment.findNavController(this)
-            val action = CategoryFragmentDirections.actionToProductInfoFragment(it)
-            navController.navigate(action)
+                val navController = NavHostFragment.findNavController(this)
+                val action = CategoryFragmentDirections.actionToProductInfoFragment(it)
+                navController.navigate(action)
+
         }
         val onStart: (id: Long, onTrue: ()->Unit, onFalse: ()->Unit) ->Unit = { id, onTrue, onFalse ->
-            favViewModel.isFavProduct(id, onTrue, onFalse)
+            if (CustomerData.getInstance(requireContext()).isLogged){
+                favViewModel.isFavProduct(id, onTrue, onFalse)
+            }
+
         }
 
         adapter = ProductAdapter(requireContext(), onStart, onClick, onCardClick)
@@ -216,9 +223,11 @@ class CategoryFragment : Fragment() ,CategoryListener{
         val repository: Repository = RepositoryImp(networkManager)
         val factory = CategoryFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(CategoryViewModel::class.java)
-
-        val favFactory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
-        favViewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
+        if (CustomerData.getInstance(requireContext()).isLogged){
+            val favFactory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
+            favViewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
+        }
+       // if you need to make an action here handle it
 
         viewModel.getProducts()
         viewModel.getLatestRates()
