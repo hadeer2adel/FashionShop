@@ -20,9 +20,12 @@ import retrofit2.Response
 
 class FakeNetworkManager (var address: AddressRequest,
                           var updatedAddress: AddressUpdateRequest,
-                          var prices :PriceRule) :NetworkManager {
+                          var prices :PriceRule , var customer:OneCustomer
+                          , var checkoutSession:CheckoutSessionResponse,
+                            var exchanges:ExchangeRatesResponseX)
+    :NetworkManager {
     override suspend fun getcutomers(id: Long): OneCustomer {
-        TODO("Not yet implemented")
+    return customer
     }
 
     override suspend fun AddSingleCustomerAdreess(
@@ -41,7 +44,6 @@ class FakeNetworkManager (var address: AddressRequest,
     }
 
     override suspend fun deleteSingleCustomerAddress(customerId: Long, id: Long) {
-        TODO("Not yet implemented")
     }
 
     override suspend fun createCustomer(customer: CustomerRequest): CustomerResponse {
@@ -100,7 +102,7 @@ class FakeNetworkManager (var address: AddressRequest,
         symbols: String,
         base: String
     ): ExchangeRatesResponseX {
-        TODO("Not yet implemented")
+        return  exchanges
     }
 
     override suspend fun createCheckoutSession(
@@ -115,7 +117,7 @@ class FakeNetworkManager (var address: AddressRequest,
         mode: String,
         paymentMethodType: String
     ): CheckoutSessionResponse {
-        TODO("Not yet implemented")
+        return checkoutSession
     }
 
     override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {

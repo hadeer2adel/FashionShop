@@ -5,6 +5,7 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.CheckoutSessionResponse
+import com.example.fashionshop.Model.Customer
 import com.example.fashionshop.Model.CustomerAddress
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
@@ -30,8 +31,9 @@ class FakeRepository :Repository {
     var addressList : MutableList<AddressRequest> = mutableListOf()
     var pricesCodes : MutableList<PriceRule> = mutableListOf()
     var checkoutList :MutableList<CheckoutSessionResponse> = mutableListOf()
+    var customer :MutableList<OneCustomer> = mutableListOf()
     override suspend fun getcustomers(id: Long): OneCustomer {
-        TODO("Not yet implemented")
+        return customer[0]
     }
 
     override suspend fun createCustomer(customer: CustomerRequest): CustomerResponse {
