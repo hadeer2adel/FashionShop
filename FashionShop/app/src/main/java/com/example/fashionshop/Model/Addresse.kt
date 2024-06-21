@@ -11,7 +11,7 @@ data class Addresse(
     val country_code: String,
     val country_name: String,
     val customer_id: Long,
-    val default: Boolean,
+    var default: Boolean,
     val first_name: String,
     val id: Long,
     val last_name: String,
