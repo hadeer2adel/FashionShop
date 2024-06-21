@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -42,8 +43,10 @@ class HomeViewModel(private var repository: Repository) : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO){
             try {
-                val response = repository.getDiscountCodes()
-                _products.value = NetworkState.Success(response)
+                val response = repository.getDiscountCodes().catch { e->_products.value = NetworkState.Failure(e) }
+                    .collect{it->
+                        _products.value = NetworkState.Success(it)
+                    }
             } catch (e: HttpException) {
                 _products.value = NetworkState.Failure(e)
             }catch (e: Exception) {
