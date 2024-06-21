@@ -1,8 +1,6 @@
 package com.example.fashionshop.Repository
 
 import com.example.fashionshop.Model.*
-import com.example.fashionshop.Repository.Repository
-import kotlinx.coroutines.delay
 import retrofit2.Response
 import kotlin.random.Random
 import com.example.fashionshop.Model.AddressDefultRequest
@@ -10,27 +8,20 @@ import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.CheckoutSessionResponse
-import com.example.fashionshop.Model.Customer
 import com.example.fashionshop.Model.CustomerAddress
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.ExchangeRatesResponseX
-import com.example.fashionshop.Model.InvoiceCreation
-import com.example.fashionshop.Model.InvoiceData
 import com.example.fashionshop.Model.OneCustomer
 import com.example.fashionshop.Model.OrderBody
 import com.example.fashionshop.Model.OrderBodyResponse
 import com.example.fashionshop.Model.OrderResponse
-import com.example.fashionshop.Model.PaymentMethodOptions
-import com.example.fashionshop.Model.PhoneNumberCollection
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.ProductResponse
-import com.example.fashionshop.Model.TotalDetails
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.Response
 
 class FakeRepository :Repository {
     var addressList : MutableList<AddressRequest> = mutableListOf()
@@ -75,10 +66,6 @@ class FakeRepository :Repository {
     }
 
     override suspend fun getProducts(): Response<ProductResponse> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getCustomerByEmail(email: String): CustomerResponse {
         TODO("Not yet implemented")
     }
 
@@ -278,36 +265,5 @@ class FakeRepository :Repository {
             }
         }
         return CustomerResponse()
-    }
-
-    override suspend fun AddSingleCustomerAdreess(
-        id: Long,
-        addressRequest: AddressRequest
-    ): AddressRequest {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun editSingleCustomerAddress(
-        customerID: Long,
-        id: Long,
-        addressRequest: AddressDefultRequest
-    ): AddressUpdateRequest {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteSingleCustomerAddress(customerID: Long, id: Long) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getDiscountCodes(): PriceRule {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getProductById(id: Long): ProductResponse {
-        TODO("Not yet implemented")
     }
 }
