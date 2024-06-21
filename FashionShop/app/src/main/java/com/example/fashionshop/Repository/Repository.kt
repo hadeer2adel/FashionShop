@@ -18,6 +18,7 @@ import com.example.fashionshop.Model.OrderResponse
 import retrofit2.http.Path
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.UpdateCustomerRequest
+import kotlinx.coroutines.flow.Flow
 
 
 interface Repository {
@@ -35,7 +36,7 @@ interface Repository {
     ): AddressUpdateRequest
     suspend fun deleteSingleCustomerAddress(customerID: Long,id: Long)
     suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
-    suspend fun getDiscountCodes(): PriceRule
+    suspend fun getDiscountCodes():Flow <PriceRule>
     suspend fun getProductById(id: Long): ProductResponse
     suspend fun createDraftOrders(draftOrder: DraftOrderResponse): DraftOrderResponse
     suspend fun updateDraftOrder(id: Long, draftOrder: DraftOrderResponse): DraftOrderResponse

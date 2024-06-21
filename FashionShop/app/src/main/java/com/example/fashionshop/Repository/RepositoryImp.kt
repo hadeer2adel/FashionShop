@@ -16,6 +16,8 @@ import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import com.example.fashionshop.Service.Networking.NetworkManager
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import retrofit2.Response
 
 class RepositoryImp constructor(
@@ -83,8 +85,8 @@ class RepositoryImp constructor(
         return  networkManager.getCustomerOrders(userId)
     }
 
-    override suspend fun getDiscountCodes(): PriceRule {
-        return networkManager.getDiscountCodes()
+    override suspend fun getDiscountCodes(): Flow<PriceRule> {
+        return flowOf(networkManager.getDiscountCodes())
 
     }
     override suspend fun getProductById(id: Long): ProductResponse {

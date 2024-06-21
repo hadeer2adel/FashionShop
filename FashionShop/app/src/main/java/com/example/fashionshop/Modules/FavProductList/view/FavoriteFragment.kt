@@ -1,5 +1,6 @@
 package com.example.fashionshop.Modules.FavProductList.view
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,11 +45,15 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setUpRecycleView()
-        initViewModel()
-
-        viewModel.getFavProducts()
+        if (CustomerData.getInstance(requireContext()).isLogged) {
+            setUpRecycleView()
+            initViewModel()
+            viewModel.getFavProducts()
+        }
+        else{
+            showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
+            binding.emptyView.visibility = View.VISIBLE
+        }
     }
 
     private fun setUpRecycleView(){
@@ -111,6 +116,18 @@ class FavoriteFragment : Fragment() {
                     else -> {}
                 }
             }
+        }
+    }
+
+    private fun showAlertDialog(title: String, message: String) {
+        AlertDialog.Builder(requireContext()).apply {
+            setTitle(title)
+            setMessage(message)
+            setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            create()
+            show()
         }
     }
 
