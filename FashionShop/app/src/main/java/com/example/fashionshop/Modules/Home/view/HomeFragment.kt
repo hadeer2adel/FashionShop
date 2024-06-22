@@ -131,10 +131,10 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
     private fun setUpSlider(sliderView: SliderView ,count:Int , list:List<PriceRuleX> ) {
         val imageResourceIds = listOf(
-            R.drawable.coupone,
-            R.drawable.coupon2,
-            R.drawable.coupon3  ,
-            R.drawable.coupon3
+            R.drawable.fiveoff,
+            R.drawable.twentyfive,
+            R.drawable.fivety  ,
+            R.drawable.ten
         )
 
         val sliderAdapter = SliderAdapter(requireContext(),count, imageResourceIds, true,this)
