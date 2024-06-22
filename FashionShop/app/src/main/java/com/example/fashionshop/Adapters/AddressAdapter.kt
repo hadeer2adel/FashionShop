@@ -34,7 +34,8 @@ class AddressAdapter(private val listener: AddressListener ,private val showDele
         val currentAddress = addressList[position]
         holder.countryTextView.text = currentAddress.country
         holder.addressTextView.text = currentAddress.address1
-        holder.addressTextView2.text = "${currentAddress.address2}"
+        holder.addressTextView2.text = if (currentAddress.address2 == null ) currentAddress.address1 else "${currentAddress.address2}"
+       // holder.addressTextView2.text = "${currentAddress.address2}" if (currentAddress.address2 == "null")
         holder.phoneTextView.text = currentAddress.phone
         holder.itemView.isSelected = selectedItemPosition == position
 
