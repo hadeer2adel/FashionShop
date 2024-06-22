@@ -61,8 +61,9 @@ class OrderInfoFragment : Fragment() {
         // Set up the toolbar
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
-        initViewModel()
         setUpRV()
+        initViewModel()
+       // setUpRV()
     }
 
     private fun initViewModel() {

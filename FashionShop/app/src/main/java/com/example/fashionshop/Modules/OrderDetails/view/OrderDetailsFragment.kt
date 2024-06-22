@@ -192,13 +192,13 @@ class OrderDetailsFragment() : Fragment() {
         }
 
         binding.paymentButtonContainer.setOnClickListener {
-            placeOrder()
+
             showPaymentMethodDialog()
         }
     }
 
     private fun convertCurrency(amount: Double?): Double {
-        amount ?: return 0.0 // Handle null or undefined amount gracefully
+        amount ?: return 0.0
         return amount / currencyConversionRate
     }
 
@@ -335,8 +335,9 @@ class OrderDetailsFragment() : Fragment() {
                 paymentVisa()
             }
             "Cash" -> {
+                placeOrder()
                 findNavController().navigate(R.id.actiomfromSheet_to_order)
-                Snackbar.make(binding.root,"You Choose Cash Method Succssed Orde", Snackbar.LENGTH_SHORT).show()
+                //Snackbar.make(binding.root,"You Choose Cash Method Succssed Orde", Snackbar.LENGTH_SHORT).show()
 
             }
             else -> {
@@ -405,17 +406,20 @@ class OrderDetailsFragment() : Fragment() {
 
         allCodesViewModel.createOrder(wrappedOrderBody,
             onSuccess = {
-                Snackbar.make(binding.root,"Order placed successfully", Snackbar.LENGTH_SHORT).show()
+                showSnackbar("Order placed successfully")
                 Log.d("placeOrder", "success")
                 allProductViewModel.deleteAllCartProducts()
             },
             onError = { errorMessage ->
-                Snackbar.make(binding.root,errorMessage, Snackbar.LENGTH_SHORT).show()
+                showSnackbar(errorMessage)
                 Log.d("placeOrder", "error: $errorMessage")
             }
         )
     }
-
+    private fun showSnackbar(message: String) {
+        val parentView = view?.findViewById<View>(android.R.id.content) ?: requireActivity().findViewById(android.R.id.content)
+        Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
+    }
 }
 
 
