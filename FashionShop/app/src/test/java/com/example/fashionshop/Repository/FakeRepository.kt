@@ -33,7 +33,7 @@ class FakeRepository :Repository {
     var customers = mutableListOf<CustomerResponse.Customer>()
     var draftOrders = mutableListOf<DraftOrderResponse>()
     var createdOrders = mutableListOf<OrderBodyResponse>()
-
+    var  exchenges = mutableListOf<ExchangeRatesResponseX>()
     override suspend fun getcustomers(id: Long): OneCustomer {
         return customer[0]
     }
@@ -170,7 +170,7 @@ class FakeRepository :Repository {
         symbols: String,
         base: String
     ): ExchangeRatesResponseX {
-        TODO("Not yet implemented")
+        return exchenges[0]
     }
 
     override suspend fun createCheckoutSession(
