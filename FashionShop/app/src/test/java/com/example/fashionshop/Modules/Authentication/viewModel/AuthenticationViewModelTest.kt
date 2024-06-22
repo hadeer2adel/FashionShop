@@ -3,6 +3,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.fashionshop.Model.*
 import com.example.fashionshop.Modules.Authentication.viewModel.AuthenticationViewModel
+import com.example.fashionshop.Repository.FakeRepository
 import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

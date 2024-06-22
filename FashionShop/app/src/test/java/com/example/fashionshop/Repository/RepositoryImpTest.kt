@@ -13,7 +13,10 @@ import com.example.fashionshop.Model.CustomText
 import com.example.fashionshop.Model.Customer
 import com.example.fashionshop.Model.CustomerAddress
 import com.example.fashionshop.Model.CustomerDetails
+import com.example.fashionshop.Model.CustomerRequest
+import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DefaultAddress
+import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.EmailMarketingConsent
 import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.InvoiceCreation
@@ -27,25 +30,40 @@ import com.example.fashionshop.Model.PrerequisiteToEntitlementPurchase
 import com.example.fashionshop.Model.PrerequisiteToEntitlementQuantityRatio
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleX
+import com.example.fashionshop.Model.Product
+import com.example.fashionshop.Model.ProductImage
 import com.example.fashionshop.Model.RatesX
 import com.example.fashionshop.Model.SmsMarketingConsent
 import com.example.fashionshop.Model.TotalDetails
+import com.example.fashionshop.Model.UpdateCustomerRequest
+import com.example.fashionshop.Model.Variant
 import com.example.fashionshop.Service.Networking.FakeNetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManager
+import com.example.fashionshop.Service.Networking.NetworkState
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.core.IsEqual
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.random.Random
 
 
 class RepositoryImpTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
     lateinit var  fakeRemote : NetworkManager
-    lateinit var  repo :Repository
+    lateinit var  repository :Repository
     var address =AddressRequest(
         Addresse(
             address1 = "123 Main St",
@@ -223,19 +241,52 @@ class RepositoryImpTest {
             ui_mode = "hosted",
             url = "https://checkout.stripe.com/c/pay/cs_test_a1vMqMBnX2DyP93CEed8rmSKRqQyTUlMTvepNQp4MttdYOd4ilRWbON9ug#fidkdWxOYHwnPyd1blpxYHZxWjA0VVZnUWJBamBcS1ZmZ1FoZE5QSVxMdnBUNjZXa0p9dH1yamBXN0ZBPXVsS3dkYm1tcUh0TUxtRHZuQXBwdGpAdEZ9VTNWZnRqVXVtN2N9VENjYzRdb3N9NTVfSWJVaXBCPCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl"
        )
+
+    private lateinit var firstCustomer: CustomerResponse.Customer
+    private var customers = mutableListOf<CustomerResponse.Customer>()
+    private var draftOrders = mutableListOf<DraftOrderResponse>()
+    private lateinit var product1: DraftOrderResponse.DraftOrder.LineItem
+    private lateinit var product2: DraftOrderResponse.DraftOrder.LineItem
+    private lateinit var favList: DraftOrderResponse.DraftOrder
+    private val listId = 1L
+
     @Before
     fun setup() {
-        fakeRemote = FakeNetworkManager(address,updatedAddress,prices,customer,checkout,exchanges)
-        repo=RepositoryImp(fakeRemote)
+        firstCustomer = CustomerResponse.Customer( 1L, "First", "Customer", "first@gmail.com", "", "EGY", 0L,  0L)
+        customers.add(firstCustomer)
+        product1 = DraftOrderResponse.DraftOrder.LineItem(null, 1, 1, "Product 1", "100", "1*image1.png")
+        product2 = DraftOrderResponse.DraftOrder.LineItem(null, 1, 2, "Product 2", "200", "2*image2.png")
+        favList = DraftOrderResponse.DraftOrder(line_items = listOf(product1, product2))
+        draftOrders.add(DraftOrderResponse(favList))
+
+        fakeRemote = FakeNetworkManager(address,updatedAddress,prices,customer,checkout,exchanges, customers, draftOrders)
+        repository=RepositoryImp(fakeRemote)
     }
     @Test
     fun getcustomers() = runBlockingTest {
-        val result=repo.getcustomers(7371713577180)
+        val result=repository.getcustomers(7371713577180)
         MatcherAssert.assertThat(result.customer.id, CoreMatchers.`is`(7371713577180))
     }
 
-    fun createCustomer() {
-    }
+
+    @Test
+    fun createCustomer_CustomerResponseSameAsCustomerRequest() = runBlockingTest {
+        //Given
+        val customerRequest = CustomerRequest(
+            CustomerRequest.Customer(
+                "Hadeer",
+                "Adel",
+                "hadeer@gmail.com"
+            ))
+
+        //When
+        val result = repository.createCustomer(customerRequest)
+
+        //Then
+        assertThat(result.first().customer, not(nullValue()))
+        assertThat(result.first().customer?.first_name, IsEqual(customerRequest.customer.first_name))
+        assertThat(result.first().customer?.last_name, IsEqual(customerRequest.customer.last_name))
+        assertThat(result.first().customer?.email, IsEqual(customerRequest.customer.email)) }
 
     fun getBrands() {
     }
@@ -246,23 +297,37 @@ class RepositoryImpTest {
     fun getProducts() {
     }
 
-    fun getCustomerByEmail() {
-    }
+    @Test
+    fun getCustomerByEmail_success() = runBlockingTest {
+        val email = firstCustomer.email
+        var result = repository.getCustomerByEmail(email)
+
+        assertThat(result.first().customers , not(nullValue()))
+        assertThat(result.first().customers?.first()?.email, IsEqual(email)) }
+
+    @Test
+    fun getCustomerByEmail_fail() = runBlockingTest {
+        val email = "second@gmail.com"
+        var result = repository.getCustomerByEmail(email)
+
+        assertThat(result.first().customers, nullValue())
+        assertThat(result.first().customers?.first()?.email, not(IsEqual(email))) }
+
     @Test
     fun addSingleCustomerAdreess()= runBlockingTest{
-        val result=repo.AddSingleCustomerAdreess(7371713577180,address)
+        val result=repository.AddSingleCustomerAdreess(7371713577180,address)
         MatcherAssert.assertThat(result, CoreMatchers.`is`(address))
         MatcherAssert.assertThat(result.address.address1, CoreMatchers.`is`(address.address.address1))
     }
     @Test
     fun editSingleCustomerAddress() = runBlockingTest {
-        val result=repo.editSingleCustomerAddress(7371713577180,12345,addressDefault)
+        val result=repository.editSingleCustomerAddress(7371713577180,12345,addressDefault)
         MatcherAssert.assertThat(result.customer_address.default, CoreMatchers.`is`(addressDefault.address.default))
     }
     @Test
     fun deleteSingleCustomerAddress() = runBlockingTest{
-        repo.deleteSingleCustomerAddress(7371713577180,1234)
-        val result=repo.getcustomers(7371713577180)
+        repository.deleteSingleCustomerAddress(7371713577180,1234)
+        val result=repository.getcustomers(7371713577180)
         MatcherAssert.assertThat(result.customer.addresses.size, CoreMatchers.`is`(0))
     }
 
@@ -270,24 +335,60 @@ class RepositoryImpTest {
     }
     @Test
     fun getDiscountCodes()= runBlockingTest {
-        val result=repo.getDiscountCodes()
+        val result=repository.getDiscountCodes()
         MatcherAssert.assertThat(result.first(), CoreMatchers.`is`(prices))
     }
 
     fun getProductById() {
     }
 
-    fun createDraftOrders() {
-    }
+    @Test
+    fun createDraftOrders_IdNotZero() = runBlockingTest {
+        val draftOrderResponse = DraftOrderResponse(DraftOrderResponse.DraftOrder())
 
-    fun updateDraftOrder() {
-    }
+        val result = repository.createDraftOrders(draftOrderResponse)
 
-    fun getDraftOrder() {
-    }
+        assertThat(result.first().draft_order , not(nullValue()))
+        assertThat(result.first().draft_order.id, not(IsEqual(0L)))}
 
-    fun updateCustomer() {
-    }
+    @Test
+    fun updateDraftOrder_LineItemsListIncreasedByOne() = runBlockingTest {
+        val product3 = DraftOrderResponse.DraftOrder.LineItem(null, 1, 3, "Product 3", "300", "3*image3.png")
+        val draftOrder = draftOrders.first().draft_order
+
+        val updatedLineItems = draftOrder.line_items.toMutableList().apply {
+            add(product3)
+        }
+        val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+
+        var result = repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+
+        assertThat(result.first().draft_order , not(nullValue()))
+        assertThat(result.first().draft_order.line_items.size, IsEqual(favList.line_items.size + 1)) }
+
+    @Test
+    fun getDraftOrder_ResultSameListAsFavList() = runBlockingTest {
+        var result = repository.getDraftOrder(listId)
+
+        assertThat(result.first().draft_order , not(nullValue()))
+        assertThat(result.first().draft_order, IsEqual(favList)) }
+
+    @Test
+    fun updateCustomer_NoteAndMultipassIdentifierNotZero() = runBlockingTest {
+        val favListId = Random.nextLong(1L, 10000L)
+        val cartId = Random.nextLong(1L, 10000L)
+        val updateCustomerRequest = UpdateCustomerRequest(
+            UpdateCustomerRequest.Customer(favListId, cartId)
+        )
+
+        var result = repository.updateCustomer(firstCustomer.id, updateCustomerRequest)
+
+        assertThat(result.first().customer , not(nullValue()))
+        assertThat(result.first().customer?.id, IsEqual(firstCustomer.id))
+        assertThat(result.first().customer?.note, not(IsEqual(0L)))
+        assertThat(result.first().customer?.note, IsEqual(favListId))
+        assertThat(result.first().customer?.multipass_identifier, not(IsEqual(0L)))
+        assertThat(result.first().customer?.multipass_identifier, IsEqual(cartId)) }
 
     fun createOrder() {
     }
@@ -296,12 +397,12 @@ class RepositoryImpTest {
     }
     @Test
     fun getExchangeRates() = runBlockingTest{
-        val result = repo.getExchangeRates("tVEqdM1Lv5eZwifx7UyalZFZ4svWWsHo","EGP","USD")
+        val result = repository.getExchangeRates("tVEqdM1Lv5eZwifx7UyalZFZ4svWWsHo","EGP","USD")
         MatcherAssert.assertThat(result.base,CoreMatchers.`is`("USD"))
     }
     @Test
     fun createCheckoutSession()= runBlockingTest {
-        val result=repo.createCheckoutSession("https://example.com/cancel","https://example.com/cancel","user@gmail.com","USD","Your Order","Please Write your Card Information",
+        val result=repository.createCheckoutSession("https://example.com/cancel","https://example.com/cancel","user@gmail.com","USD","Your Order","Please Write your Card Information",
             10000,1,"payment","card")
         MatcherAssert.assertThat(result.cancel_url, CoreMatchers.`is`("https://example.com/cancel"))
         MatcherAssert.assertThat(result.success_url, CoreMatchers.`is`("https://example.com/cancel"))

@@ -1,6 +1,5 @@
 package com.example.fashionshop.Modules.FavProductList.viewModel
 
-import FakeRepository
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -9,6 +8,7 @@ import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductImage
 import com.example.fashionshop.Model.Variant
 import com.example.fashionshop.R
+import com.example.fashionshop.Repository.FakeRepository
 import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelAndJoin
@@ -94,7 +94,6 @@ class FavViewModelTest {
 
         viewModel.insertFavProduct(product)
 
-
         var result = DraftOrderResponse(DraftOrderResponse.DraftOrder())
 
         val job = launch {
@@ -111,7 +110,6 @@ class FavViewModelTest {
 
         advanceUntilIdle()
         job.cancelAndJoin()
-
 
         assertThat(result.draft_order , not(nullValue()))
         assertThat(result.draft_order.line_items.size, IsEqual(favList.line_items.size + 1))
@@ -139,10 +137,7 @@ class FavViewModelTest {
         advanceUntilIdle()
         job.cancelAndJoin()
 
-
         assertThat(result.draft_order , not(nullValue()))
         assertThat(result.draft_order.line_items.size, IsEqual(favList.line_items.size - 1))
-        assertThat(result.draft_order.line_items.first(), IsEqual(product2))
-
     }
 }

@@ -43,8 +43,8 @@ class RepositoryImp constructor(
 
     override suspend fun createCustomer(
         customer: CustomerRequest
-    ): CustomerResponse {
-        return networkManager.createCustomer(customer)
+    ): Flow<CustomerResponse> {
+        return flowOf(networkManager.createCustomer(customer))
     }
 
     override suspend fun getBrands(): Response<BrandResponse> {
@@ -60,8 +60,8 @@ class RepositoryImp constructor(
     }
 
 
-    override suspend fun getCustomerByEmail(email: String): CustomerResponse {
-        return networkManager.getCustomerByEmail(email)
+    override suspend fun getCustomerByEmail(email: String): Flow<CustomerResponse> {
+        return flowOf(networkManager.getCustomerByEmail(email))
     }
 
 
@@ -89,27 +89,27 @@ class RepositoryImp constructor(
         return flowOf(networkManager.getDiscountCodes())
 
     }
-    override suspend fun getProductById(id: Long): ProductResponse {
-        return networkManager.getProductById(id)
+    override suspend fun getProductById(id: Long): Flow<ProductResponse> {
+        return flowOf(networkManager.getProductById(id))
     }
 
-    override suspend fun createDraftOrders(draftOrder: DraftOrderResponse): DraftOrderResponse {
-        return networkManager.createDraftOrders(draftOrder)
+    override suspend fun createDraftOrders(draftOrder: DraftOrderResponse): Flow<DraftOrderResponse> {
+        return flowOf(networkManager.createDraftOrders(draftOrder))
     }
 
-    override suspend fun updateDraftOrder(id: Long, draftOrder: DraftOrderResponse): DraftOrderResponse{
-        return networkManager.updateDraftOrder(id, draftOrder)
+    override suspend fun updateDraftOrder(id: Long, draftOrder: DraftOrderResponse): Flow<DraftOrderResponse> {
+        return flowOf(networkManager.updateDraftOrder(id, draftOrder))
     }
 
-    override suspend fun getDraftOrder(id: Long): DraftOrderResponse {
-        return networkManager.getDraftOrder(id)
+    override suspend fun getDraftOrder(id: Long): Flow<DraftOrderResponse> {
+        return flowOf(networkManager.getDraftOrder(id))
     }
 
     override suspend fun updateCustomer(
         id: Long,
         customer: UpdateCustomerRequest
-    ): CustomerResponse {
-        return networkManager.updateCustomer(id, customer)
+    ): Flow<CustomerResponse> {
+        return flowOf(networkManager.updateCustomer(id, customer))
     }
 
     override suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse {

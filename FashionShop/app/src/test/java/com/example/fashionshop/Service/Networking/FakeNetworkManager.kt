@@ -16,14 +16,19 @@ import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.UpdateCustomerRequest
+import kotlinx.coroutines.flow.flowOf
 import retrofit2.Response
+import kotlin.random.Random
 
 class FakeNetworkManager (var address: AddressRequest,
                           var updatedAddress: AddressUpdateRequest,
-                          var prices :PriceRule , var customer:OneCustomer
-                          , var checkoutSession:CheckoutSessionResponse,
-                            var exchanges:ExchangeRatesResponseX)
-    :NetworkManager {
+                          var prices :PriceRule ,
+                          var customer:OneCustomer,
+                          var checkoutSession:CheckoutSessionResponse,
+                          var exchanges:ExchangeRatesResponseX,
+                          private var customers: MutableList<CustomerResponse.Customer>,
+                          private var draftOrders: MutableList<DraftOrderResponse>
+                          ) :NetworkManager {
     override suspend fun getcutomers(id: Long): OneCustomer {
     return customer
     }
@@ -46,8 +51,19 @@ class FakeNetworkManager (var address: AddressRequest,
     override suspend fun deleteSingleCustomerAddress(customerId: Long, id: Long) {
     }
 
-    override suspend fun createCustomer(customer: CustomerRequest): CustomerResponse {
-        TODO("Not yet implemented")
+    override suspend fun createCustomer(customerRequest: CustomerRequest): CustomerResponse {
+        val customer = CustomerResponse.Customer(
+            (customers.size + 1).toLong(),
+            customerRequest.customer.first_name!!,
+            customerRequest.customer.last_name!!,
+            customerRequest.customer.email!!,
+            "",
+            "EGY",
+            0L,
+            0L
+        )
+        customers.add(customer)
+        return CustomerResponse(customer)
     }
 
     override suspend fun getBrands(): Response<BrandResponse> {
@@ -63,7 +79,12 @@ class FakeNetworkManager (var address: AddressRequest,
     }
 
     override suspend fun getCustomerByEmail(email: String): CustomerResponse {
-        TODO("Not yet implemented")
+        customers.forEach{ customer ->
+            if (customer.email.equals(email)){
+                return CustomerResponse(customers = listOf(customer))
+            }
+        }
+        return CustomerResponse()
     }
 
     override suspend fun getDiscountCodes(): PriceRule {
@@ -76,25 +97,31 @@ class FakeNetworkManager (var address: AddressRequest,
     }
 
     override suspend fun createDraftOrders(draftOrder: DraftOrderResponse): DraftOrderResponse {
-        TODO("Not yet implemented")
+        val id = Random.nextLong(1L, 10000L)
+        val fakeDraftOrderResponse = DraftOrderResponse(DraftOrderResponse.DraftOrder(id = id))
+        return fakeDraftOrderResponse
     }
 
     override suspend fun updateDraftOrder(
         id: Long,
         draftOrder: DraftOrderResponse
     ): DraftOrderResponse {
-        TODO("Not yet implemented")
+        draftOrders.set((id - 1).toInt(), draftOrder)
+        return draftOrders.get((id - 1).toInt())
     }
 
     override suspend fun getDraftOrder(id: Long): DraftOrderResponse {
-        TODO("Not yet implemented")
+        return draftOrders.get((id - 1).toInt())
     }
 
     override suspend fun updateCustomer(
         id: Long,
-        customer: UpdateCustomerRequest
+        updateCustomerRequest: UpdateCustomerRequest
     ): CustomerResponse {
-        TODO("Not yet implemented")
+        var customer = customers.get(id.toInt() - 1)
+        customer.note = updateCustomerRequest.customer.note!!
+        customer.multipass_identifier = updateCustomerRequest.customer.multipass_identifier!!
+        return CustomerResponse(customer)
     }
 
     override suspend fun getExchangeRates(

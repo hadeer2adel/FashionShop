@@ -22,6 +22,7 @@ import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class FakeRepository :Repository {
     var addressList : MutableList<AddressRequest> = mutableListOf()
@@ -38,7 +39,7 @@ class FakeRepository :Repository {
         return customer[0]
     }
 
-    override suspend fun createCustomer(customerRequest: CustomerRequest): CustomerResponse {
+    override suspend fun createCustomer(customerRequest: CustomerRequest): Flow<CustomerResponse> {
         if (shouldReturnError) {
             throw Exception("Test exception")
         }
@@ -54,7 +55,7 @@ class FakeRepository :Repository {
         )
         customers.add(customer)
 
-        return CustomerResponse(customer)
+        return flowOf(CustomerResponse(customer))
     }
 
     override suspend fun getBrands(): Response<BrandResponse> {
@@ -124,45 +125,45 @@ class FakeRepository :Repository {
         pricesCodes.forEach { emit(it) }
     }
 
-    override suspend fun getProductById(id: Long): ProductResponse {
+    override suspend fun getProductById(id: Long): Flow<ProductResponse> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun createDraftOrders(draftOrderResponse: DraftOrderResponse): DraftOrderResponse {
+    override suspend fun createDraftOrders(draftOrderResponse: DraftOrderResponse): Flow<DraftOrderResponse> {
         if (shouldReturnError) {
             throw Exception("Test exception")
         }
         val id = Random.nextLong(1L, 10000L)
         val fakeDraftOrderResponse = DraftOrderResponse(DraftOrderResponse.DraftOrder(id = id))
-        return fakeDraftOrderResponse
+        return flowOf(fakeDraftOrderResponse)
     }
 
     override suspend fun updateDraftOrder(
         id: Long,
         draftOrder: DraftOrderResponse
-    ): DraftOrderResponse {
+    ): Flow<DraftOrderResponse> {
         if (shouldReturnError) {
             throw Exception("Test exception")
         }
         draftOrders.set((id - 1).toInt(), draftOrder)
-        return draftOrders.get((id - 1).toInt())
+        return flowOf(draftOrders.get((id - 1).toInt()))
     }
 
-    override suspend fun getDraftOrder(id: Long): DraftOrderResponse {
+    override suspend fun getDraftOrder(id: Long): Flow<DraftOrderResponse> {
         if (shouldReturnError) {
             throw Exception("Test exception")
         }
-        return draftOrders.get((id - 1).toInt())
+        return flowOf(draftOrders.get((id - 1).toInt()))
     }
 
-    override suspend fun updateCustomer(id: Long, updateCustomerRequest: UpdateCustomerRequest): CustomerResponse {
+    override suspend fun updateCustomer(id: Long, updateCustomerRequest: UpdateCustomerRequest): Flow<CustomerResponse> {
         if (shouldReturnError) {
             throw Exception("Test exception")
         }
         var customer = customers.get(id.toInt() - 1)
         customer.note = updateCustomerRequest.customer.note!!
-        customer.multipass_identifier = updateCustomerRequest.customer.note!!
-        return CustomerResponse(customer)
+        customer.multipass_identifier = updateCustomerRequest.customer.multipass_identifier!!
+        return flowOf(CustomerResponse(customer))
     }
 
     override suspend fun getExchangeRates(
@@ -255,15 +256,15 @@ class FakeRepository :Repository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getCustomerByEmail(email: String): CustomerResponse {
+    override suspend fun getCustomerByEmail(email: String): Flow<CustomerResponse> {
         if (shouldReturnError) {
             throw Exception("Test exception")
         }
         customers.forEach{ customer ->  
             if (customer.email.equals(email)){
-                return CustomerResponse(customers = listOf(customer))
+                return flowOf(CustomerResponse(customers = listOf(customer)))
             }
         }
-        return CustomerResponse()
+        return flowOf(CustomerResponse())
     }
 }

@@ -17,10 +17,11 @@ import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class AuthenticationViewModel(private var repository: Repository) : ViewModel(){
+class AuthenticationViewModel(private var repository: Repository) : ViewModel() {
 
     private var _customers = MutableStateFlow<NetworkState<CustomerResponse>>(NetworkState.Loading)
     var customers: StateFlow<NetworkState<CustomerResponse>> = _customers
@@ -28,65 +29,41 @@ class AuthenticationViewModel(private var repository: Repository) : ViewModel(){
     private var _customer = MutableStateFlow<NetworkState<CustomerResponse>>(NetworkState.Loading)
     var customer: StateFlow<NetworkState<CustomerResponse>> = _customer
 
-    fun createCustomer(customer: CustomerRequest){
-
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                val createResponse = repository.createCustomer(customer)
-                val id = createResponse.customer!!.id
-
-                val draftOrderResponse = DraftOrderResponse(DraftOrderResponse.DraftOrder())
-                val favList = repository.createDraftOrders(draftOrderResponse)
-                val cart = repository.createDraftOrders(draftOrderResponse)
-
-                val updateCustomerRequest = UpdateCustomerRequest(
-                    UpdateCustomerRequest.Customer(
-                        favList.draft_order.id,
-                        cart.draft_order.id
-                    ))
-                val response = repository.updateCustomer(id, updateCustomerRequest)
-                _customer.value = NetworkState.Success(response)
-            } catch (e: HttpException) {
-                _customer.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
-                _customer.value = NetworkState.Failure(e)
-            }
+    fun createCustomer(customer: CustomerRequest) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.createCustomer(customer)
+                .catch {_customer.value = NetworkState.Failure(it) }
+                .collect {updateCustomer(it.customer!!.id) }
         }
     }
 
-    fun updateCustomer(id: Long){
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                val draftOrderResponse = DraftOrderResponse(DraftOrderResponse.DraftOrder())
-                val favList = repository.createDraftOrders(draftOrderResponse)
-                val cart = repository.createDraftOrders(draftOrderResponse)
+    fun updateCustomer(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val draftOrderResponse = DraftOrderResponse(DraftOrderResponse.DraftOrder())
+            var favListId = 0L
+            var cartId = 0L
 
-                val updateCustomerRequest = UpdateCustomerRequest(
-                    UpdateCustomerRequest.Customer(
-                        favList.draft_order.id,
-                        cart.draft_order.id
-                    ))
-                val response = repository.updateCustomer(id, updateCustomerRequest)
+            repository.createDraftOrders(draftOrderResponse)
+                .catch {_customer.value = NetworkState.Failure(it)}
+                .collect { favListId = it.draft_order.id }
+            repository.createDraftOrders(draftOrderResponse)
+                .catch {_customer.value = NetworkState.Failure(it)}
+                .collect { cartId = it.draft_order.id }
 
-                _customer.value = NetworkState.Success(response)
-            } catch (e: HttpException) {
-                _customer.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
-                _customer.value = NetworkState.Failure(e)
-            }
+            val updateCustomerRequest = UpdateCustomerRequest(
+                UpdateCustomerRequest.Customer(favListId, cartId)
+            )
+            repository.updateCustomer(id, updateCustomerRequest)
+                .catch {_customer.value = NetworkState.Failure(it)}
+                .collect {_customer.value = NetworkState.Success(it)}
         }
     }
 
-    fun getCustomerByEmail(email: String){
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                val response = repository.getCustomerByEmail(email)
-                _customers.value = NetworkState.Success(response)
-            } catch (e: HttpException) {
-                _customers.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
-                _customers.value = NetworkState.Failure(e)
-            }
+    fun getCustomerByEmail(email: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getCustomerByEmail(email)
+                .catch { _customers.value = NetworkState.Failure(it) }
+                .collect { _customers.value = NetworkState.Success(it) }
         }
     }
 
