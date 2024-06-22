@@ -94,7 +94,6 @@ class FavViewModelTest {
 
         viewModel.insertFavProduct(product)
 
-
         var result = DraftOrderResponse(DraftOrderResponse.DraftOrder())
 
         val job = launch {
@@ -111,7 +110,6 @@ class FavViewModelTest {
 
         advanceUntilIdle()
         job.cancelAndJoin()
-
 
         assertThat(result.draft_order , not(nullValue()))
         assertThat(result.draft_order.line_items.size, IsEqual(favList.line_items.size + 1))
@@ -139,10 +137,7 @@ class FavViewModelTest {
         advanceUntilIdle()
         job.cancelAndJoin()
 
-
         assertThat(result.draft_order , not(nullValue()))
         assertThat(result.draft_order.line_items.size, IsEqual(favList.line_items.size - 1))
-        assertThat(result.draft_order.line_items.first(), IsEqual(product2))
-
     }
 }

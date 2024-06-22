@@ -23,11 +23,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface Repository {
     suspend fun getcustomers(id:Long): OneCustomer
-    suspend fun createCustomer(customer: CustomerRequest): CustomerResponse
+    suspend fun createCustomer(customer: CustomerRequest): Flow<CustomerResponse>
     suspend fun getBrands(): Response<BrandResponse>
     suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
     suspend fun getProducts(): Response<ProductResponse>
-    suspend fun getCustomerByEmail(email: String): CustomerResponse
+    suspend fun getCustomerByEmail(email: String): Flow<CustomerResponse>
     suspend fun AddSingleCustomerAdreess(id:Long,addressRequest: AddressRequest): AddressRequest
     suspend fun editSingleCustomerAddress(
         customerID:Long,
@@ -37,11 +37,11 @@ interface Repository {
     suspend fun deleteSingleCustomerAddress(customerID: Long,id: Long)
     suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
     suspend fun getDiscountCodes():Flow <PriceRule>
-    suspend fun getProductById(id: Long): ProductResponse
-    suspend fun createDraftOrders(draftOrder: DraftOrderResponse): DraftOrderResponse
-    suspend fun updateDraftOrder(id: Long, draftOrder: DraftOrderResponse): DraftOrderResponse
-    suspend fun getDraftOrder(id: Long): DraftOrderResponse
-    suspend fun updateCustomer(id: Long, customer: UpdateCustomerRequest): CustomerResponse
+    suspend fun getProductById(id: Long): Flow<ProductResponse>
+    suspend fun createDraftOrders(draftOrder: DraftOrderResponse): Flow<DraftOrderResponse>
+    suspend fun updateDraftOrder(id: Long, draftOrder: DraftOrderResponse): Flow<DraftOrderResponse>
+    suspend fun getDraftOrder(id: Long): Flow<DraftOrderResponse>
+    suspend fun updateCustomer(id: Long, customer: UpdateCustomerRequest): Flow<CustomerResponse>
     suspend  fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX
     suspend fun createCheckoutSession(successUrl: String,cancelUrl: String,customerEmail: String,currency: String,productName: String,productDescription: String,
                                       unitAmountDecimal: Int, quantity: Int,mode: String, paymentMethodType: String

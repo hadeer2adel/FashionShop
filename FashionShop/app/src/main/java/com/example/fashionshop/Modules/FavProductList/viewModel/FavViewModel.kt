@@ -10,6 +10,7 @@ import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -20,41 +21,36 @@ class FavViewModel(private var repository: Repository, private var listId: Long)
     private var _product = MutableStateFlow<NetworkState<DraftOrderResponse>>(NetworkState.Loading)
     var product: StateFlow<NetworkState<DraftOrderResponse>> = _product
 
-    fun getFavProducts(){
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                val response = repository.getDraftOrder(listId)
-                _product.value = NetworkState.Success(response)
-            } catch (e: HttpException) {
-                _product.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
-                _product.value = NetworkState.Failure(e)
-            }
+    fun getFavProducts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getDraftOrder(listId)
+                .catch { _product.value = NetworkState.Failure(it) }
+                .collect { _product.value = NetworkState.Success(it) }
         }
     }
 
-    fun isFavProduct(id: Long, favTrue: ()->Unit, favFalse: ()->Unit){
+    fun isFavProduct(id: Long, favTrue: ()->Unit, favFalse: ()->Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             _product.value = NetworkState.Loading
-            val response = repository.getDraftOrder(listId).draft_order.line_items
-            if (response.size > 1) {
-                val isFav = response.toMutableList().any {
-                    val values = it.sku?.split("*")
-                    values?.get(0)?.equals(id.toString()) ?: false
-                }
+            repository.getDraftOrder(listId)
+                .catch { _product.value = NetworkState.Failure(it) }
+                .collect {
+                    val response = it.draft_order.line_items
+                    if (response.size > 1) {
+                        val isFav = response.toMutableList().any {
+                            val values = it.sku?.split("*")
+                            values?.get(0)?.equals(id.toString()) ?: false
+                        }
 
-                withContext(Dispatchers.Main) {
-                    if (isFav) {
-                        favTrue()
+                        withContext(Dispatchers.Main) {
+                            if (isFav) favTrue() else favFalse()
+                        }
                     } else {
-                        favFalse()
+                        withContext(Dispatchers.Main) {
+                            favFalse()
+                        }
                     }
                 }
-            }else {
-                withContext(Dispatchers.Main) {
-                    favFalse()
-                }
-            }
         }
     }
 
@@ -72,19 +68,20 @@ class FavViewModel(private var repository: Repository, private var listId: Long)
     fun insertFavProduct(product: Product) {
         viewModelScope.launch(Dispatchers.IO) {
             _product.value = NetworkState.Loading
-            val draftOrder = repository.getDraftOrder(listId).draft_order
-            val updatedLineItems = draftOrder.line_items.toMutableList().apply {
-                add(convertProductToLineItem(product))
-            }
-            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+            repository.getDraftOrder(listId)
+                .catch { _product.value = NetworkState.Failure(it) }
+                .collect {
+                    val draftOrder = it.draft_order
 
-            try {
-                val updatedResponse =
+                    val updatedLineItems = draftOrder.line_items.toMutableList().apply {
+                        add(convertProductToLineItem(product))
+                    }
+
+                    val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
                     repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
-                _product.value = NetworkState.Success(updatedResponse)
-            } catch (e: Exception) {
-                _product.value = NetworkState.Failure(e)
-            }
+                        .catch { _product.value = NetworkState.Failure(it) }
+                        .collect { _product.value = NetworkState.Success(it) }
+                }
         }
     }
 
@@ -92,21 +89,22 @@ class FavViewModel(private var repository: Repository, private var listId: Long)
     fun deleteFavProduct(id: Long){
         viewModelScope.launch(Dispatchers.IO){
             _product.value = NetworkState.Loading
-            val draftOrder = repository.getDraftOrder(listId).draft_order
+            repository.getDraftOrder(listId)
+                .catch { _product.value = NetworkState.Failure(it) }
+                .collect {
+                    val draftOrder = it.draft_order
 
-            val updatedLineItems = draftOrder.line_items.filter {
-                val values = it.sku?.split("*")
-                val equal = values?.get(0)?.equals(id.toString()) ?: false
-                (! equal)
-            }
+                    val updatedLineItems = draftOrder.line_items.filter {
+                        val values = it.sku?.split("*")
+                        val equal = values?.get(0)?.equals(id.toString()) ?: false
+                        (!equal)
+                    }
 
-            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
-            try {
-                val updatedResponse = repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
-                _product.value = NetworkState.Success(updatedResponse)
-            } catch (e: Exception) {
-                _product.value = NetworkState.Failure(e)
-            }
+                    val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+                    repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                        .catch { _product.value = NetworkState.Failure(it) }
+                        .collect { _product.value = NetworkState.Success(it) }
+                }
         }
     }
 

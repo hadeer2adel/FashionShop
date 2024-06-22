@@ -11,6 +11,7 @@ import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -24,77 +25,74 @@ class CartViewModel (private val repo: Repository, private var listId: Long
     }
 
     fun getCardProducts(){
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                val response = repo.getDraftOrder(listId)
-                _productCard.value = NetworkState.Success(response)
-            } catch (e: HttpException) {
-                _productCard.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
-                _productCard.value = NetworkState.Failure(e)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.getDraftOrder(listId)
+                .catch { _productCard.value = NetworkState.Failure(it) }
+                .collect { _productCard.value = NetworkState.Success(it) }
         }
     }
 
     fun deleteCardProduct(id: Long){
         viewModelScope.launch(Dispatchers.IO){
             _productCard.value = NetworkState.Loading
-            val draftOrder = repo.getDraftOrder(listId).draft_order
-            val updatedLineItems = draftOrder.line_items.filter {
-                it.id != id
-            }
-            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
-            try {
-
-                val updatedResponse = repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
-                _productCard.value = NetworkState.Success(updatedResponse)
-            } catch (e: Exception) {
-                _productCard.value = NetworkState.Failure(e)
-            }
+            repo.getDraftOrder(listId)
+                .catch { _productCard.value = NetworkState.Failure(it) }
+                .collect {
+                    val draftOrder = it.draft_order
+                    val updatedLineItems = draftOrder.line_items.filter {
+                        it.id != id
+                    }
+                    val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+                    repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                        .catch { _productCard.value = NetworkState.Failure(it) }
+                        .collect { _productCard.value = NetworkState.Success(it) }
+                }
         }
     }
 
     fun editCardQuantityProduct(id: Long, quantity: Int, price: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _productCard.value = NetworkState.Loading
-            val draftOrderResponse = repo.getDraftOrder(listId)
-            val draftOrder = draftOrderResponse.draft_order
-            val updatedLineItems = draftOrder.line_items.map { lineItem ->
-                if (lineItem.id == id) {
-                    lineItem.copy(quantity = quantity, price = price)
-                } else {
-                    lineItem
+            repo.getDraftOrder(listId)
+                .catch { _productCard.value = NetworkState.Failure(it) }
+                .collect {
+                    val draftOrder = it.draft_order
+                    val updatedLineItems = draftOrder.line_items.map { lineItem ->
+                        if (lineItem.id == id) {
+                            lineItem.copy(quantity = quantity, price = price)
+                        } else {
+                            lineItem
+                        }
+                    }
+                    val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+                    repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                        .catch { _productCard.value = NetworkState.Failure(it) }
+                        .collect { _productCard.value = NetworkState.Success(it) }
                 }
-            }
-            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
-
-            try {
-                val updatedResponse = repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
-                _productCard.value = NetworkState.Success(updatedResponse)
-            } catch (e: Exception) {
-                _productCard.value = NetworkState.Failure(e)
-            }
         }
     }
     fun deleteAllCartProducts() {
         viewModelScope.launch(Dispatchers.IO) {
             _productCard.value = NetworkState.Loading
-            val draftOrder = repo.getDraftOrder(listId).draft_order
-            val updatedLineItems = if (draftOrder.line_items.isNotEmpty()) {
-                listOf(draftOrder.line_items.first())
-            } else {
-                emptyList()
-            }
-            val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
-            Log.i("updatedDraftOrder", "deleteAllCartProducts: ${updatedDraftOrder} ")
-            try {
-                val updatedResponse = repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
-                inventoryQuantities.clear()
-                originalPrices.clear()
-                _productCard.value = NetworkState.Success(updatedResponse)
-            } catch (e: Exception) {
-                _productCard.value = NetworkState.Failure(e)
-            }
+            repo.getDraftOrder(listId)
+                .catch { _productCard.value = NetworkState.Failure(it) }
+                .collect {
+                    val draftOrder = it.draft_order
+                    val updatedLineItems = if (draftOrder.line_items.isNotEmpty()) {
+                        listOf(draftOrder.line_items.first())
+                    } else {
+                        emptyList()
+                    }
+                    val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
+
+                    repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
+                        .catch { _productCard.value = NetworkState.Failure(it) }
+                        .collect {
+                            inventoryQuantities.clear()
+                            originalPrices.clear()
+                            _productCard.value = NetworkState.Success(it)
+                        }
+                }
         }
     }
 
