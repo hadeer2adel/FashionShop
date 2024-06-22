@@ -115,8 +115,6 @@ class OrderInfoFragment : Fragment() {
 
     private fun convertToLineItemBody(lineItem: LineItemBody): LineItemBody {
         return LineItemBody(
-            // Map properties from lineItem to LineItemBody
-            // Assuming similar properties in both classes for this example
             id = lineItem.id,
             title = lineItem.title,
             quantity = lineItem.quantity,

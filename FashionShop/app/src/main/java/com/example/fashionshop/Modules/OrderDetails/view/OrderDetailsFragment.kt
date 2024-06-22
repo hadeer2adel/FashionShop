@@ -276,7 +276,7 @@ class OrderDetailsFragment() : Fragment() {
             setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
                 binding.discountValue.text = "0"
-                binding.totalValue.text = "0"
+                binding.totalValue.text = subtotalInt.toString()
             }
         }
         alertDialogBuilder.create().show()

@@ -33,8 +33,8 @@ class FakeRepository :Repository {
     var shouldReturnError = false
     var customers = mutableListOf<CustomerResponse.Customer>()
     var draftOrders = mutableListOf<DraftOrderResponse>()
-
-
+    var createdOrders = mutableListOf<OrderBodyResponse>()
+    var  exchenges = mutableListOf<ExchangeRatesResponseX>()
     override suspend fun getcustomers(id: Long): OneCustomer {
         return customer[0]
     }
@@ -171,7 +171,7 @@ class FakeRepository :Repository {
         symbols: String,
         base: String
     ): ExchangeRatesResponseX {
-        TODO("Not yet implemented")
+        return exchenges[0]
     }
 
     override suspend fun createCheckoutSession(
@@ -186,70 +186,66 @@ class FakeRepository :Repository {
         mode: String,
         paymentMethodType: String
     ): CheckoutSessionResponse {
-//        val expectedCheckoutSession = CheckoutSessionResponse(
-//            id = "cs_test_a1vMqMBnX2DyP93CEed8rmSKRqQyTUlMTvepNQp4MttdYOd4ilRWbON9ug",
-//            object = "checkout.session",
-//            after_expiration = null,
-//            allow_promotion_codes = null,
-//            amount_subtotal = 50000,
-//            amount_total = 50000,
-//            automatic_tax = AutomaticTax(false, null, null),
-//            billing_address_collection = null,
-//            cancel_url = cancelUrl,
-//            client_reference_id = null,
-//            client_secret = null,
-//            consent = null,
-//            consent_collection = null,
-//            created = 1718714694,
-//            currency = currency,
-//            currency_conversion = null,
-//            custom_fields = emptyList(),
-//            custom_text = CustomText(null, null, null, null),
-//            customer = null,
-//            customer_creation = "if_required",
-//            customer_details = CustomerDetails(null, customerEmail, null, null, "none", null),
-//            customer_email = customerEmail,
-//            expires_at = 1718801094,
-//            id = "cs_test_a1vMqMBnX2DyP93CEed8rmSKRqQyTUlMTvepNQp4MttdYOd4ilRWbON9ug",
-//            invoice = null,
-//            invoice_creation = InvoiceCreation(false, InvoiceData(null, null, null, null, null, null)),
-//            livemode = false,
-//            locale = null,
-//            metadata = emptyMap(),
-//            mode = mode,
-//            `object` = "checkout.session",
-//            payment_intent = null,
-//            payment_link = null,
-//            payment_method_collection = "if_required",
-//            payment_method_configuration_details = null,
-//            payment_method_options = PaymentMethodOptions(CardOptions("automatic")),
-//            payment_method_types = listOf("card"),
-//            payment_status = "unpaid",
-//            phone_number_collection = PhoneNumberCollection(false),
-//            recovered_from = null,
-//            saved_payment_method_options = null,
-//            setup_intent = null,
-//            shipping_address_collection = null,
-//            shipping_cost = null,
-//            shipping_details = null,
-//            shipping_options = emptyList(),
-//            status = "open",
-//            submit_type = null,
-//            subscription = null,
-//            success_url = successUrl,
-//            total_details = TotalDetails(0, 0, 0),
-//            ui_mode = "hosted",
-//            url = "https://checkout.stripe.com/c/pay/cs_test_a1vMqMBnX2DyP93CEed8rmSKRqQyTUlMTvepNQp4MttdYOd4ilRWbON9ug#fidkdWxOYHwnPyd1blpxYHZxWjA0VVZnUWJBamBcS1ZmZ1FoZE5QSVxMdnBUNjZXa0p9dH1yamBXN0ZBPXVsS3dkYm1tcUh0TUxtRHZuQXBwdGpAdEZ9VTNWZnRqVXVtN2N9VENjYzRdb3N9NTVfSWJVaXBCPCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl"
-//        )
-//
-//        checkoutList.add(checkoutSession)
-//        return checkoutSession
-        TODO("Not yet implemented")
+        var checkout = CheckoutSessionResponse(
+            after_expiration = "null",
+            allow_promotion_codes = "null",
+            amount_subtotal = 50000,
+            amount_total = 50000,
+            automatic_tax = AutomaticTax(false, "null", "null"),
+            billing_address_collection = "null",
+            cancel_url = "https://example.com/cancel",
+            client_reference_id = "null",
+            client_secret = "null",
+            consent = "null",
+            consent_collection = "null",
+            created = 1718714694,
+            currency = "USD",
+            currency_conversion = "null",
+            custom_fields = emptyList(),
+            custom_text = CustomText("null", "null", "null", "null"),
+            customer = "null",
+            customer_creation = "if_required",
+            customer_details = CustomerDetails("null", "customerEmail", "null", "null", "none", "null"),
+            customer_email = "user@gmail.com",
+            expires_at = 1718801094,
+            id = "cs_test_a1vMqMBnX2DyP93CEed8rmSKRqQyTUlMTvepNQp4MttdYOd4ilRWbON9ug",
+            invoice = "null",
+            invoice_creation = InvoiceCreation(false, InvoiceData("null", "null", "null", "null", "null", MetadataX(),"null")),
+            livemode = false,
+            locale = "null",
+            metadata =MetadataX(),
+            mode = "payment",
+            `object` = "checkout.session",
+            payment_intent = "null",
+            payment_link = "null",
+            payment_method_collection = "if_required",
+            payment_method_configuration_details = "null",
+            payment_method_options = PaymentMethodOptions(Card("")),
+            payment_method_types = listOf("card"),
+            payment_status = "unpaid",
+            phone_number_collection = PhoneNumberCollection(false),
+            recovered_from = "null",
+            saved_payment_method_options = "null",
+            setup_intent = "null",
+            shipping_address_collection = "null",
+            shipping_cost = "null",
+            shipping_details = "null",
+            shipping_options = emptyList(),
+            status = "open",
+            submit_type = "null",
+            subscription = "null",
+            success_url = "https://example.com/cancel",
+            total_details = TotalDetails(0, 0, 0),
+            ui_mode = "hosted",
+            url = "https://checkout.stripe.com/c/pay/cs_test_a1vMqMBnX2DyP93CEed8rmSKRqQyTUlMTvepNQp4MttdYOd4ilRWbON9ug#fidkdWxOYHwnPyd1blpxYHZxWjA0VVZnUWJBamBcS1ZmZ1FoZE5QSVxMdnBUNjZXa0p9dH1yamBXN0ZBPXVsS3dkYm1tcUh0TUxtRHZuQXBwdGpAdEZ9VTNWZnRqVXVtN2N9VENjYzRdb3N9NTVfSWJVaXBCPCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl"
+        )
+       checkoutList.add(checkout)
+        return checkout
 
     }
 
     override suspend fun createOrder(order: Map<String, OrderBody>): OrderBodyResponse {
-        TODO("Not yet implemented")
+        return createdOrders[0]
     }
 
     override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
