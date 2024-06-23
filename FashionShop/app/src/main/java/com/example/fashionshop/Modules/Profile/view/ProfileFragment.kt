@@ -1,5 +1,7 @@
 package com.example.fashionshop.Modules.Profile.view
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +21,7 @@ import com.example.fashionshop.Model.inventoryQuantities
 import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
 import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
+import com.example.fashionshop.Modules.Authentication.view.LoginActivity
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
@@ -56,18 +59,13 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = NavHostFragment.findNavController(this)
         appBarConfiguration = AppBarConfiguration(navController.graph)
-
-//        // Set up the toolbar
-//        val toolbar = binding.toolbar
-//        setupWithNavController(toolbar, navController, appBarConfiguration)
-
-
         allProductFactroy= AddressFactory(
             RepositoryImp.getInstance(
                 NetworkManagerImp.getInstance()
             )
         )
         allProductViewModel= ViewModelProvider(this, allProductFactroy).get(AddressViewModel::class.java)
+        if (CustomerData.getInstance(requireContext()).isLogged) {
         allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
         lifecycleScope.launch {
             allProductViewModel.products.collectLatest { response ->
@@ -113,6 +111,16 @@ class ProfileFragment : Fragment() {
             inventoryQuantities.clear()
             originalPrices.clear()
         }
+        } else{
+            binding.loginBtn.setOnClickListener {
+                val intent = Intent(requireContext(), LoginActivity::class.java)
+                startActivity(intent)
+            }
+                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
+                binding.emptyView.visibility = View.VISIBLE
+            binding.profileLayout.visibility = View.GONE
+            binding.buttonsLayout.visibility = View.GONE
+            }
     }
 
     override fun onDestroyView() {
@@ -129,5 +137,16 @@ class ProfileFragment : Fragment() {
                     // Add any parameters if necessary
                 }
             }
+    }
+    private fun showAlertDialog(title: String, message: String) {
+        AlertDialog.Builder(requireContext()).apply {
+            setTitle(title)
+            setMessage(message)
+            setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            create()
+            show()
+        }
     }
 }

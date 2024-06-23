@@ -1,8 +1,8 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="80dp"
     tools:context=".Modules.Profile.view.ProfileFragment">
 
@@ -13,6 +13,60 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/emptyAnimationView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/l" />
+
+        <TextView
+            android:id="@+id/emptyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/guest_profile"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/emptyTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/guest_profile2"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/loginBtn"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="200dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:backgroundTint="@color/black"
+            android:text="@string/login"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:cornerRadius="10dp" />
+
+    </LinearLayout>
+
+
     <LinearLayout
         android:id="@+id/profileLayout"
         android:layout_width="match_parent"
@@ -21,7 +75,8 @@
         android:gravity="bottom"
         android:orientation="vertical"
         android:padding="16dp"
-        android:textDirection="locale">
+        android:textDirection="locale"
+        android:visibility="visible">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="180dp"
@@ -34,12 +89,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Habiba Mohamed"
-            android:textSize="20sp"
-            android:textStyle="bold"
             android:gravity="center"
+            android:text="Habiba Mohamed"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/emailCustomer"
@@ -47,20 +102,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:textSize="18sp"
             android:text="habiba123@gmail.com"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/profileLayout"
         android:layout_marginTop="34dp"
         android:orientation="vertical"
-        android:textDirection="locale"
-        android:padding="8dp">
-
+        android:padding="8dp"
+        android:textDirection="locale">
 
 
         <Button
@@ -79,8 +134,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginHorizontal="16dp"
-            android:background="@color/gray"
-            android:alpha="0.4"/>
+            android:alpha="0.4"
+            android:background="@color/gray" />
 
         <Button
             android:id="@+id/settings"
@@ -99,8 +154,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginHorizontal="16dp"
-            android:background="@color/gray"
-            android:alpha="0.4"/>
+            android:alpha="0.4"
+            android:background="@color/gray" />
 
         <Button
             android:id="@+id/logout"

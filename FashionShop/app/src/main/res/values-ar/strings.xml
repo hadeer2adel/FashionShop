@@ -158,5 +158,9 @@
     <string name="choose_currency_title">اختر العملة</string>
     <string name="selected_currency">تم اختيار:</string>
     <string name="orderEmpty">سلة الطلبات فارغة لنقم بإضافة طلب جديد!</string>
+    <string name="guest_profile">هل لديك حساب لدينا ؟</string>
+    <string name="guest_profile2"> فقط أضغط تسجيل دخول ! </string>
+
+
 
 </resources>

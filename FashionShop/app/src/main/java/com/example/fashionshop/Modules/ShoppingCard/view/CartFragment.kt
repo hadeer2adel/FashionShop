@@ -97,9 +97,13 @@ class CartFragment : Fragment() ,CartListener {
                         is NetworkState.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE
                             binding.recyclerViewCartItems.visibility = View.GONE
+                            binding.emptyView.visibility = View.GONE
+
                         }
                         is NetworkState.Success -> {
                             binding.progressBar.visibility = View.GONE
+                            binding.emptyView.visibility = View.GONE
+
                             val lineItems = response.data.draft_order.line_items
                             if (lineItems.size <= 1) {
                                 binding.recyclerViewCartItems.visibility = View.GONE
@@ -119,6 +123,8 @@ class CartFragment : Fragment() ,CartListener {
                         }
                         is NetworkState.Failure -> {
                             binding.progressBar.visibility = View.GONE
+                            binding.emptyView.visibility = View.GONE
+
                             Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
                         }
                     }
@@ -145,6 +151,8 @@ class CartFragment : Fragment() ,CartListener {
         else{
             showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
             binding.emptyView.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
+
         }
 
 
