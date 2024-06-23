@@ -19,6 +19,7 @@ import com.example.fashionshop.Service.Networking.NetworkManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import retrofit2.Response
+import kotlinx.coroutines.flow.flow
 
 class RepositoryImp constructor(
     private var networkManager: NetworkManager
@@ -47,16 +48,18 @@ class RepositoryImp constructor(
         return flowOf(networkManager.createCustomer(customer))
     }
 
-    override suspend fun getBrands(): Response<BrandResponse> {
-        return networkManager.getBrands()
+    override suspend fun getBrands(): Flow<BrandResponse> {
+        return flow { emit(networkManager.getBrands()) }
     }
 
-    override suspend fun getBrandProducts(vendor: String): Response<ProductResponse> {
-        return networkManager.getBrandProducts(vendor)
+    override suspend fun getBrandProducts(vendor: String): Flow<ProductResponse> {
+        return flow { emit(networkManager.getBrandProducts(vendor)) }
     }
 
-    override suspend fun getProducts(): Response<ProductResponse> {
-        return networkManager.getProducts()
+    override suspend fun getProducts(): Flow<ProductResponse> {
+        return flow {
+            emit(networkManager.getProducts())
+        }
     }
 
 
@@ -81,8 +84,10 @@ class RepositoryImp constructor(
         return networkManager.deleteSingleCustomerAddress(customerID,id)
     }
 
-    override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
-        return  networkManager.getCustomerOrders(userId)
+    override suspend fun getCustomerOrders(userId: Long): Flow<OrderResponse> {
+        return flow {
+            emit(networkManager.getCustomerOrders(userId))
+        }
     }
 
     override suspend fun getDiscountCodes(): Flow<PriceRule> {
@@ -112,12 +117,14 @@ class RepositoryImp constructor(
         return flowOf(networkManager.updateCustomer(id, customer))
     }
 
-    override suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse {
-        return networkManager.createOrder(order)
+    override suspend fun createOrder(order:  Map<String, OrderBody>): Flow<OrderBodyResponse> {
+        return flowOf(networkManager.createOrder(order))
     }
 
-    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
-        return networkManager.getSingleOrder(orderId)
+    override suspend fun getSingleOrder(orderId: Long): Flow<OrderResponse> {
+        return flow {
+            emit(networkManager.getSingleOrder(orderId))
+        }
     }
 
 

@@ -68,15 +68,15 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return networkService.createCustomer(customer)
     }
 
-    override suspend fun getBrands(): Response<BrandResponse> {
+    override suspend fun getBrands(): BrandResponse {
         return networkService.getBrands()
     }
 
-    override suspend fun getProducts(): Response<ProductResponse> {
+    override suspend fun getProducts(): ProductResponse {
         return networkService.getProducts()
     }
 
-    override suspend fun getBrandProducts(vendor: String): Response<ProductResponse> {
+    override suspend fun getBrandProducts(vendor: String): ProductResponse {
         return  networkService.getBrandProducts(vendor)
     }
 
@@ -85,7 +85,7 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return networkService.getCustomerByEmail(email)
     }
 
-    override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
+    override suspend fun getCustomerOrders(userId: Long): OrderResponse {
         return networkService.getCustomerOrders(userId)
     }
 
@@ -118,7 +118,7 @@ class NetworkManagerImp private constructor(): NetworkManager {
         return networkService.createOrder(order)
     }
 
-    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
+    override suspend fun getSingleOrder(orderId: Long): OrderResponse {
         return networkService.getSingleOrder(orderId)
     }
     override suspend fun getExchangeRates(apiKey: String,symbols :String, base: String): ExchangeRatesResponseX{

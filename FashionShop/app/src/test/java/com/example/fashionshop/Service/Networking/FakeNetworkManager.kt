@@ -15,6 +15,7 @@ import com.example.fashionshop.Model.OrderBodyResponse
 import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.ProductResponse
+import com.example.fashionshop.Model.SmartCollection
 import com.example.fashionshop.Model.UpdateCustomerRequest
 import kotlinx.coroutines.flow.flowOf
 import retrofit2.Response
@@ -27,8 +28,14 @@ class FakeNetworkManager (var address: AddressRequest,
                           var checkoutSession:CheckoutSessionResponse,
                           var exchanges:ExchangeRatesResponseX,
                           private var customers: MutableList<CustomerResponse.Customer>,
-                          private var draftOrders: MutableList<DraftOrderResponse>
-                          ) :NetworkManager {
+                          private var draftOrders: MutableList<DraftOrderResponse>,
+                          private var brands : BrandResponse,
+                          private var products : ProductResponse,
+                          private var orders : OrderResponse,
+                          private var orderResult : OrderBodyResponse
+
+
+) :NetworkManager {
     override suspend fun getcutomers(id: Long): OneCustomer {
     return customer
     }
@@ -66,16 +73,16 @@ class FakeNetworkManager (var address: AddressRequest,
         return CustomerResponse(customer)
     }
 
-    override suspend fun getBrands(): Response<BrandResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getBrands(): BrandResponse {
+        return brands
     }
 
-    override suspend fun getProducts(): Response<ProductResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getProducts(): ProductResponse {
+       return products
     }
 
-    override suspend fun getBrandProducts(vendor: String): Response<ProductResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getBrandProducts(vendor: String): ProductResponse {
+        return products
     }
 
     override suspend fun getCustomerByEmail(email: String): CustomerResponse {
@@ -147,15 +154,15 @@ class FakeNetworkManager (var address: AddressRequest,
         return checkoutSession
     }
 
-    override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getCustomerOrders(userId: Long): OrderResponse {
+        return orders
     }
 
     override suspend fun createOrder(order: Map<String, OrderBody>): OrderBodyResponse {
-        TODO("Not yet implemented")
+        return orderResult
     }
 
-    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getSingleOrder(orderId: Long): OrderResponse {
+       return orders
     }
 }

@@ -1,28 +1,41 @@
 package com.example.fashionshop.Repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.fashionshop.Model.Address
+import com.example.fashionshop.Model.AddressBody
 import com.example.fashionshop.Model.AddressDefault
 import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.Addresse
 import com.example.fashionshop.Model.AutomaticTax
+import com.example.fashionshop.Model.BrandImage
+import com.example.fashionshop.Model.BrandResponse
 import com.example.fashionshop.Model.Card
 import com.example.fashionshop.Model.CheckoutSessionResponse
 import com.example.fashionshop.Model.CustomText
 import com.example.fashionshop.Model.Customer
 import com.example.fashionshop.Model.CustomerAddress
+import com.example.fashionshop.Model.CustomerBody
+import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.CustomerDetails
 import com.example.fashionshop.Model.CustomerRequest
 import com.example.fashionshop.Model.CustomerResponse
 import com.example.fashionshop.Model.DefaultAddress
+import com.example.fashionshop.Model.DefaultAddressBody
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.EmailMarketingConsent
 import com.example.fashionshop.Model.ExchangeRatesResponseX
 import com.example.fashionshop.Model.InvoiceCreation
 import com.example.fashionshop.Model.InvoiceData
+import com.example.fashionshop.Model.LineItemBody
 import com.example.fashionshop.Model.MetadataX
 import com.example.fashionshop.Model.OneCustomer
+import com.example.fashionshop.Model.Order
+import com.example.fashionshop.Model.OrderBody
+import com.example.fashionshop.Model.OrderBodyResponse
+import com.example.fashionshop.Model.OrderCurrency
+import com.example.fashionshop.Model.OrderResponse
 import com.example.fashionshop.Model.PaymentMethodOptions
 import com.example.fashionshop.Model.PhoneNumberCollection
 import com.example.fashionshop.Model.PrerequisiteQuantityRange
@@ -32,7 +45,9 @@ import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleX
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductImage
+import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.RatesX
+import com.example.fashionshop.Model.SmartCollection
 import com.example.fashionshop.Model.SmsMarketingConsent
 import com.example.fashionshop.Model.TotalDetails
 import com.example.fashionshop.Model.UpdateCustomerRequest
@@ -40,6 +55,7 @@ import com.example.fashionshop.Model.Variant
 import com.example.fashionshop.Service.Networking.FakeNetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkState
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -48,6 +64,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert
@@ -56,6 +73,7 @@ import org.hamcrest.core.IsEqual
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.Date
 import kotlin.random.Random
 
 
@@ -242,6 +260,212 @@ class RepositoryImpTest {
             url = "https://checkout.stripe.com/c/pay/cs_test_a1vMqMBnX2DyP93CEed8rmSKRqQyTUlMTvepNQp4MttdYOd4ilRWbON9ug#fidkdWxOYHwnPyd1blpxYHZxWjA0VVZnUWJBamBcS1ZmZ1FoZE5QSVxMdnBUNjZXa0p9dH1yamBXN0ZBPXVsS3dkYm1tcUh0TUxtRHZuQXBwdGpAdEZ9VTNWZnRqVXVtN2N9VENjYzRdb3N9NTVfSWJVaXBCPCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl"
        )
 
+    val brands = BrandResponse(
+        listOf(
+            SmartCollection(
+                id = 1,
+                title = "Nike",
+                image = BrandImage(
+                    src = "https://example.com/nike.jpg"
+                )
+            ),
+            SmartCollection(
+                id = 2,
+                title = "Adidas",
+                image = BrandImage(
+                    src = "https://example.com/adidas.jpg"
+                )
+            )
+        )
+    )
+
+    val products = ProductResponse(
+        listOf(
+            Product(
+                id = 1,
+                title = "Nike Air Max",
+                image = ProductImage(src = "https://example.com/nike_air_max.jpg"),
+                variants = listOf(
+                    Variant(price = "$100", inventory_quantity = 10),
+                    Variant(price = "$120", inventory_quantity = 5)
+                ),
+                tags = "Running, Sneakers",
+                product_type = "Shoes"
+            ),
+            Product(
+                id = 2,
+                title = "Nike Dri-FIT T-shirt",
+                image = ProductImage(src = "https://example.com/nike_tshirt.jpg"),
+                variants = listOf(
+                    Variant(price = "$30", inventory_quantity = 20),
+                    Variant(price = "$35", inventory_quantity = 15)
+                ),
+                tags = "Sportswear, T-shirt",
+                product_type = "Clothing"
+            )
+        )
+    )
+
+    val orders = OrderResponse(
+        listOf(
+            Order(
+                id = 1,
+                admin_graphql_api_id = "gid://shopify/Order/123456789",
+                browser_ip = "127.0.0.1",
+                buyer_accepts_marketing = true,
+                cart_token = "abcdefghijk123456789",
+                checkout_id = 123456789,
+                checkout_token = "xyz987654321",
+                confirmed = true,
+                contact_email = "user@example.com",
+                created_at = Date().toString(),
+                currency = OrderCurrency.Usd,
+                current_subtotal_price = "100.00",
+                current_total_discounts = "10.00",
+                current_total_price = "90.00",
+                current_total_tax = "5.00",
+                email = "user@example.com",
+                estimated_taxes = false,
+                financial_status = "paid",
+                landing_site = "https://example.com",
+                landing_site_ref = "123",
+                number = 123,
+                order_number = 456,
+                order_status_url = "https://example.com/orders/123",
+                payment_gateway_names = listOf("visa", "mastercard"),
+                phone = "+1234567890",
+                po_number = "PO123",
+                presentment_currency = OrderCurrency.Usd,
+                processed_at = Date().toString(),
+                reference = "ref123",
+                referring_site = "https://example.com/referrer",
+                source_identifier = "web",
+                source_name = "web",
+                subtotal_price = "90.00",
+                tags = "important, urgent",
+                taxExempt = false,
+                test = false,
+                token = "token123",
+                total_discounts = "10.00",
+                total_line_items_price = "100.00",
+                total_outstanding = "90.00",
+                total_price = "90.00",
+                total_tax = "5.00",
+                total_tip_received = "0.00",
+                total_weight = 2000,
+                updated_at = Date().toString(),
+                billing_address = Address(
+                    first_name = "John",
+                    address1 = "123 Main St",
+                    phone = "+1234567890",
+                    city = "New York",
+                    zip = "10001",
+                    province = "NY",
+                    country = "US",
+                    last_name = "Doe",
+                    address2 = "Apt 1",
+                    latitude = 40.7128,
+                    longitude = -74.0060,
+                    name = "John Doe",
+                    country_code = "US",
+                    province_code = "NY",
+                    id = 1,
+                    customer_id = 1,
+                    country_name = "United States",
+                    default = true
+                ),
+                shipping_address = Address(
+                    first_name = "Jane",
+                    address1 = "456 Elm St",
+                    phone = "+1234567890",
+                    city = "Los Angeles",
+                    zip = "90001",
+                    province = "CA",
+                    country = "US",
+                    last_name = "Smith",
+                    address2 = "Suite 2",
+                    latitude = 34.0522,
+                    longitude = -118.2437,
+                    name = "Jane Smith",
+                    country_code = "US",
+                    province_code = "CA",
+                    id = 2,
+                    customer_id = 1,
+                    country_name = "United States",
+                    default = false
+                ),
+                line_items = listOf(
+                    LineItemBody(
+                        id = 1,
+                        title = "Nike Air Max",
+                        quantity = 1,
+                        price = "90.00",
+                        sku = "NM123",
+                        variant_id = 123456789,
+                    )
+                )
+            )
+        )
+
+        // Add more orders as needed
+    )
+
+    val addressOrder = AddressBody(
+        first_name = "ahmed",
+        address1 = "",
+        phone = "12345",
+        city = "city",
+        zip = "zip",
+        country = "country",
+        last_name = "last_name",
+        name = "name",
+        country_code = "country_code"
+    )
+
+
+    val defaultAddressOrder = DefaultAddressBody(
+        first_name = "ahmed",
+        address1 = "",
+        phone = "12345",
+        city = "city",
+        zip = "zip",
+        country = "country",
+        last_name = "last_name",
+        name = "name",
+        country_code = "country_code",
+        default = true
+    )
+
+    val customerOrder = CustomerBody(
+        id = 123L,
+        email = "ahmedkh2711@gmail.com",
+        first_name = "Ahmed",
+        last_name = "Khaled",
+        currency = "currency",
+        default_address = defaultAddressOrder
+    )
+
+    val lineItemOrder = LineItemBody(
+        variant_id = 124L,
+        quantity = 200,
+        id = 147L,
+        title = "title",
+        price = "price",
+        sku = "sku"
+
+    )
+    val lineItemsList = listOf(lineItemOrder)
+
+    val orderBody = OrderBody(
+        billing_address = addressOrder,
+        customer = customerOrder,
+        line_items = lineItemsList,
+        total_tax = 13.5,
+        currency ="EGY"
+    )
+    val orderBodyResponse = OrderBodyResponse(orderBody)
+    val wrappedOrderBody = mapOf("order" to orderBody)
+
     private lateinit var firstCustomer: CustomerResponse.Customer
     private var customers = mutableListOf<CustomerResponse.Customer>()
     private var draftOrders = mutableListOf<DraftOrderResponse>()
@@ -259,7 +483,7 @@ class RepositoryImpTest {
         favList = DraftOrderResponse.DraftOrder(line_items = listOf(product1, product2))
         draftOrders.add(DraftOrderResponse(favList))
 
-        fakeRemote = FakeNetworkManager(address,updatedAddress,prices,customer,checkout,exchanges, customers, draftOrders)
+        fakeRemote = FakeNetworkManager(address,updatedAddress,prices,customer,checkout,exchanges, customers, draftOrders , brands , products , orders , orderBodyResponse)
         repository=RepositoryImp(fakeRemote)
     }
     @Test
@@ -287,14 +511,22 @@ class RepositoryImpTest {
         assertThat(result.first().customer?.first_name, IsEqual(customerRequest.customer.first_name))
         assertThat(result.first().customer?.last_name, IsEqual(customerRequest.customer.last_name))
         assertThat(result.first().customer?.email, IsEqual(customerRequest.customer.email)) }
-
-    fun getBrands() {
+    @Test
+    fun getBrands() = runBlockingTest {
+        val result = repository.getBrands()
+        assertThat(result, not(nullValue()))
     }
+    @Test
+    fun getBrandProducts() = runBlockingTest {
+        val result = repository.getBrandProducts("nike")
+        assertThat(result, not(nullValue()))
 
-    fun getBrandProducts() {
     }
+    @Test
+    fun getProducts() = runBlockingTest {
+        val result = repository.getProducts()
+        assertThat(result, not(nullValue()))
 
-    fun getProducts() {
     }
 
     @Test
@@ -331,8 +563,59 @@ class RepositoryImpTest {
         MatcherAssert.assertThat(result.customer.addresses.size, CoreMatchers.`is`(0))
     }
 
-    fun getCustomerOrders() {
+    @Test
+    fun getCustomerOrders() = runBlockingTest {
+        // Given
+        val userId = 1L // Assuming userId for testing
+
+        // When
+        val flow = repository.getCustomerOrders(userId)
+        val result = flow.first() // Collect the first emission from the flow
+
+        // Then
+        assertThat(result, not(nullValue())) // Ensure the result is not null
+
+        // Validate specific properties of the first order in the response
+        assertThat(result.orders?.size, equalTo(1)) // Assuming only one order is returned
+        val order = result.orders?.first()
+        assertThat(order?.id, equalTo(1))
+        assertThat(order?.email, equalTo("user@example.com"))
+        assertThat(order?.total_price, equalTo("90.00"))
+
+        // Validate billing address
+        assertThat(order?.billing_address, not(nullValue()))
+        assertThat(order?.billing_address?.first_name, equalTo("John"))
+        assertThat(order?.billing_address?.last_name, equalTo("Doe"))
+        assertThat(order?.billing_address?.address1, equalTo("123 Main St"))
+        assertThat(order?.billing_address?.phone, equalTo("+1234567890"))
+        assertThat(order?.billing_address?.city, equalTo("New York"))
+        assertThat(order?.billing_address?.zip, equalTo("10001"))
+        assertThat(order?.billing_address?.province, equalTo("NY"))
+        assertThat(order?.billing_address?.country, equalTo("US"))
+
+        // Validate shipping address
+        assertThat(order?.shipping_address, not(nullValue()))
+        assertThat(order?.shipping_address?.first_name, equalTo("Jane"))
+        assertThat(order?.shipping_address?.last_name, equalTo("Smith"))
+        assertThat(order?.shipping_address?.address1, equalTo("456 Elm St"))
+        assertThat(order?.shipping_address?.phone, equalTo("+1234567890"))
+        assertThat(order?.shipping_address?.city, equalTo("Los Angeles"))
+        assertThat(order?.shipping_address?.zip, equalTo("90001"))
+        assertThat(order?.shipping_address?.province, equalTo("CA"))
+        assertThat(order?.shipping_address?.country, equalTo("US"))
+
+        // Validate line items
+        assertThat(order?.line_items, not(nullValue()))
+        assertThat(order?.line_items?.size, equalTo(1)) // Assuming one line item in the order
+        val lineItem = order?.line_items?.first()
+        assertThat(lineItem?.id, equalTo(1))
+        assertThat(lineItem?.title, equalTo("Nike Air Max"))
+        assertThat(lineItem?.quantity, equalTo(1))
+        assertThat(lineItem?.price, equalTo("90.00"))
+        assertThat(lineItem?.sku, equalTo("NM123"))
+        assertThat(lineItem?.variant_id, equalTo(123456789))
     }
+
     @Test
     fun getDiscountCodes()= runBlockingTest {
         val result=repository.getDiscountCodes()
@@ -390,11 +673,69 @@ class RepositoryImpTest {
         assertThat(result.first().customer?.multipass_identifier, not(IsEqual(0L)))
         assertThat(result.first().customer?.multipass_identifier, IsEqual(cartId)) }
 
-    fun createOrder() {
+    @Test
+    fun createOrder_OrderResponseSameAsOrderRequest() = runBlockingTest {
+        //When
+        val result = repository.createOrder(wrappedOrderBody)
+
+        //Then
+        assertThat(result.first().order, not(nullValue()))
+        assertThat(result.first().order?.customer?.first_name, IsEqual(orderBody.customer.first_name))
+        assertThat(result.first().order?.customer?.last_name, IsEqual(orderBody.customer.last_name))
+        assertThat(result.first().order?.customer?.email, IsEqual(orderBody.customer.email))
     }
 
-    fun getSingleOrder() {
+    @Test
+    fun getSingleOrder()= runBlockingTest {
+
+        // When
+        val flow = repository.getSingleOrder(123)
+        val result = flow.first() // Collect the first emission from the flow
+
+        // Then
+        assertThat(result, not(nullValue())) // Ensure the result is not null
+
+        // Validate specific properties of the first order in the response
+        assertThat(result.orders?.size, equalTo(1)) // Assuming only one order is returned
+        val order = result.orders?.first()
+        assertThat(order?.id, equalTo(1))
+        assertThat(order?.email, equalTo("user@example.com"))
+        assertThat(order?.total_price, equalTo("90.00"))
+
+        // Validate billing address
+        assertThat(order?.billing_address, not(nullValue()))
+        assertThat(order?.billing_address?.first_name, equalTo("John"))
+        assertThat(order?.billing_address?.last_name, equalTo("Doe"))
+        assertThat(order?.billing_address?.address1, equalTo("123 Main St"))
+        assertThat(order?.billing_address?.phone, equalTo("+1234567890"))
+        assertThat(order?.billing_address?.city, equalTo("New York"))
+        assertThat(order?.billing_address?.zip, equalTo("10001"))
+        assertThat(order?.billing_address?.province, equalTo("NY"))
+        assertThat(order?.billing_address?.country, equalTo("US"))
+
+        // Validate shipping address
+        assertThat(order?.shipping_address, not(nullValue()))
+        assertThat(order?.shipping_address?.first_name, equalTo("Jane"))
+        assertThat(order?.shipping_address?.last_name, equalTo("Smith"))
+        assertThat(order?.shipping_address?.address1, equalTo("456 Elm St"))
+        assertThat(order?.shipping_address?.phone, equalTo("+1234567890"))
+        assertThat(order?.shipping_address?.city, equalTo("Los Angeles"))
+        assertThat(order?.shipping_address?.zip, equalTo("90001"))
+        assertThat(order?.shipping_address?.province, equalTo("CA"))
+        assertThat(order?.shipping_address?.country, equalTo("US"))
+
+        // Validate line items
+        assertThat(order?.line_items, not(nullValue()))
+        assertThat(order?.line_items?.size, equalTo(1)) // Assuming one line item in the order
+        val lineItem = order?.line_items?.first()
+        assertThat(lineItem?.id, equalTo(1))
+        assertThat(lineItem?.title, equalTo("Nike Air Max"))
+        assertThat(lineItem?.quantity, equalTo(1))
+        assertThat(lineItem?.price, equalTo("90.00"))
+        assertThat(lineItem?.sku, equalTo("NM123"))
+        assertThat(lineItem?.variant_id, equalTo(123456789))
     }
+
     @Test
     fun getExchangeRates() = runBlockingTest{
         val result = repository.getExchangeRates("tVEqdM1Lv5eZwifx7UyalZFZ4svWWsHo","EGP","USD")

@@ -9,6 +9,7 @@ import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -19,15 +20,13 @@ class OrdersViewModel(private var repository: Repository) : ViewModel() {
 
     fun getOrders(userId: Long) {
         viewModelScope.launch(Dispatchers.IO){
-            try {
-
-                val response =repository.getCustomerOrders(userId)
-                _orders.value = NetworkState.Success(response.body()!!)
-            } catch (e: HttpException) {
-                _orders.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
-                _orders.value = NetworkState.Failure(e)
-            }
+            repository.getCustomerOrders(userId)
+                .catch {
+                        e -> _orders.value = NetworkState.Failure(e)
+                }
+                .collect { response ->
+                    _orders.value = NetworkState.Success(response)
+                }
         }
 
     }

@@ -16,19 +16,18 @@ import retrofit2.HttpException
 
 class HomeViewModel(private var repository: Repository) : ViewModel() {
     private var _brand = MutableStateFlow<NetworkState<BrandResponse>>(NetworkState.Loading)
-    val brand =_brand.asStateFlow()
+    val brand: StateFlow<NetworkState<BrandResponse>> = _brand.asStateFlow()
     private var _products = MutableStateFlow<NetworkState<PriceRule>>(NetworkState.Loading)
     var products: StateFlow<NetworkState<PriceRule>> = _products
 
     fun getBrands(){
         viewModelScope.launch(Dispatchers.IO){
-            try {
-                val response =repository.getBrands()
-                _brand.value = NetworkState.Success(response.body()!!)
-            } catch (e: HttpException) {
-                _brand.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
-                _brand.value = NetworkState.Failure(e)
+            repository.getBrands()
+            .catch {
+                e -> _brand.value = NetworkState.Failure(e)
+            }
+            .collect { response ->
+                _brand.value = NetworkState.Success(response)
             }
         }
 

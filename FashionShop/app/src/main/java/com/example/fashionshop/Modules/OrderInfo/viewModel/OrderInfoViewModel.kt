@@ -9,6 +9,7 @@ import com.example.fashionshop.Service.Networking.NetworkState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -18,19 +19,13 @@ class OrderInfoViewModel(private var repository: Repository) : ViewModel() {
     val order =_order.asStateFlow()
     fun getOrder(userId: Long) {
         viewModelScope.launch(Dispatchers.IO){
-            try {
-                val response = repository.getSingleOrder(userId)
-                if (response.isSuccessful && response.body() != null) {
-                    _order.value = NetworkState.Success(response.body()!!)
-                } else {
-                    Log.d("getOrder", ":No data found ")
-                    _order.value = NetworkState.Failure(Exception("No data found"))
+            repository.getSingleOrder(userId)
+                .catch {
+                        e -> _order.value = NetworkState.Failure(e)
                 }
-            } catch (e: HttpException) {
-                _order.value = NetworkState.Failure(e)
-            } catch (e: Exception) {
-                _order.value = NetworkState.Failure(e)
-            }
+                .collect { response ->
+                    _order.value = NetworkState.Success(response)
+                }
         }
 
     }

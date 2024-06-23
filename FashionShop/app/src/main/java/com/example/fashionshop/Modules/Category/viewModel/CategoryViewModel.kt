@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.util.Locale
@@ -31,17 +32,14 @@ class CategoryViewModel(private var repository: Repository) : ViewModel() {
 
     fun getProducts() {
         viewModelScope.launch(Dispatchers.IO){
-            try {
-                val response =repository.getProducts()
-                val productsList = response.body()?.products ?: emptyList()
-                _allProducts = productsList
-                _subProducts = productsList
-                _products.value = NetworkState.Success(response.body()!!)
-            } catch (e: HttpException) {
-                _products.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
-                _products.value = NetworkState.Failure(e)
-            }
+            repository.getProducts()
+                .catch { e -> _products.value = NetworkState.Failure(e) }
+                .collect { response ->
+                    val productsList = response.products ?: emptyList()
+                    _allProducts = productsList
+                    _subProducts = productsList
+                    _products.value = NetworkState.Success(response)
+                }
         }
     }
 

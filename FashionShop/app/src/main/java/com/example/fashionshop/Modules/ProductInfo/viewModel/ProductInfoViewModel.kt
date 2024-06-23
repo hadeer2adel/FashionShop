@@ -57,14 +57,11 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
 
     fun getProductSuggestions(vendor : String){
         viewModelScope.launch(Dispatchers.IO){
-            try {
-                val response =repository.getBrandProducts(vendor)
-                _productSuggestions.value = NetworkState.Success(response.body()!!)
-            } catch (e: HttpException) {
-                _productSuggestions.value = NetworkState.Failure(e)
-            }catch (e: Exception) {
-                _productSuggestions.value = NetworkState.Failure(e)
-            }
+            repository.getBrandProducts(vendor)
+                .catch { e -> _product.value = NetworkState.Failure(e) }
+                .collect {
+                        response -> _product.value = NetworkState.Success(response)
+                }
         }
     }
     private fun convertProductToLineItem(product: ProductDetails): DraftOrderResponse.DraftOrder.LineItem{

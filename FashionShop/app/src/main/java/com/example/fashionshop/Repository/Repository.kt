@@ -24,9 +24,9 @@ import kotlinx.coroutines.flow.Flow
 interface Repository {
     suspend fun getcustomers(id:Long): OneCustomer
     suspend fun createCustomer(customer: CustomerRequest): Flow<CustomerResponse>
-    suspend fun getBrands(): Response<BrandResponse>
-    suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
-    suspend fun getProducts(): Response<ProductResponse>
+    suspend fun getBrands(): Flow<BrandResponse>
+    suspend fun getBrandProducts(@Query("vendor") vendor: String): Flow<ProductResponse>
+    suspend fun getProducts(): Flow<ProductResponse>
     suspend fun getCustomerByEmail(email: String): Flow<CustomerResponse>
     suspend fun AddSingleCustomerAdreess(id:Long,addressRequest: AddressRequest): AddressRequest
     suspend fun editSingleCustomerAddress(
@@ -35,7 +35,7 @@ interface Repository {
         addressRequest: AddressDefultRequest
     ): AddressUpdateRequest
     suspend fun deleteSingleCustomerAddress(customerID: Long,id: Long)
-    suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
+    suspend fun getCustomerOrders(@Path("id") userId: Long): Flow<OrderResponse>
     suspend fun getDiscountCodes():Flow <PriceRule>
     suspend fun getProductById(id: Long): Flow<ProductResponse>
     suspend fun createDraftOrders(draftOrder: DraftOrderResponse): Flow<DraftOrderResponse>
@@ -46,8 +46,8 @@ interface Repository {
     suspend fun createCheckoutSession(successUrl: String,cancelUrl: String,customerEmail: String,currency: String,productName: String,productDescription: String,
                                       unitAmountDecimal: Int, quantity: Int,mode: String, paymentMethodType: String
     ): CheckoutSessionResponse
-    suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse
+    suspend fun createOrder(order:  Map<String, OrderBody>): Flow<OrderBodyResponse>
 
-    suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
+    suspend fun getSingleOrder(@Path("id") orderId: Long): Flow<OrderResponse>
 
 }

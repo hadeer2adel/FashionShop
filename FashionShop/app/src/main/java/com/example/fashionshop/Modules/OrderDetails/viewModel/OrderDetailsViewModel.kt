@@ -19,8 +19,8 @@ import retrofit2.HttpException
 
 class OrderDetailsViewModel (private var repository: Repository) : ViewModel() {
 
-    private var _order = MutableStateFlow<NetworkState<OrderBodyResponse>>(NetworkState.Loading)
-    val order =_order.asStateFlow()
+    private val _order = MutableStateFlow<NetworkState<OrderBodyResponse>>(NetworkState.Loading)
+    val order: StateFlow<NetworkState<OrderBodyResponse>> = _order.asStateFlow()
     private var _productCode = MutableStateFlow<NetworkState<PriceRule>>(NetworkState.Loading)
     var productCode: StateFlow<NetworkState<PriceRule>> = _productCode
 
@@ -46,23 +46,32 @@ class OrderDetailsViewModel (private var repository: Repository) : ViewModel() {
         onError: (String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val response =repository.createOrder(orderBody)
-                withContext(Dispatchers.Main) {
+//            try {
+//                val response =repository.createOrder(orderBody)
+//                withContext(Dispatchers.Main) {
+//                    _order.value = NetworkState.Success(response)
+//                    onSuccess.invoke()
+//                }
+//            } catch (e: HttpException) {
+//                withContext(Dispatchers.Main) {
+//                    _order.value = NetworkState.Failure(e)
+//                    onError.invoke("HTTP Error: ${e.message}")
+//                }
+//            }catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    _order.value = NetworkState.Failure(e)
+//                    onError.invoke("Error: ${e.message}")
+//                }
+//            }
+            repository.createOrder(orderBody)
+                .catch {
+                        e -> _order.value = NetworkState.Failure(e)
+                        onError.invoke("HTTP Error: ${e.message}")
+                }
+                .collect { response ->
                     _order.value = NetworkState.Success(response)
                     onSuccess.invoke()
                 }
-            } catch (e: HttpException) {
-                withContext(Dispatchers.Main) {
-                    _order.value = NetworkState.Failure(e)
-                    onError.invoke("HTTP Error: ${e.message}")
-                }
-            }catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    _order.value = NetworkState.Failure(e)
-                    onError.invoke("Error: ${e.message}")
-                }
-            }
         }
     }
 
