@@ -106,7 +106,8 @@ class CategoryFragment : Fragment() ,CategoryListener{
 
 
                     }
-                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
+                    is NetworkState.Failure -> Log.i("TAG", "onViewCreated: \"Failed ttgtgtgtgto load data. Please try again.\"")
+                        //showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
                     else -> { }
                 }
             }

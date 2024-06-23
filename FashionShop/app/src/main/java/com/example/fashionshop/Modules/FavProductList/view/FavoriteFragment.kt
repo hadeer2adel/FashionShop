@@ -1,6 +1,7 @@
 package com.example.fashionshop.Modules.FavProductList.view
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.fashionshop.Adapters.FavProductAdapter
 import com.example.fashionshop.Model.CustomerData
+import com.example.fashionshop.Modules.Authentication.view.LoginActivity
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModelFactory
 import com.example.fashionshop.Modules.FavProductList.view.FavoriteFragmentDirections
@@ -51,8 +53,15 @@ class FavoriteFragment : Fragment() {
             viewModel.getFavProducts()
         }
         else{
+            binding.loginBtn.setOnClickListener {
+                val intent = Intent(requireContext(), LoginActivity::class.java)
+                startActivity(intent)
+            }
             showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
-            binding.emptyView.visibility = View.VISIBLE
+            binding.emptyView.visibility = View.GONE
+            binding.emptyViewGuest.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
+
         }
     }
 
