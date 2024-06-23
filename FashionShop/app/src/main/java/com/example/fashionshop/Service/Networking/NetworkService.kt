@@ -37,12 +37,12 @@ interface NetworkService {
     ): CustomerResponse
 
     @GET("smart_collections.json")
-    suspend fun getBrands(): Response<BrandResponse>
+    suspend fun getBrands(): BrandResponse
 
     @GET("products.json")
-    suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
+    suspend fun getBrandProducts(@Query("vendor") vendor: String): ProductResponse
     @GET("products.json")
-    suspend fun getProducts(): Response<ProductResponse>
+    suspend fun getProducts(): ProductResponse
     @GET("customers/search.json")
     suspend fun getCustomerByEmail(
         @Query("email") email: String
@@ -69,7 +69,7 @@ interface NetworkService {
         @Path("id") id: Long,
         )
     @GET("customers/{id}/orders.json")
-    suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
+    suspend fun getCustomerOrders(@Path("id") userId: Long): OrderResponse
 
 
     @GET("price_rules.json")
@@ -115,7 +115,7 @@ interface NetworkService {
         @Body order:  Map<String, OrderBody>
     ): OrderBodyResponse
     @GET("orders/{id}.json")
-    suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
+    suspend fun getSingleOrder(@Path("id") orderId: Long): OrderResponse
 }
 
 

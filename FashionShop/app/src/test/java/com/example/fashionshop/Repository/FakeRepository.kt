@@ -23,6 +23,7 @@ import com.example.fashionshop.Model.UpdateCustomerRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import java.util.Date
 
 class FakeRepository :Repository {
     var addressList : MutableList<AddressRequest> = mutableListOf()
@@ -58,16 +59,140 @@ class FakeRepository :Repository {
         return flowOf(CustomerResponse(customer))
     }
 
-    override suspend fun getBrands(): Response<BrandResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getBrands(): Flow<BrandResponse> {
+        val brands = listOf(
+            SmartCollection(
+                id = 1,
+                title = "Nike",
+                image = BrandImage(
+                    src = "https://example.com/nike.jpg"
+                )
+            ),
+            SmartCollection(
+                id = 2,
+                title = "Adidas",
+                image = BrandImage(
+                    src = "https://example.com/adidas.jpg"
+                )
+            )
+        )
+        val brandResponse = BrandResponse(smart_collections = brands)
+        return flowOf(brandResponse)
     }
 
-    override suspend fun getBrandProducts(vendor: String): Response<ProductResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getBrandProducts(vendor: String): Flow<ProductResponse> {
+        // Generate fake product data for demonstration
+        val products = when (vendor.toLowerCase()) {
+            "nike" -> {
+                listOf(
+                    Product(
+                        id = 1,
+                        title = "Nike Air Max",
+                        image = ProductImage(src = "https://example.com/nike_air_max.jpg"),
+                        variants = listOf(
+                            Variant(price = "$100", inventory_quantity = 10),
+                            Variant(price = "$120", inventory_quantity = 5)
+                        ),
+                        tags = "Running, Sneakers",
+                        product_type = "Shoes"
+                    ),
+                    Product(
+                        id = 2,
+                        title = "Nike Dri-FIT T-shirt",
+                        image = ProductImage(src = "https://example.com/nike_tshirt.jpg"),
+                        variants = listOf(
+                            Variant(price = "$30", inventory_quantity = 20),
+                            Variant(price = "$35", inventory_quantity = 15)
+                        ),
+                        tags = "Sportswear, T-shirt",
+                        product_type = "Clothing"
+                    )
+                )
+            }
+            "adidas" -> {
+                listOf(
+                    Product(
+                        id = 3,
+                        title = "Adidas Ultraboost",
+                        image = ProductImage(src = "https://example.com/adidas_ultraboost.jpg"),
+                        variants = listOf(
+                            Variant(price = "$150", inventory_quantity = 8),
+                            Variant(price = "$160", inventory_quantity = 3)
+                        ),
+                        tags = "Running, Sneakers",
+                        product_type = "Shoes"
+                    ),
+                    Product(
+                        id = 4,
+                        title = "Adidas Originals Hoodie",
+                        image = ProductImage(src = "https://example.com/adidas_hoodie.jpg"),
+                        variants = listOf(
+                            Variant(price = "$70", inventory_quantity = 12),
+                            Variant(price = "$75", inventory_quantity = 10)
+                        ),
+                        tags = "Sportswear, Hoodie",
+                        product_type = "Clothing"
+                    )
+                )
+            }
+            else -> emptyList()  // Handle unknown vendors
+        }
+        val productResponse = ProductResponse(products = products)
+
+        return flowOf(productResponse)
     }
 
-    override suspend fun getProducts(): Response<ProductResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getProducts(): Flow<ProductResponse> {
+        val products = listOf(
+            Product(
+                id = 1,
+                title = "Nike Air Max",
+                image = ProductImage(src = "https://example.com/nike_air_max.jpg"),
+                variants = listOf(
+                    Variant(price = "$100", inventory_quantity = 10),
+                    Variant(price = "$120", inventory_quantity = 5)
+                ),
+                tags = "Running, Sneakers",
+                product_type = "Shoes"
+            ),
+            Product(
+                id = 2,
+                title = "Adidas Ultraboost",
+                image = ProductImage(src = "https://example.com/adidas_ultraboost.jpg"),
+                variants = listOf(
+                    Variant(price = "$150", inventory_quantity = 8),
+                    Variant(price = "$160", inventory_quantity = 3)
+                ),
+                tags = "Running, Sneakers",
+                product_type = "Shoes"
+            ),
+            Product(
+                id = 3,
+                title = "Nike Dri-FIT T-shirt",
+                image = ProductImage(src = "https://example.com/nike_tshirt.jpg"),
+                variants = listOf(
+                    Variant(price = "$30", inventory_quantity = 20),
+                    Variant(price = "$35", inventory_quantity = 15)
+                ),
+                tags = "Sportswear, T-shirt",
+                product_type = "Clothing"
+            ),
+            Product(
+                id = 4,
+                title = "Adidas Originals Hoodie",
+                image = ProductImage(src = "https://example.com/adidas_hoodie.jpg"),
+                variants = listOf(
+                    Variant(price = "$70", inventory_quantity = 12),
+                    Variant(price = "$75", inventory_quantity = 10)
+                ),
+                tags = "Sportswear, Hoodie",
+                product_type = "Clothing"
+            )
+        )
+
+        val productResponse = ProductResponse(products = products)
+
+        return flowOf(productResponse)
     }
 
     override suspend fun AddSingleCustomerAdreess(
@@ -117,9 +242,113 @@ class FakeRepository :Repository {
         address?.let { addressList.remove(it) }
     }
 
-    override suspend fun getCustomerOrders(userId: Long): Response<OrderResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getCustomerOrders(userId: Long): Flow<OrderResponse> {
+        val orders = listOf(
+            Order(
+                id = 1,
+                admin_graphql_api_id = "gid://shopify/Order/123456789",
+                browser_ip = "127.0.0.1",
+                buyer_accepts_marketing = true,
+                cart_token = "abcdefghijk123456789",
+                checkout_id = 123456789,
+                checkout_token = "xyz987654321",
+                confirmed = true,
+                contact_email = "user@example.com",
+                created_at = Date().toString(),
+                currency = OrderCurrency.Usd,
+                current_subtotal_price = "100.00",
+                current_total_discounts = "10.00",
+                current_total_price = "90.00",
+                current_total_tax = "5.00",
+                email = "user@example.com",
+                estimated_taxes = false,
+                financial_status = "paid",
+                landing_site = "https://example.com",
+                landing_site_ref = "123",
+                number = 123,
+                order_number = 456,
+                order_status_url = "https://example.com/orders/123",
+                payment_gateway_names = listOf("visa", "mastercard"),
+                phone = "+1234567890",
+                po_number = "PO123",
+                presentment_currency = OrderCurrency.Usd,
+                processed_at = Date().toString(),
+                reference = "ref123",
+                referring_site = "https://example.com/referrer",
+                source_identifier = "web",
+                source_name = "web",
+                subtotal_price = "90.00",
+                tags = "important, urgent",
+                taxExempt = false,
+                test = false,
+                token = "token123",
+                total_discounts = "10.00",
+                total_line_items_price = "100.00",
+                total_outstanding = "90.00",
+                total_price = "90.00",
+                total_tax = "5.00",
+                total_tip_received = "0.00",
+                total_weight = 2000,
+                updated_at = Date().toString(),
+                billing_address = Address(
+                    first_name = "John",
+                    address1 = "123 Main St",
+                    phone = "+1234567890",
+                    city = "New York",
+                    zip = "10001",
+                    province = "NY",
+                    country = "US",
+                    last_name = "Doe",
+                    address2 = "Apt 1",
+                    latitude = 40.7128,
+                    longitude = -74.0060,
+                    name = "John Doe",
+                    country_code = "US",
+                    province_code = "NY",
+                    id = 1,
+                    customer_id = 1,
+                    country_name = "United States",
+                    default = true
+                ),
+                shipping_address = Address(
+                    first_name = "Jane",
+                    address1 = "456 Elm St",
+                    phone = "+1234567890",
+                    city = "Los Angeles",
+                    zip = "90001",
+                    province = "CA",
+                    country = "US",
+                    last_name = "Smith",
+                    address2 = "Suite 2",
+                    latitude = 34.0522,
+                    longitude = -118.2437,
+                    name = "Jane Smith",
+                    country_code = "US",
+                    province_code = "CA",
+                    id = 2,
+                    customer_id = 1,
+                    country_name = "United States",
+                    default = false
+                ),
+                line_items = listOf(
+                    LineItemBody(
+                        id = 1,
+                        title = "Nike Air Max",
+                        quantity = 1,
+                        price = "90.00",
+                        sku = "NM123",
+                        variant_id = 123456789,
+                    )
+                )
+            )
+            // Add more orders as needed
+        )
+
+        val orderResponse = OrderResponse(orders = orders)
+
+        return flowOf(orderResponse)
     }
+
 
     override suspend fun getDiscountCodes(): Flow<PriceRule> = flow {
         pricesCodes.forEach { emit(it) }
@@ -244,12 +473,124 @@ class FakeRepository :Repository {
 
     }
 
-    override suspend fun createOrder(order: Map<String, OrderBody>): OrderBodyResponse {
-        return createdOrders[0]
+    override suspend fun createOrder(order: Map<String, OrderBody>): Flow<OrderBodyResponse> {
+        val orderBodyResponse = OrderBodyResponse(
+            order = order.values.firstOrNull()
+        )
+        return flowOf(orderBodyResponse)
     }
 
-    override suspend fun getSingleOrder(orderId: Long): Response<OrderResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getSingleOrder(orderId: Long): Flow<OrderResponse> {
+        val order = Order(
+            id = orderId,
+            admin_graphql_api_id = "dummy_api_id",
+            browser_ip = "127.0.0.1",
+            buyer_accepts_marketing = true,
+            cart_token = "dummy_cart_token",
+            checkout_id = 1,
+            checkout_token = "dummy_checkout_token",
+            confirmed = true,
+            contact_email = "user@example.com",
+            created_at = "2024-06-22T10:15:30Z",
+            currency = OrderCurrency.Usd,
+            current_subtotal_price = "100.00",
+            current_total_discounts = "10.00",
+            current_total_price = "90.00",
+            current_total_tax = "5.00",
+            email = "user@example.com",
+            estimated_taxes = true,
+            financial_status = "paid",
+            landing_site = "https://example.com",
+            landing_site_ref = "referral_site",
+            number = orderId,
+            order_number = 1001,
+            order_status_url = "https://example.com/orders/$orderId",
+            payment_gateway_names = listOf("stripe"),
+            phone = "1234567890",
+            po_number = "PO123456",
+            presentment_currency = OrderCurrency.Usd,
+            processed_at = "2024-06-22T10:30:45Z",
+            reference = "reference123",
+            referring_site = "referral_site",
+            source_identifier = "source_id",
+            source_name = "web",
+            subtotal_price = "100.00",
+            tags = "tag1,tag2",
+            taxExempt = false,
+            test = false,
+            token = "token123",
+            total_discounts = "10.00",
+            total_line_items_price = "90.00",
+            total_outstanding = "0.00",
+            total_price = "95.00",
+            total_tax = "5.00",
+            total_tip_received = "0.00",
+            total_weight = 1500,
+            updated_at = "2024-06-22T11:00:00Z",
+            billing_address = Address(
+                first_name = "John",
+                address1 = "123 Main St",
+                phone = "1234567890",
+                city = "Anytown",
+                zip = "12345",
+                province = "Province",
+                country = "Country",
+                last_name = "Doe",
+                address2 = "Apt 1",
+                latitude = 37.7749,
+                longitude = -122.4194,
+                name = "John Doe",
+                country_code = "US",
+                province_code = "CA",
+                id = 1,
+                customer_id = 1,
+                country_name = "United States",
+                default = true,
+                line_items = emptyList() // Adjust with actual line items if needed
+            ),
+            shipping_address = Address(
+                first_name = "Jane",
+                address1 = "456 Elm St",
+                phone = "9876543210",
+                city = "Othertown",
+                zip = "54321",
+                province = "Province",
+                country = "Country",
+                last_name = "Smith",
+                address2 = "",
+                latitude = 37.7749,
+                longitude = -122.4194,
+                name = "Jane Smith",
+                country_code = "US",
+                province_code = "CA",
+                id = 2,
+                customer_id = 2,
+                country_name = "United States",
+                default = false,
+                line_items = emptyList() // Adjust with actual line items if needed
+            ),
+            line_items = listOf(
+                LineItemBody(
+                    variant_id = 1,
+                    quantity = 2,
+                    id = 1,
+                    title = "Product A",
+                    price = "50.00",
+                    sku = "SKU-001"
+                ),
+                LineItemBody(
+                    variant_id = 2,
+                    quantity = 1,
+                    id = 2,
+                    title = "Product B",
+                    price = "40.00",
+                    sku = "SKU-002"
+                )
+            )
+        )
+
+        val orderResponse = OrderResponse(order = order)
+        return flowOf(orderResponse)
     }
 
     override suspend fun getCustomerByEmail(email: String): Flow<CustomerResponse> {

@@ -26,9 +26,9 @@ interface NetworkManager {
     suspend fun editSingleCustomerAddress(cutomerId:Long,id:Long,addressRequest: AddressDefultRequest): AddressUpdateRequest
     suspend fun deleteSingleCustomerAddress(customerId:Long,id:Long)
     suspend fun createCustomer(customer: CustomerRequest): CustomerResponse
-    suspend fun getBrands(): Response<BrandResponse>
-    suspend fun getProducts(): Response<ProductResponse>
-    suspend fun getBrandProducts(@Query("vendor") vendor: String): Response<ProductResponse>
+    suspend fun getBrands(): BrandResponse
+    suspend fun getProducts(): ProductResponse
+    suspend fun getBrandProducts(@Query("vendor") vendor: String): ProductResponse
     suspend fun getCustomerByEmail(email: String): CustomerResponse
     suspend fun getDiscountCodes(): PriceRule
     suspend fun getProductById(id: Long): ProductResponse
@@ -41,9 +41,9 @@ interface NetworkManager {
                                       unitAmountDecimal: Int, quantity: Int,mode: String, paymentMethodType: String
     ): CheckoutSessionResponse
 
-    suspend fun getCustomerOrders(@Path("id") userId: Long): Response<OrderResponse>
+    suspend fun getCustomerOrders(@Path("id") userId: Long): OrderResponse
     suspend fun createOrder(order:  Map<String, OrderBody>): OrderBodyResponse
 
-    suspend fun getSingleOrder(@Path("id") orderId: Long): Response<OrderResponse>
+    suspend fun getSingleOrder(@Path("id") orderId: Long): OrderResponse
 
 }
