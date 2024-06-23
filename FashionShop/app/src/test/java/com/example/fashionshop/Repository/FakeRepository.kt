@@ -36,6 +36,7 @@ class FakeRepository :Repository {
     var draftOrders = mutableListOf<DraftOrderResponse>()
     var createdOrders = mutableListOf<OrderBodyResponse>()
     var  exchenges = mutableListOf<ExchangeRatesResponseX>()
+    var products = mutableListOf<ProductResponse>()
     override suspend fun getcustomers(id: Long): OneCustomer {
         return customer[0]
     }
@@ -355,8 +356,7 @@ class FakeRepository :Repository {
     }
 
     override suspend fun getProductById(id: Long): Flow<ProductResponse> {
-        TODO("Not yet implemented")
-    }
+        return flowOf(products.get((id - 1).toInt())) }
 
     override suspend fun createDraftOrders(draftOrderResponse: DraftOrderResponse): Flow<DraftOrderResponse> {
         if (shouldReturnError) {

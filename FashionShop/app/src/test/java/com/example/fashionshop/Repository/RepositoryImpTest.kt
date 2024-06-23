@@ -44,6 +44,7 @@ import com.example.fashionshop.Model.PrerequisiteToEntitlementQuantityRatio
 import com.example.fashionshop.Model.PriceRule
 import com.example.fashionshop.Model.PriceRuleX
 import com.example.fashionshop.Model.Product
+import com.example.fashionshop.Model.ProductDetails
 import com.example.fashionshop.Model.ProductImage
 import com.example.fashionshop.Model.ProductResponse
 import com.example.fashionshop.Model.RatesX
@@ -473,6 +474,8 @@ class RepositoryImpTest {
     private lateinit var product2: DraftOrderResponse.DraftOrder.LineItem
     private lateinit var favList: DraftOrderResponse.DraftOrder
     private val listId = 1L
+    private lateinit var productDetails: ProductDetails
+    private var productsList = mutableListOf<ProductResponse>()
 
     @Before
     fun setup() {
@@ -483,7 +486,17 @@ class RepositoryImpTest {
         favList = DraftOrderResponse.DraftOrder(line_items = listOf(product1, product2))
         draftOrders.add(DraftOrderResponse(favList))
 
-        fakeRemote = FakeNetworkManager(address,updatedAddress,prices,customer,checkout,exchanges, customers, draftOrders , brands , products , orders , orderBodyResponse)
+        productDetails = ProductDetails(
+            1,
+            "Product 1",
+            "Product 1 body",
+            ProductImage("image3.png"),
+            listOf(ProductImage("image3.png")),
+            listOf(Variant("300")),
+            "Brand 1")
+        productsList.add(ProductResponse(product = productDetails))
+
+        fakeRemote = FakeNetworkManager(address,updatedAddress,prices,customer,checkout,exchanges, customers, draftOrders , brands , products , orders , orderBodyResponse, productsList)
         repository=RepositoryImp(fakeRemote)
     }
     @Test
@@ -622,9 +635,13 @@ class RepositoryImpTest {
         MatcherAssert.assertThat(result.first(), CoreMatchers.`is`(prices))
     }
 
-    fun getProductById() {
-    }
+    @Test
+    fun getProductInfo_ReturnSameProduct() = runBlockingTest {
+        var result = repository.getProductById(productDetails.id!!)
 
+        assertThat(result.first().product, not(nullValue()))
+        assertThat(result.first().product, IsEqual(productDetails)) }
+    
     @Test
     fun createDraftOrders_IdNotZero() = runBlockingTest {
         val draftOrderResponse = DraftOrderResponse(DraftOrderResponse.DraftOrder())

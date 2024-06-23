@@ -32,7 +32,8 @@ class FakeNetworkManager (var address: AddressRequest,
                           private var brands : BrandResponse,
                           private var products : ProductResponse,
                           private var orders : OrderResponse,
-                          private var orderResult : OrderBodyResponse
+                          private var orderResult : OrderBodyResponse,
+                          private var productsList: MutableList<ProductResponse>
 
 
 ) :NetworkManager {
@@ -100,7 +101,7 @@ class FakeNetworkManager (var address: AddressRequest,
     }
 
     override suspend fun getProductById(id: Long): ProductResponse {
-        TODO("Not yet implemented")
+        return productsList.get((id - 1).toInt())
     }
 
     override suspend fun createDraftOrders(draftOrder: DraftOrderResponse): DraftOrderResponse {
