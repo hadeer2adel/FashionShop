@@ -176,7 +176,7 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
                 setMessage("Are you sure you want to delete this address?")
                 setPositiveButton("Delete") { dialog, _ ->
                     dialog.dismiss()
-                allProductViewModel.senddeleteAddressRequest(CustomerData.getInstance(requireContext()).id,addressId)
+                allProductViewModel.senddeleteAddressRequest(addressId,CustomerData.getInstance(requireContext()).id)
                 refreshFragment()
                 }
             }
