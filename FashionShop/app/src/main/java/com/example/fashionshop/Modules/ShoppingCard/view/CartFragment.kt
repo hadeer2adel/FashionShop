@@ -2,7 +2,6 @@ package com.example.fashionshop.Modules.ShoppingCard.view
 
 import CartFragmentArgs
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,7 +20,6 @@ import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.TaxLineX
 import com.example.fashionshop.Model.inventoryQuantities
 import com.example.fashionshop.Model.originalPrices
-import com.example.fashionshop.Modules.Authentication.view.LoginActivity
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.ShoppingCard.viewModel.CartFactory
@@ -99,13 +97,9 @@ class CartFragment : Fragment() ,CartListener {
                         is NetworkState.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE
                             binding.recyclerViewCartItems.visibility = View.GONE
-                            binding.emptyView.visibility = View.GONE
-
                         }
                         is NetworkState.Success -> {
                             binding.progressBar.visibility = View.GONE
-                            binding.emptyView.visibility = View.GONE
-
                             val lineItems = response.data.draft_order.line_items
                             if (lineItems.size <= 1) {
                                 binding.recyclerViewCartItems.visibility = View.GONE
@@ -125,8 +119,6 @@ class CartFragment : Fragment() ,CartListener {
                         }
                         is NetworkState.Failure -> {
                             binding.progressBar.visibility = View.GONE
-                            binding.emptyView.visibility = View.GONE
-
                             Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
                         }
                     }
@@ -151,16 +143,8 @@ class CartFragment : Fragment() ,CartListener {
             }
         }
         else{
-            binding.loginBtn.setOnClickListener {
-                val intent = Intent(requireContext(), LoginActivity::class.java)
-                startActivity(intent)
-            }
             showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
-            binding.emptyView.visibility = View.GONE
-            binding.emptyViewGuest.visibility = View.VISIBLE
-            showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
-            binding.progressBar.visibility = View.GONE
-
+            binding.emptyView.visibility = View.VISIBLE
         }
 
 
