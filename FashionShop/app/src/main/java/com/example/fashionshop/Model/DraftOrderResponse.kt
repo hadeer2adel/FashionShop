@@ -6,7 +6,6 @@ data class DraftOrderResponse(
     data class DraftOrder(
         val id: Long = 0,
         val line_items: List<LineItem> = listOf(LineItem(null, quantity = 1)),
-        val note_attributes : List<Note> = listOf(Note("", "")),
     ) {
         data class LineItem(
             val variant_id: Long?,
@@ -15,12 +14,17 @@ data class DraftOrderResponse(
             val title: String? = "dummy",
             var price: String? = "1",
             val sku: String? = null,
+            val product_id : Long? = null,
+            val properties: List<Property> = listOf(Property("custom engraving", "Happy Birthday Mom!"))
+        ) {
+            data class Property(
+                val name: String,
+                val value: String
+            )
+        }
 
-        )
-        data class Note(
-            val value: String?,
-            val name :String?
-        )
+
+
 
     }
 }

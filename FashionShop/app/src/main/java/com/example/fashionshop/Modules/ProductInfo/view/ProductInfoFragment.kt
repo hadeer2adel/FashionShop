@@ -237,7 +237,7 @@ class ProductInfoFragment : Fragment() {
 
             product.vendor?.let { viewModel.getProductSuggestions(it) }
             variantAdapter.submitList(product.variants)
-
+            Log.i("handleFavBtn", "setData: ${product} ")
             handleFavBtn(product)
         }
     }
@@ -300,8 +300,7 @@ class ProductInfoFragment : Fragment() {
 
                 if (product != null) {
                     Log.i("ProductInfoFragment", "onViewCreated: $product")
-                    viewModel.insertCardProduct(requireView(), product)
-
+                    viewModel.insertCardProduct(requireView(), product,variantId)
                     Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
 
                 } else {

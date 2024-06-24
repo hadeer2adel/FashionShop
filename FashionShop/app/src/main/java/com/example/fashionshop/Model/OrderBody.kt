@@ -44,7 +44,14 @@ data class LineItemBody(
     val title: String? = "dummy",
     val price: String? = "1",
     val sku: String? = null,
-)
+    val properties: List<Property> = listOf(Property("custom engraving", "Happy Birthday Mom!"))
+) {
+    data class Property(
+        val name: String,
+        val value: String
+    )
+}
+
 
 // Order class
 data class OrderBody(

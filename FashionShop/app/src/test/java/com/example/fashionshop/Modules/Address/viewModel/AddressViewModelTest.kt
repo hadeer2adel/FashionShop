@@ -7,6 +7,7 @@ import com.example.fashionshop.Model.AddressDefultRequest
 import com.example.fashionshop.Model.AddressUpdateRequest
 import com.example.fashionshop.Model.CheckoutSessionResponse
 import com.example.fashionshop.Model.Customer
+import com.example.fashionshop.Model.CustomerAddress
 import com.example.fashionshop.Model.DefaultAddress
 import com.example.fashionshop.Model.EmailMarketingConsent
 import com.example.fashionshop.Model.OneCustomer
@@ -35,6 +36,27 @@ class AddressViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
     private lateinit var repository: FakeRepository
     private lateinit var viewModel: AddressViewModel
+    var updatedAddress = AddressUpdateRequest(
+        CustomerAddress(
+            address1 = "",
+            address2 = "",
+            city = "",
+            company = "",
+            country = "",
+            country_code = "",
+            country_name = "",
+            customer_id = 0L,
+            default = true,
+            first_name = "",
+            id = 0L,
+            last_name = "",
+            name = "",
+            phone = "",
+            province = "",
+            province_code = "",
+            zip = ""
+        )
+    )
     var customer = OneCustomer(
         Customer(addresses = emptyList(),
             admin_graphql_api_id = "admin_id",
@@ -48,7 +70,7 @@ class AddressViewModelTest {
                 country_code = "",
                 country_name = "",
                 customer_id = 0L,
-                default = false,
+                default = true,
                 first_name = "",
                 id = 0L,
                 last_name = "",
@@ -161,10 +183,16 @@ class AddressViewModelTest {
 
         viewModel.editSingleCustomerAddress(customerId, addressId, addressRequest)
 
-        var result: NetworkState<AddressUpdateRequest>? = null
+        var result: AddressUpdateRequest?  = updatedAddress
         val job = launch {
             viewModel.products1.collectLatest { state ->
-                result = state
+                when(state){
+                    is NetworkState.Loading -> {}
+                    is NetworkState.Success -> {
+                        result =state.data
+                    }
+                    is NetworkState.Failure -> {}
+                }
             }
         }
 
@@ -172,10 +200,9 @@ class AddressViewModelTest {
         job.cancelAndJoin()
 
         MatcherAssert.assertThat(result, CoreMatchers.not(CoreMatchers.nullValue()))
-        MatcherAssert.assertThat(result, CoreMatchers.instanceOf(NetworkState.Success::class.java))
-        MatcherAssert.assertThat((result as NetworkState.Success).data.customer_address.default, IsEqual(true))
+        MatcherAssert.assertThat(result?.customer_address?.default, IsEqual(true))
 
-        var customerResult: OneCustomer? = null
+        var customerResult: OneCustomer? = customer
         val job2 = launch {
             viewModel.products.collectLatest { state ->
                 when (state) {

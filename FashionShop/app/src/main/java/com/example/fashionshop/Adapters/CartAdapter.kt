@@ -4,14 +4,22 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.inventoryQuantities
 import com.example.fashionshop.Model.originalPrices
+import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModel
+import com.example.fashionshop.Modules.ProductInfo.viewModel.ProductInfoViewModelFactory
+import com.example.fashionshop.Modules.ShoppingCard.view.CartFragment
 import com.example.fashionshop.Modules.ShoppingCard.view.CartListener
 import com.example.fashionshop.R
+import com.example.fashionshop.Repository.Repository
+import com.example.fashionshop.Repository.RepositoryImp
+import com.example.fashionshop.Service.Networking.NetworkManager
+import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.CartItemBinding
 import com.google.android.material.snackbar.Snackbar
 
@@ -26,6 +34,7 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
         items = cartItems
         notifyDataSetChanged()
     }
+
     fun updateCurrencyConversionRate(rate: Double) {
         currencyConversionRate = rate
         notifyDataSetChanged() // Refresh all items with new currency rate
@@ -44,19 +53,25 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
 //                .into(holder.binding.imageView)
 //        }
         //  Log.i("CartAdapter", "item: ${item.line_items}")
-        Log.i("Glide", "onBindViewHolder:${item.sku} ")
-        val imageUrls = parseSkuString(item.sku)
-        Log.i("Glide", "Parsed Image URLs: $imageUrls")
+        // Extract image URL from properties
+        val property = item.properties.firstOrNull { it.name.contains("ProductImage") }
+        val imageUrl = property?.name?.substringAfter("src=")?.substringBefore(")")
 
-        if (imageUrls.isNotEmpty()) {
+        Log.i("Glide", "onBindViewHolder: $imageUrl")
+
+        if (!imageUrl.isNullOrEmpty()) {
             Glide.with(holder.itemView.context)
-                .load(imageUrls[0])
+                .load(imageUrl)
                 .placeholder(R.drawable.adidas) // Optional: add a placeholder
                 .error(R.drawable.logout) // Optional: add an error image
                 .into(holder.binding.imageView)
         } else {
-            Log.i("Glide", "No image URLs found in SKU: ${item.sku}")
+            Log.i("Glide", "No image URL found in properties")
         }
+
+
+
+
         if (CustomerData.getInstance(context).currency == "USD"){
             val priceDouble = item.price?.toDoubleOrNull() ?: 0.0
             holder.binding.itemPrice.text =  convertCurrency(priceDouble)}
@@ -64,6 +79,10 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
         val customer = CustomerData.getInstance(context)
         holder.binding.currency.text = customer.currency
         holder.binding.itemName.text = item.title
+        val skuPattern = """\d{2}-\w+""".toRegex()
+        val skuMatch = skuPattern.find(item.sku.toString())
+        val skuSubstring = skuMatch?.value ?: ""
+        holder.binding.itemDetails.text = skuSubstring
         holder.binding.quantityText.text = item.quantity.toString()
         holder.binding.deleteIcon.setOnClickListener {
             item.id?.let { nonNullId ->

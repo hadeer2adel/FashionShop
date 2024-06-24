@@ -38,19 +38,36 @@ class SingleOrderAdapter(private val context: Context)
 //                .with(binding.root)
 //                .load(imageUrl)
 //                .into(ivProduct)
-            val imageUrls = parseSkuString(order.sku)
-            Log.i("Glide", "Parsed Image URLs: $imageUrls")
+//            val imageUrls = parseSkuString(order.sku)
+//            Log.i("Glide", "Parsed Image URLs: $imageUrls")
+//
+//            if (imageUrls.isNotEmpty()) {
+//                Glide.with(holder.itemView.context)
+//                    .load(imageUrls[0])
+//                    .placeholder(R.drawable.adidas) // Optional: add a placeholder
+//                    .error(R.drawable.logout) // Optional: add an error image
+//                    .into(cvImage)
+//            } else {
+//                Log.i("Glide", "No image URLs found in SKU: ${order.sku}")
+//            }
+            val property = order.properties.firstOrNull { it.name.contains("ProductImage") }
+            val imageUrl = property?.name?.substringAfter("src=")?.substringBefore(")")
 
-            if (imageUrls.isNotEmpty()) {
+            Log.i("Glide", "onBindViewHolder: $imageUrl")
+
+            if (!imageUrl.isNullOrEmpty()) {
                 Glide.with(holder.itemView.context)
-                    .load(imageUrls[0])
+                    .load(imageUrl)
                     .placeholder(R.drawable.adidas) // Optional: add a placeholder
                     .error(R.drawable.logout) // Optional: add an error image
                     .into(cvImage)
             } else {
-                Log.i("Glide", "No image URLs found in SKU: ${order.sku}")
+                Log.i("Glide", "No image URL found in properties")
             }
+
+
         }
+
     }
 
     private fun parseSkuString(sku: String?): List<String> {

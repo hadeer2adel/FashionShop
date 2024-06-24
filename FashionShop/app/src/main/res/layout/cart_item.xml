@@ -86,6 +86,13 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
+            <TextView
+                android:id="@+id/item_details"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="item_details"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

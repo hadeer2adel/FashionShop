@@ -63,6 +63,7 @@ class OrderInfoFragment : Fragment() {
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
         setUpRV()
         initViewModel()
+        viewModel.getOrder(args.orderId)
        // setUpRV()
     }
 
@@ -120,7 +121,9 @@ class OrderInfoFragment : Fragment() {
             quantity = lineItem.quantity,
             price = lineItem.price,
             sku = lineItem.sku,
-            variant_id = lineItem.variant_id
+            variant_id = lineItem.variant_id,
+            properties= lineItem.properties
+
 
         )
     }

@@ -391,7 +391,14 @@ class OrderDetailsFragment() : Fragment() {
                 id = lineItem.id,
                 title = lineItem.title,
                 price = lineItem.price,
-                sku = lineItem.sku
+                sku = lineItem.sku,
+                properties = lineItem.properties.map { draftProperty ->
+                    LineItemBody.Property(
+                        name = draftProperty.name,
+                        value = draftProperty.value
+                    )
+                }
+
 
             )
         }

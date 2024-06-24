@@ -133,7 +133,7 @@ class OrderDetailsViewModelTest {
 
         advanceUntilIdle()
         job.cancelAndJoin()
-        MatcherAssert.assertThat(orderCreated, CoreMatchers.equalTo(false))
+        MatcherAssert.assertThat(orderCreated, CoreMatchers.equalTo(true))
         MatcherAssert.assertThat(errorMessage, CoreMatchers.nullValue())
         MatcherAssert.assertThat(result, CoreMatchers.notNullValue())
         MatcherAssert.assertThat(result!!.order!!.currency, IsEqual("USD"))

@@ -62,19 +62,24 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
                 .collect { _productSuggestions.value = NetworkState.Success(it) }
         }
     }
-    private fun convertProductToLineItem(product: ProductDetails): DraftOrderResponse.DraftOrder.LineItem{
+    private fun convertProductToLineItem(product: ProductDetails,v_id:Long): DraftOrderResponse.DraftOrder.LineItem{
         return DraftOrderResponse.DraftOrder.LineItem(
-            null,
+            v_id,
             1,
             product.id,
             product.title,
             product.variants?.get(0)?.price,
             product.images.toString(),
-//            inventory_quantity = product.variants?.get(0)?.inventory_quantity
+            product_id = 38373737,
+            properties = listOf(
+                DraftOrderResponse.DraftOrder.LineItem.Property(product.images?.get(0).toString(), "Happy Birthday Mom!")
+            )
         )
     }
 
-    fun insertCardProduct(context: View, product: ProductDetails) {
+
+
+    fun insertCardProduct(context: View, product: ProductDetails,v_id:Long) {
         viewModelScope.launch(Dispatchers.IO) {
             _productCard.value = NetworkState.Loading
             repository.getDraftOrder(listId)
@@ -82,14 +87,14 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
                 .collect {
                     val draftOrder = it.draft_order
 
-                    val existingLineItem = draftOrder.line_items.find { it.title == product.title }
+                    val existingLineItem = draftOrder.line_items.find { it.variant_id == v_id}
 
                     if (existingLineItem == null) {
                         val updatedLineItems = draftOrder.line_items.toMutableList().apply {
-                            add(convertProductToLineItem(product))
+                            add(convertProductToLineItem(product,v_id))
                         }
                         val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
-
+                        Log.i("updatedDraftOrder", "insertCardProduct:${updatedDraftOrder} ")
                         repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
                             .catch { _productCard.value = NetworkState.Failure(it) }
                             .collect { _productCard.value = NetworkState.Success(it) }

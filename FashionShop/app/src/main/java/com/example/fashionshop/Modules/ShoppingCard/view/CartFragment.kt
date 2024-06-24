@@ -107,6 +107,7 @@ class CartFragment : Fragment() ,CartListener {
                             binding.emptyView.visibility = View.GONE
 
                             val lineItems = response.data.draft_order.line_items
+                           // val notes = response.data.draft_order.note_attributes
                             if (lineItems.size <= 1) {
                                 binding.recyclerViewCartItems.visibility = View.GONE
                                 binding.emptyView.visibility = View.VISIBLE
@@ -114,6 +115,8 @@ class CartFragment : Fragment() ,CartListener {
                                 binding.recyclerViewCartItems.visibility = View.VISIBLE
                                 binding.emptyView.visibility = View.GONE
                                 mAdapter.setCartList(lineItems.drop(1))
+                               // mAdapter.setCartImages(notes.drop(1))
+                                Log.i("productc", "onViewCreated: ${lineItems.drop(1)}")
                                 val subtotal = lineItems.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
                                 val customer = CustomerData.getInstance(requireContext())
                                 if (customer.currency == "USD") {
@@ -131,6 +134,7 @@ class CartFragment : Fragment() ,CartListener {
                         }
                     }
                 } }
+
 
             binding.buttonCheckout.setOnClickListener {
                 val args = CartFragmentArgs(draftOrderIds).toBundle()
