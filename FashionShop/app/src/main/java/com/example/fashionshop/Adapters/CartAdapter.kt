@@ -13,6 +13,7 @@ import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.ShoppingCard.view.CartListener
 import com.example.fashionshop.R
 import com.example.fashionshop.databinding.CartItemBinding
+import com.google.android.material.snackbar.Snackbar
 
 class CartAdapter(private val listener: CartListener, private val context: Context,
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
@@ -97,6 +98,7 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
 
         holder.binding.increaseButton.setOnClickListener {
             val currentQuantity = item.quantity ?: 0
+            if (position < inventoryQuantities.size) {
             if (currentQuantity < inventoryQuantities[position]) {
                 val newQuantity = currentQuantity + 1
                 item.quantity = newQuantity // Update item's quantity
@@ -108,8 +110,11 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
                 Log.i("CartAdapter", "Cannot increase above 5 quantity")
                 // Optionally, you can show a toast or handle this situation as per your app's UX design
             }
-        }
+        }else{
+                Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
 
+            }
+        }
     }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully
