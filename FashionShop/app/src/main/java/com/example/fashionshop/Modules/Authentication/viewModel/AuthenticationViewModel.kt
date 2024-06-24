@@ -71,7 +71,7 @@ class AuthenticationViewModel(private var repository: Repository) : ViewModel() 
         val customer = CustomerData.getInstance(context)
         customer.isLogged = true
         customer.id = data.id
-        customer.name = data.first_name + " " + data.last_name
+        customer.name = data.first_name
         customer.email = data.email
         customer.currency = data.currency
         customer.favListId = data.note
