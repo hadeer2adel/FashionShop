@@ -79,22 +79,22 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
 
 
 
-    fun insertCardProduct(context: View, product: ProductDetails,v_id:Long) {
+    fun insertCardProduct(context: View, product: ProductDetails, v_id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             _productCard.value = NetworkState.Loading
             repository.getDraftOrder(listId)
                 .catch { _productCard.value = NetworkState.Failure(it) }
-                .collect {
-                    val draftOrder = it.draft_order
+                .collect { draftOrderResponse ->
+                    val draftOrder = draftOrderResponse.draft_order
 
-                    val existingLineItem = draftOrder.line_items.find { it.variant_id == v_id}
-
+                    // Check if variant_id already exists in line_items
+                    val existingLineItem = draftOrder.line_items.find { it.variant_id == v_id }
                     if (existingLineItem == null) {
                         val updatedLineItems = draftOrder.line_items.toMutableList().apply {
-                            add(convertProductToLineItem(product,v_id))
+                            add(convertProductToLineItem(product, v_id))
                         }
                         val updatedDraftOrder = draftOrder.copy(line_items = updatedLineItems)
-                        Log.i("updatedDraftOrder", "insertCardProduct:${updatedDraftOrder} ")
+                        Log.i("updatedDraftOrder", "insertCardProduct: $updatedDraftOrder")
                         repository.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
                             .catch { _productCard.value = NetworkState.Failure(it) }
                             .collect { _productCard.value = NetworkState.Success(it) }
@@ -114,12 +114,12 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
                             ).show()
                             Log.i("ProductInfoViewModel", "insertCardProduct: Already in cart")
                         }
-                        _productCard.value =
-                            NetworkState.Failure(Exception("Item is already in the cart"))
+                        _productCard.value = NetworkState.Failure(Exception("Item is already in the cart"))
                     }
                 }
         }
     }
+
 
 
 

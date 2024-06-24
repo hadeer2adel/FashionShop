@@ -297,7 +297,10 @@ class ProductInfoFragment : Fragment() {
 //                    product.variants,
 //                )
                 Log.i("product", "onViewCreated: $product")
+                    if (variantId==-1L){
+                        Snackbar.make(requireView(),"You Must Select Variant !", Snackbar.LENGTH_SHORT).show()
 
+                    }else{
                 if (product != null) {
                     Log.i("ProductInfoFragment", "onViewCreated: $product")
                     viewModel.insertCardProduct(requireView(), product,variantId)
@@ -307,9 +310,11 @@ class ProductInfoFragment : Fragment() {
                     Snackbar.make(requireView(),"Product information not available", Snackbar.LENGTH_SHORT).show()
                 }
             }
+            }
             else {
                 showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
             }
+
         }
 
         lifecycleScope.launch {

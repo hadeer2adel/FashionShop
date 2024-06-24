@@ -79,16 +79,20 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
         val customer = CustomerData.getInstance(context)
         holder.binding.currency.text = customer.currency
         holder.binding.itemName.text = item.title
-        val skuPattern = """\d{2}-\w+""".toRegex()
-        val skuMatch = skuPattern.find(item.sku.toString())
-        val skuSubstring = skuMatch?.value ?: ""
-        holder.binding.itemDetails.text = skuSubstring
+        val skuParts = item.sku?.split("-") ?: emptyList()
+        val skuToShow = if (skuParts.size >= 3) {
+            "${skuParts[1]}-${skuParts[2]}-${skuParts[3]}" // Concatenate parts as needed
+        } else {
+            item.sku ?: "" // Handle case where sku is null
+            }
+            holder.binding.itemDetails.text = skuToShow
         holder.binding.quantityText.text = item.quantity.toString()
         holder.binding.deleteIcon.setOnClickListener {
             item.id?.let { nonNullId ->
                 Log.i("CartAdapter", "deleteIcon: $nonNullId")
                 listener.deleteCart(nonNullId)
             }
+
             originalPrices.removeAt(position)
             inventoryQuantities.removeAt(position)
             Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
