@@ -134,10 +134,10 @@ class MapsFragment : Fragment() {
                 country = addresses[0].countryName
                 country_code = addresses[0].countryCode
                 default = false
-                first_name = CustomerData.getInstance(requireContext()).name
-                last_name = CustomerData.getInstance(requireContext()).name
+                first_name =  CustomerData.getInstance(requireContext()).name.split(" ")[0]
+                last_name =  CustomerData.getInstance(requireContext()).name.split(" ")[1]
                 company = addresses[0].featureName
-                name = addresses[0].adminArea
+                name =  CustomerData.getInstance(requireContext()).name.split(" ")[0]
                 country_name = addresses[0].countryName
                 val cityName = addresses[0].getAddressLine(0)
                 val lat = addresses[0].latitude

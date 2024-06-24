@@ -111,6 +111,7 @@ class OrdersFragment : Fragment() {
         if (orders.isEmpty()) {
             binding.rvOrders.visibility = View.GONE
             binding.emptyView.visibility = View.VISIBLE
+            binding.toolbar.visibility = View.GONE
         } else {
             binding.rvOrders.visibility = View.VISIBLE
             binding.emptyView.visibility = View.GONE
