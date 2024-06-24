@@ -160,6 +160,12 @@
     <string name="orderEmpty">سلة الطلبات فارغة لنقم بإضافة طلب جديد!</string>
     <string name="guest_profile">هل لديك حساب لدينا ؟</string>
     <string name="guest_profile2"> فقط أضغط تسجيل دخول ! </string>
+    <string name="homeNav">الرئيسية</string>
+    <string name="CartNav">عربة التسوق</string>
+    <string name="FavoriteNav">المفضلة</string>
+    <string name="SettingsNav">حسابي</string>
+    <string name="CategoryNav">التصنيفات</string>
+
 
 
 
