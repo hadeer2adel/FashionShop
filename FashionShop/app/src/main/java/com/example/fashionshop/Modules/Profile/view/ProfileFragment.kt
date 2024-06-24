@@ -59,32 +59,38 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = NavHostFragment.findNavController(this)
         appBarConfiguration = AppBarConfiguration(navController.graph)
-        allProductFactroy= AddressFactory(
-            RepositoryImp.getInstance(
-                NetworkManagerImp.getInstance()
-            )
-        )
-        allProductViewModel= ViewModelProvider(this, allProductFactroy).get(AddressViewModel::class.java)
+        val customer = CustomerData.getInstance(requireContext())
         if (CustomerData.getInstance(requireContext()).isLogged) {
-        allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
-        lifecycleScope.launch {
-            allProductViewModel.products.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-                    is NetworkState.Success -> {
-                        Log.i("TAG", "Data updated. Size: ${response.data.customer.id}")
-                        binding.nameCustomer.text = response.data.customer.first_name + " " + response.data.customer.last_name
-                        binding.emailCustomer.text = response.data.customer.email
 
-                    }
-                    is NetworkState.Failure -> {
-                        binding.progressBar.visibility = View.GONE
-                        Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
-                    }
-                }
-            } }
+            binding.nameCustomer.text = customer.name
+        binding.emailCustomer.text =customer.email
+
+//        allProductFactroy= AddressFactory(
+//            RepositoryImp.getInstance(
+//                NetworkManagerImp.getInstance()
+//            )
+//        )
+       // allProductViewModel= ViewModelProvider(this, allProductFactroy).get(AddressViewModel::class.java)
+    //    if (CustomerData.getInstance(requireContext()).isLogged) {
+//        allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
+//        lifecycleScope.launch {
+//            allProductViewModel.products.collectLatest { response ->
+//                when(response){
+//                    is NetworkState.Loading -> {
+//                        binding.progressBar.visibility = View.VISIBLE
+//                    }
+//                    is NetworkState.Success -> {
+//                        Log.i("TAG", "Data updated. Size: ${response.data.customer.id}")
+//                        binding.nameCustomer.text = response.data.customer.first_name + " " + response.data.customer.last_name
+//                        binding.emailCustomer.text = response.data.customer.email
+//
+//                    }
+//                    is NetworkState.Failure -> {
+//                        binding.progressBar.visibility = View.GONE
+//                        Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
+//                    }
+//                }
+//            } }
 
         binding.ordersButton.setOnClickListener {
             navController.navigate(R.id.action_profileFragment_to_ordersFragment)

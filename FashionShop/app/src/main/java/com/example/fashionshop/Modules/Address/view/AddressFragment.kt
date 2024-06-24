@@ -72,6 +72,7 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
         allProductFactory =
             AddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
         allProductViewModel = ViewModelProvider(this, allProductFactory).get(AddressViewModel::class.java)
+        allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
         refreshFragment()
         fetchAddressesData()
         binding.buttonAddAddress.setOnClickListener {

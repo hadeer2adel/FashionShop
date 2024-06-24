@@ -88,9 +88,8 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
             "onViewCreated", "onViewCreated: ${CustomerData.getInstance(requireContext()).cartListId}"
 
         )
-
-
         Log.i("onViewCreated", "onViewCreated:${CustomerData.getInstance(requireContext()).currency} ")
+        Log.i("onViewCreated", "onViewCreated:${ CustomerData.getInstance(requireContext()).name} ")
         Log.i("onViewCreated", "onViewCreated:${CustomerData.getInstance(requireContext()).id} ")
 
 //        viewModel.getAdsCount()
