@@ -66,6 +66,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert
@@ -528,18 +529,28 @@ class RepositoryImpTest {
     fun getBrands() = runBlockingTest {
         val result = repository.getBrands()
         assertThat(result, not(nullValue()))
+        assertThat(result?.first()?.smart_collections?.size, `is`(2))
+        assertThat(result?.first()?.smart_collections?.get(0)?.title, `is`("Nike"))
     }
     @Test
     fun getBrandProducts() = runBlockingTest {
         val result = repository.getBrandProducts("nike")
         assertThat(result, not(nullValue()))
-
+        result.first().products
+        assertThat(result.first().products?.size, `is`(equalTo(2))) // Assuming two products for Nike
+        assertThat(result.first().products?.get(0)?.title, `is`("Nike Air Max"))
+        assertThat(result.first().products?.get(1)?.title, `is`("Nike Dri-FIT T-shirt"))
+        assertThat(result.first().products?.get(0)?.variants?.size, `is`(equalTo(2))) // Assuming two variants for Nike Air Max
+        assertThat(result.first().products?.get(1)?.variants?.size, `is`(equalTo(2))) // Assuming two variants for Nike Dri-FIT T-shirt
     }
     @Test
     fun getProducts() = runBlockingTest {
         val result = repository.getProducts()
+        // Assert
         assertThat(result, not(nullValue()))
-
+        assertThat(result.first().products?.size, `is`(equalTo(2))) // Assuming two products are returned
+        assertThat(result.first().products?.get(0)?.title, `is`("Nike Air Max"))
+        assertThat(result.first().products?.get(1)?.title, `is`("Nike Dri-FIT T-shirt"))
     }
 
     @Test

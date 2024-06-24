@@ -409,7 +409,7 @@ class CategoryFragment : Fragment() ,CategoryListener{
 
         return   d
     }
-    
+
     private fun handleFilterSelection(fromValue: Float?, toValue: Float?) {
         viewModel.filterProductsByPrice(fromValue, toValue)
     }
