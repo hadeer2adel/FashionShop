@@ -35,6 +35,9 @@ import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentCategoryBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
@@ -173,12 +176,18 @@ class CategoryFragment : Fragment() ,CategoryListener{
 
     private fun showFilterMenu(context: Context) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_filter, null)
+        val fromInputLayout = dialogView.findViewById<TextInputLayout>(R.id.from)
+        val toInputLayout = dialogView.findViewById<TextInputLayout>(R.id.to)
+        val fromInput = fromInputLayout.editText
+        val toInput = toInputLayout.editText
 
         MaterialAlertDialogBuilder(context)
             .setTitle(context.getString(R.string.dialog_filter))
             .setView(dialogView)
             .setPositiveButton(context.getString(R.string.ok)) { dialog, which ->
-                // Handle OK
+                val fromValue = fromInput?.text?.toString()?.toFloatOrNull()
+                val toValue = toInput?.text?.toString()?.toFloatOrNull()
+                handleFilterSelection(fromValue, toValue)
             }
             .setNegativeButton(context.getString(R.string.cancel)) { dialog, which ->
                 // Handle cancel
@@ -242,24 +251,6 @@ class CategoryFragment : Fragment() ,CategoryListener{
                 }
             }
         }
-//
-//viewModel.getLatestRates()
-//        lifecycleScope.launch {
-//            viewModel.productCurrency.collectLatest { response ->
-//                when(response){
-//                    is NetworkState.Loading -> showLoading()
-//                    is NetworkState.Success -> {
-//
-//                        Log.i("initViewModel", "initViewModel:${  response.data} ")
-//
-//
-//
-//                    }
-//                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
-//                    else -> { }
-//                }
-//            }
-//        }
     }
 
 
@@ -417,6 +408,10 @@ class CategoryFragment : Fragment() ,CategoryListener{
         Log.i("d", "${d}: ")
 
         return   d
+    }
+    
+    private fun handleFilterSelection(fromValue: Float?, toValue: Float?) {
+        viewModel.filterProductsByPrice(fromValue, toValue)
     }
 
 
