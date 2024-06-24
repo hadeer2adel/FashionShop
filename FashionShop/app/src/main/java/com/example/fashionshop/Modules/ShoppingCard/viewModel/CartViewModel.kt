@@ -50,7 +50,7 @@ class CartViewModel (private val repo: Repository, private var listId: Long
         }
     }
 
-    fun editCardQuantityProduct(id: Long, quantity: Int, price: String) {
+    fun editCardQuantityProduct(id: Long, quantity: Int, price: String, inventoryQuantitiess: String, images: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _productCard.value = NetworkState.Loading
             repo.getDraftOrder(listId)
@@ -59,7 +59,19 @@ class CartViewModel (private val repo: Repository, private var listId: Long
                     val draftOrder = it.draft_order
                     val updatedLineItems = draftOrder.line_items.map { lineItem ->
                         if (lineItem.id == id) {
-                            lineItem.copy(quantity = quantity, price = price)
+                            val updatedProperties = lineItem.properties.toMutableList()
+                            val existingImageProperty = updatedProperties.find { it.name.contains("ProductImage") }
+                            val imageUrl = existingImageProperty?.name?.substringAfter("src=")?.substringBefore(")")
+
+                            lineItem.copy(
+                                quantity = quantity,
+                                properties = listOf(
+                                    DraftOrderResponse.DraftOrder.LineItem.Property(
+                                        name = "ProductImage(src=$imageUrl)",
+                                        value = "$inventoryQuantitiess*$price"
+                                    )
+                                )
+                            )
                         } else {
                             lineItem
                         }
@@ -71,6 +83,7 @@ class CartViewModel (private val repo: Repository, private var listId: Long
                 }
         }
     }
+
     fun deleteAllCartProducts() {
         viewModelScope.launch(Dispatchers.IO) {
             _productCard.value = NetworkState.Loading

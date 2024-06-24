@@ -135,7 +135,7 @@ class OrderDetailsFragment() : Fragment() {
                         binding.progressBar.visibility = View.GONE
                         lineItemsList = response.data.draft_order.line_items.drop(1)
                         var subtotal = response.data.draft_order.line_items.drop(1)
-                            .sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
+                            .sumByDouble { it.properties.get(0).value.split("*").getOrNull(1)?.trim() ?.toDoubleOrNull() ?: 0.0}
 //                        subtotalInt=subtotal
                         val customer = CustomerData.getInstance(requireContext())
                         if (customer.currency == "USD") {

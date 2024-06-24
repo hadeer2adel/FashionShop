@@ -214,7 +214,14 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
                 id = lineItem.id,
                 title = lineItem.title,
                 price = lineItem.price,
-                sku = lineItem.sku
+                sku = lineItem.sku,
+                properties = lineItem.properties.map { draftProperty ->
+                    LineItemBody.Property(
+                        name = draftProperty.name,
+                        value = draftProperty.value
+                    )
+                }
+
 
             )
         }
@@ -229,15 +236,19 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
 
         allCodesViewModel.createOrder(wrappedOrderBody,
             onSuccess = {
-                Snackbar.make(requireView(),"Order placed successfully", Snackbar.LENGTH_SHORT).show()
+                showSnackbar("Order placed successfully")
                 Log.d("placeOrder", "success")
                 allProductViewModel.deleteAllCartProducts()
             },
             onError = { errorMessage ->
-                Snackbar.make(requireView(),errorMessage, Snackbar.LENGTH_SHORT).show()
+                showSnackbar(errorMessage)
                 Log.d("placeOrder", "error: $errorMessage")
             }
         )
+    }
+    private fun showSnackbar(message: String) {
+        val parentView = view?.findViewById<View>(android.R.id.content) ?: requireActivity().findViewById(android.R.id.content)
+        Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
     }
     private fun convertCurrency(amount: Double?): Double {
         amount ?: return 0.0

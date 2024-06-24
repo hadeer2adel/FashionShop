@@ -58,7 +58,7 @@ class CartFragment : Fragment() ,CartListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mAdapter = CartAdapter(this,requireContext())
+        mAdapter = CartAdapter(this,requireContext(),requireView())
         mLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.recyclerViewCartItems.apply {
             adapter = mAdapter
@@ -117,7 +117,8 @@ class CartFragment : Fragment() ,CartListener {
                                 mAdapter.setCartList(lineItems.drop(1))
                                // mAdapter.setCartImages(notes.drop(1))
                                 Log.i("productc", "onViewCreated: ${lineItems.drop(1)}")
-                                val subtotal = lineItems.drop(1).sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
+
+                                val subtotal = lineItems.drop(1).sumByDouble { it.properties.get(0).value.split("*").getOrNull(1)?.trim() ?.toDoubleOrNull() ?: 0.0 }
                                 val customer = CustomerData.getInstance(requireContext())
                                 if (customer.currency == "USD") {
                                     binding.textViewSubtotal.text = "${convertCurrency(subtotal)}"
@@ -204,8 +205,8 @@ class CartFragment : Fragment() ,CartListener {
     }
 
 
-    override  fun sendeditChoosenQuantityRequest(id: Long, quantity: Int,price:String){
-        allProductViewModel.editCardQuantityProduct(id,quantity,price)
+    override  fun sendeditChoosenQuantityRequest(id: Long, quantity: Int,price:String,inventoryQuantitiess:String,images:String){
+        allProductViewModel.editCardQuantityProduct(id,quantity,price, inventoryQuantitiess,images)
         Snackbar.make(requireView(),"Quantity Changed Successfully", Snackbar.LENGTH_SHORT).show()
     }
     private fun showAlertDialog(title: String, message: String) {

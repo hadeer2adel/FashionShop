@@ -3,6 +3,7 @@ package com.example.fashionshop.Adapters
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +24,7 @@ import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.databinding.CartItemBinding
 import com.google.android.material.snackbar.Snackbar
 
-class CartAdapter(private val listener: CartListener, private val context: Context,
+class CartAdapter(private val listener: CartListener, private val context: Context,private val v :View
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     class CartViewHolder(val binding: CartItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -69,11 +70,15 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
             Log.i("Glide", "No image URL found in properties")
         }
 
-
+        val parts = item.properties.get(0).value.split("*")
+        val quantity = parts.getOrNull(0)?.trim()?.toIntOrNull() ?: 0
+        val price = parts.getOrNull(1)?.trim() ?: "0.00"
+        Log.i("quantity", "onBindViewHolder: ${quantity} ")
+        Log.i("price", "onBindViewHolder: ${price} ")
 
 
         if (CustomerData.getInstance(context).currency == "USD"){
-            val priceDouble = item.price?.toDoubleOrNull() ?: 0.0
+            val priceDouble = price?.toDoubleOrNull() ?: 0.0
             holder.binding.itemPrice.text =  convertCurrency(priceDouble)}
         else{   holder.binding.itemPrice.text = item.price}
         val customer = CustomerData.getInstance(context)
@@ -105,40 +110,49 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
                 item.quantity = newQuantity // Update item's quantity
                 holder.binding.quantityText.text = newQuantity.toString()
 
+
                 // Recalculate and update item's price
-                holder.binding.itemPrice.text = calculateTotalPrice(originalPrices[position], newQuantity)
-                item.price = holder.binding.itemPrice.text.toString() // Update item's price in the model
+                holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
+                Log.i("holder", "onBindViewHolder: ${   holder.binding.itemPrice.text}")
+            //    item.price = holder.binding.itemPrice.text.toString() // Update item's price in the model
 
                 // Notify listener and adapter about the updated quantity and price
-                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString())
+                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString(),quantity.toString(),holder.binding.imageView.toString())
 
                 // Notify adapter about data change for this item
                 notifyItemChanged(position)
             } else {
+                Snackbar.make(v, "Cannot decrease below 1 quantity", Snackbar.LENGTH_SHORT).show()
+
                 Log.i("CartAdapter", "Cannot decrease below 1 quantity")
             }
         }
-
         holder.binding.increaseButton.setOnClickListener {
             val currentQuantity = item.quantity ?: 0
-            if (position < inventoryQuantities.size) {
-            if (currentQuantity < inventoryQuantities[position]) {
+            if (currentQuantity < quantity) {
                 val newQuantity = currentQuantity + 1
                 item.quantity = newQuantity // Update item's quantity
                 holder.binding.quantityText.text = newQuantity.toString()
-                holder.binding.itemPrice.text = calculateTotalPrice(item.price, newQuantity)
 
-                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, holder.binding.itemPrice.text.toString() ?: "0.0")
+                // Recalculate and update item's price
+                val totalPrice = calculateTotalPrice(price, newQuantity)
+                Log.i("totalPrice", "onBindViewHolder: ${totalPrice}")
+                holder.binding.itemPrice.text = price
+                Log.i("itemPrice", "onBindViewHolder: ${holder.binding.itemPrice.text}")
+
+                item.price = totalPrice // Update item's price in the model
+
+                listener.sendeditChoosenQuantityRequest(item.id ?: 0, newQuantity, totalPrice,quantity.toString(),holder.binding.imageView.toString())
+
+                notifyItemChanged(position)
             } else {
-                Log.i("CartAdapter", "Cannot increase above 5 quantity")
+                Snackbar.make(v, "Cannot increase above $quantity quantity", Snackbar.LENGTH_SHORT).show()
+
+                Log.i("CartAdapter", "Cannot increase above $quantity quantity")
                 // Optionally, you can show a toast or handle this situation as per your app's UX design
             }
-        }else{
-                Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
-
-            }
         }
-    }
+        }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully
         val convertedPrice = amount / currencyConversionRate

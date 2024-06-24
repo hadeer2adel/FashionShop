@@ -72,7 +72,7 @@ class ProductInfoViewModel(private var repository: Repository, private var listI
             product.images.toString(),
             product_id = 38373737,
             properties = listOf(
-                DraftOrderResponse.DraftOrder.LineItem.Property(product.images?.get(0).toString(), "Happy Birthday Mom!")
+                DraftOrderResponse.DraftOrder.LineItem.Property(product.images?.get(0).toString(), product.variants?.get(0)?.inventory_quantity.toString()+"*"+product.variants?.get(0)?.price.toString())
             )
         )
     }
