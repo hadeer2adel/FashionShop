@@ -97,9 +97,18 @@ class CategoryViewModel(private var repository: Repository) : ViewModel() {
 
     }
 
-
-
-
+    fun filterProductsByPrice(from: Float?, to: Float?) {
+        _products.value = NetworkState.Loading
+        viewModelScope.launch {
+            val filteredProducts = _subProducts.filter {
+                val price = it.variants?.firstOrNull()?.price?.toFloatOrNull() ?: 0f
+                val isWithinFrom = from?.let { price >= it } ?: true
+                val isWithinTo = to?.let { price <= it } ?: true
+                isWithinFrom && isWithinTo
+            }
+            _products.value = NetworkState.Success(ProductResponse(filteredProducts))
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
