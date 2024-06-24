@@ -79,10 +79,10 @@
         android:visibility="visible">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center"
-            android:src="@drawable/img" />
+            android:src="@drawable/shopify" />
 
         <TextView
             android:id="@+id/nameCustomer"
