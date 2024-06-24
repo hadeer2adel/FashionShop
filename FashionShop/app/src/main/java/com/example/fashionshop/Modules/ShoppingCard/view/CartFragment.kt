@@ -178,6 +178,7 @@ class CartFragment : Fragment() ,CartListener {
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully
         val convertedPrice = amount / currencyConversionRate
+        allProductViewModel.getCardProducts()
         return String.format("%.2f", convertedPrice)
     }
     override fun deleteCart(id: Long) {

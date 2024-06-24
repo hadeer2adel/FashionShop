@@ -93,7 +93,6 @@ class ProductInfoFragment : Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
-
         setUpRecycleView()
         initViewModel()
         viewModel.getProductInfo(args.productId)
@@ -194,6 +193,7 @@ class ProductInfoFragment : Fragment() {
         }
     }
     private fun convertCurrency(amount: Double?): String {
+        viewModel.getProductInfo(args.productId)
         amount ?: return "" // Handle null or undefined amount gracefully
         val convertedPrice = amount / currencyConversionRate
         return String.format("%.2f", convertedPrice)
