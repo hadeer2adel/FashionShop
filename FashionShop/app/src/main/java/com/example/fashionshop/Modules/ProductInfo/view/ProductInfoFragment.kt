@@ -117,46 +117,7 @@ class ProductInfoFragment : Fragment() {
             }
         }
 
-        binding.addToCartBtn.setOnClickListener {
-            if (CustomerData.getInstance(requireContext()).isLogged) {
-                val networkManager: NetworkManager = NetworkManagerImp.getInstance()
-                val repository: Repository = RepositoryImp(networkManager)
-                val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
-                viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
-                val product = (viewModel.product.value as? NetworkState.Success)?.data?.product
-                if (product != null) {
-                    Log.i("ProductInfoFragment", "onViewCreated: $product")
-                    viewModel.insertCardProduct(requireView(), product)
 
-                    Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
-
-                } else {
-                    Snackbar.make(requireView(),"Product information not available", Snackbar.LENGTH_SHORT).show()
-                }
-            }
-            else {
-                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.productCard.collectLatest { response ->
-                when (response) {
-                    is NetworkState.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is NetworkState.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        Snackbar.make(requireView(),"Product added successfully", Snackbar.LENGTH_SHORT).show()
-                    //findNavController().navigate(R.id.action_cartFragment)
-                    }
-                    is NetworkState.Failure -> {
-                        binding.progressBar.visibility = View.GONE
-                        Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
-                    //    findNavController().navigate(R.id.action_cartFragment)
-
-                    }
-                }
-            }
-        }
 
 
 
@@ -319,7 +280,54 @@ class ProductInfoFragment : Fragment() {
                 showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
             }
         }
+        binding.addToCartBtn.setOnClickListener {
+            if (CustomerData.getInstance(requireContext()).isLogged) {
+                val networkManager: NetworkManager = NetworkManagerImp.getInstance()
+                val repository: Repository = RepositoryImp(networkManager)
+                val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
+                viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
+                //val product = (viewModel.product.value as? NetworkState.Success)?.data?.product
+//                val newProduct = ProductDetails(
+//                    product?.id,
+//                    product?.title,
+//                    product.image[],
+//                    product.variants,
+//                )
+                Log.i("product", "onViewCreated: $product")
 
+                if (product != null) {
+                    Log.i("ProductInfoFragment", "onViewCreated: $product")
+                    viewModel.insertCardProduct(requireView(), product)
+
+                    Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
+
+                } else {
+                    Snackbar.make(requireView(),"Product information not available", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+            else {
+                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.productCard.collectLatest { response ->
+                when (response) {
+                    is NetworkState.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is NetworkState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        Snackbar.make(requireView(),"Product added successfully", Snackbar.LENGTH_SHORT).show()
+                        //findNavController().navigate(R.id.action_cartFragment)
+                    }
+                    is NetworkState.Failure -> {
+                        binding.progressBar.visibility = View.GONE
+                        Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
+                        //    findNavController().navigate(R.id.action_cartFragment)
+
+                    }
+                }
+            }
+        }
 
     }
 
