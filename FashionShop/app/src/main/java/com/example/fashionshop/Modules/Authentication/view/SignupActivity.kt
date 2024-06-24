@@ -56,8 +56,8 @@ class SignupActivity : AppCompatActivity() {
             if (validation()) {
                 val request = CustomerRequest(
                     CustomerRequest.Customer(
-                        first_name = binding.firstName.text.toString(),
-                        last_name = binding.lastName.text.toString(),
+                        first_name = binding.firstName.text.toString() + " " + binding.lastName.text.toString(),
+                        last_name = "",
                         email = binding.email.text.toString().trim()
                     )
                 )
