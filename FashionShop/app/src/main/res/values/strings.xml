@@ -62,6 +62,7 @@
     <string name="review">Reviews</string>
     <string name="suggest">Product Suggestions</string>
     <string name="product_info_title">Product Details</string>
+    <string name="select_variant">Select variant</string>
 
     //category
     <string name="price">Price Range</string>

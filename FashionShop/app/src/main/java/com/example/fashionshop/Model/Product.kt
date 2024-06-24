@@ -18,7 +18,11 @@ data class Product(
 
 data class Variant(
     val price: String? = null,
-    val inventory_quantity:Int = 1
+    val inventory_quantity:Int = 1,
+    val id: Long? = null,
+    val title: String? = null,
+    val option1: String? = null,
+    val option2: String? = null
 )
 
 data class ProductImage(

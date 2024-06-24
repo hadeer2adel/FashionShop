@@ -62,6 +62,8 @@
     <string name="review">Reviews</string>
     <string name="suggest">اقتراحات المنتج</string>
     <string name="product_info_title">تفاصيل المنتج</string>
+    <string name="select_variant">اختر البديل</string>
+
 
     //category
     <string name="price">نطاق السعر</string>

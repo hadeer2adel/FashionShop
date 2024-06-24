@@ -1,6 +1,7 @@
 package com.example.fashionshop.Modules.ProductInfo.view
 
 import android.app.AlertDialog
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -19,9 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fashionshop.Adapters.OnlineSliderAdapter
 import com.example.fashionshop.Adapters.ProductAdapter
+import com.example.fashionshop.Adapters.VariantAdapter
 import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.Product
 import com.example.fashionshop.Model.ProductDetails
+import com.example.fashionshop.Model.Variant
 import com.example.fashionshop.Model.inventoryQuantities
 import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
@@ -38,6 +41,8 @@ import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentProductInfoBinding
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.snackbar.Snackbar
 import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
@@ -54,7 +59,9 @@ class ProductInfoFragment : Fragment() {
     private val args: ProductInfoFragmentArgs by navArgs()
     private var isReviewsVisible = false
     private lateinit var adapter: ProductAdapter
+    private lateinit var variantAdapter: VariantAdapter
     private var isFav = false
+    private var variantId = -1L
     private var currencyConversionRate: Double = 1.0
 
     override fun onCreateView(
@@ -94,6 +101,7 @@ class ProductInfoFragment : Fragment() {
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
         setUpRecycleView()
+        setUpVariantRecycleView()
         initViewModel()
         viewModel.getProductInfo(args.productId)
 
@@ -160,10 +168,12 @@ class ProductInfoFragment : Fragment() {
         val repository: Repository = RepositoryImp(networkManager)
         val factory = ProductInfoViewModelFactory(repository,CustomerData.getInstance(requireContext()).cartListId)
         viewModel = ViewModelProvider(this, factory).get(ProductInfoViewModel::class.java)
+
         if (CustomerData.getInstance(requireContext()).isLogged){
             val favFactory = FavViewModelFactory(repository, CustomerData.getInstance(requireContext()).favListId)
             favViewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
         }
+
         lifecycleScope.launch {
             viewModel.product.collectLatest { response ->
                 when (response) {
@@ -171,8 +181,6 @@ class ProductInfoFragment : Fragment() {
                     is NetworkState.Success -> {
                         onSuccess()
                         response.data.product?.let { setData(it) }
-                        Log.i("adapter", ":${response.data.product} ")
-
                     }
                     is NetworkState.Failure -> onFailure(response.error.message)
                 }
@@ -201,20 +209,14 @@ class ProductInfoFragment : Fragment() {
     private fun setData(product: ProductDetails) {
 
         binding.apply {
-            Log.i("TAG", "${
-                product.id}: ")
             val customer = CustomerData.getInstance(requireContext())
             name.text = product.title
            // price.text = product.variants?.get(0)?.price
             if (customer.currency=="USD"){
                 val priceDouble = product.variants?.get(0)?.price?.toDoubleOrNull() ?: 0.0
                 price.text = convertCurrency(priceDouble)
-
-            }else
-            {
+            }else {
               price.text = product.variants?.get(0)?.price
-
-
             }
 
             currency.text = customer.currency
@@ -234,6 +236,7 @@ class ProductInfoFragment : Fragment() {
             sliderView.startAutoCycle()
 
             product.vendor?.let { viewModel.getProductSuggestions(it) }
+            variantAdapter.submitList(product.variants)
 
             handleFavBtn(product)
         }
@@ -353,5 +356,17 @@ class ProductInfoFragment : Fragment() {
             create()
             show()
         }
+    }
+
+    private fun setUpVariantRecycleView(){
+        val onCardClick: (id: Long, price: String) -> Unit = { id, price ->
+            variantId = id
+            binding.price.text = price
+        }
+        variantAdapter = VariantAdapter(requireContext(), onCardClick)
+
+        variantAdapter.submitList(emptyList())
+        binding.variantRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        binding.variantRecyclerView.adapter = variantAdapter
     }
 }
