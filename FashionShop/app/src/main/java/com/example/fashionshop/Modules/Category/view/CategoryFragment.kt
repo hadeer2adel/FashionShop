@@ -11,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -53,6 +55,10 @@ class CategoryFragment : Fragment() ,CategoryListener{
     private var mainCategory = ""
     private var subCategory = ""
     private lateinit var favViewModel: FavViewModel
+    private lateinit var fabOpen: Animation
+    private lateinit var fabClose: Animation
+    private lateinit var fabClock: Animation
+    private lateinit var fabAntiClock: Animation
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -121,6 +127,7 @@ class CategoryFragment : Fragment() ,CategoryListener{
         observeButtonsGroup()
         observeFloatingActionButton()
         changeFabColors()
+        setFabAnimation()
 
         viewModel.collectSearch()
 
@@ -136,16 +143,24 @@ class CategoryFragment : Fragment() ,CategoryListener{
     private fun hideAllFabButtons() {
         binding.apply {
             fabAccessories.visibility = View.GONE
+            fabAccessories.startAnimation(fabClose)
             fabShirt.visibility = View.GONE
+            fabShirt.startAnimation(fabClose)
             fabShoes.visibility = View.GONE
+            fabShoes.startAnimation(fabClose)
+            fabCategory.startAnimation(fabAntiClock)
         }
     }
 
     private fun showAllFabButtons() {
         binding.apply {
             fabAccessories.visibility = View.VISIBLE
+            fabAccessories.startAnimation(fabOpen)
             fabShirt.visibility = View.VISIBLE
+            fabShirt.startAnimation(fabOpen)
             fabShoes.visibility = View.VISIBLE
+            fabShoes.startAnimation(fabOpen)
+            fabCategory.startAnimation(fabClock)
         }
     }
 
@@ -412,6 +427,13 @@ class CategoryFragment : Fragment() ,CategoryListener{
 
     private fun handleFilterSelection(fromValue: Float?, toValue: Float?) {
         viewModel.filterProductsByPrice(fromValue, toValue)
+    }
+
+    private fun setFabAnimation() {
+        fabClose = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)
+        fabOpen = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
+        fabClock = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_clock)
+        fabAntiClock = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_anticlock)
     }
 
 
