@@ -2,6 +2,8 @@ package com.example.fashionshop.Modules.Products.view
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -51,6 +53,16 @@ class ProductsFragment : Fragment()  {
         super.onViewCreated(view, savedInstanceState)
         setUpRV()
         initViewModel()
+
+        viewModel.collectSearch()
+
+        binding.searchBarText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                viewModel.emitSearch(s.toString().lowercase())
+            }
+        })
     }
 
     override fun onDestroyView() {
