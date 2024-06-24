@@ -11,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -35,6 +37,9 @@ import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentCategoryBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
@@ -50,6 +55,10 @@ class CategoryFragment : Fragment() ,CategoryListener{
     private var mainCategory = ""
     private var subCategory = ""
     private lateinit var favViewModel: FavViewModel
+    private lateinit var fabOpen: Animation
+    private lateinit var fabClose: Animation
+    private lateinit var fabClock: Animation
+    private lateinit var fabAntiClock: Animation
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -118,6 +127,7 @@ class CategoryFragment : Fragment() ,CategoryListener{
         observeButtonsGroup()
         observeFloatingActionButton()
         changeFabColors()
+        setFabAnimation()
 
         viewModel.collectSearch()
 
@@ -133,16 +143,24 @@ class CategoryFragment : Fragment() ,CategoryListener{
     private fun hideAllFabButtons() {
         binding.apply {
             fabAccessories.visibility = View.GONE
+            fabAccessories.startAnimation(fabClose)
             fabShirt.visibility = View.GONE
+            fabShirt.startAnimation(fabClose)
             fabShoes.visibility = View.GONE
+            fabShoes.startAnimation(fabClose)
+            fabCategory.startAnimation(fabAntiClock)
         }
     }
 
     private fun showAllFabButtons() {
         binding.apply {
             fabAccessories.visibility = View.VISIBLE
+            fabAccessories.startAnimation(fabOpen)
             fabShirt.visibility = View.VISIBLE
+            fabShirt.startAnimation(fabOpen)
             fabShoes.visibility = View.VISIBLE
+            fabShoes.startAnimation(fabOpen)
+            fabCategory.startAnimation(fabClock)
         }
     }
 
@@ -173,12 +191,18 @@ class CategoryFragment : Fragment() ,CategoryListener{
 
     private fun showFilterMenu(context: Context) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_filter, null)
+        val fromInputLayout = dialogView.findViewById<TextInputLayout>(R.id.from)
+        val toInputLayout = dialogView.findViewById<TextInputLayout>(R.id.to)
+        val fromInput = fromInputLayout.editText
+        val toInput = toInputLayout.editText
 
         MaterialAlertDialogBuilder(context)
             .setTitle(context.getString(R.string.dialog_filter))
             .setView(dialogView)
             .setPositiveButton(context.getString(R.string.ok)) { dialog, which ->
-                // Handle OK
+                val fromValue = fromInput?.text?.toString()?.toFloatOrNull()
+                val toValue = toInput?.text?.toString()?.toFloatOrNull()
+                handleFilterSelection(fromValue, toValue)
             }
             .setNegativeButton(context.getString(R.string.cancel)) { dialog, which ->
                 // Handle cancel
@@ -242,24 +266,6 @@ class CategoryFragment : Fragment() ,CategoryListener{
                 }
             }
         }
-//
-//viewModel.getLatestRates()
-//        lifecycleScope.launch {
-//            viewModel.productCurrency.collectLatest { response ->
-//                when(response){
-//                    is NetworkState.Loading -> showLoading()
-//                    is NetworkState.Success -> {
-//
-//                        Log.i("initViewModel", "initViewModel:${  response.data} ")
-//
-//
-//
-//                    }
-//                    is NetworkState.Failure -> showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
-//                    else -> { }
-//                }
-//            }
-//        }
     }
 
 
@@ -417,6 +423,17 @@ class CategoryFragment : Fragment() ,CategoryListener{
         Log.i("d", "${d}: ")
 
         return   d
+    }
+
+    private fun handleFilterSelection(fromValue: Float?, toValue: Float?) {
+        viewModel.filterProductsByPrice(fromValue, toValue)
+    }
+
+    private fun setFabAnimation() {
+        fabClose = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close)
+        fabOpen = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open)
+        fabClock = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_clock)
+        fabAntiClock = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_anticlock)
     }
 
 
