@@ -171,12 +171,16 @@ at least one upper letter, one lowercase letter, and one digit</string>
     <string name="homeNav">Home</string>
     <string name="CartNav">Cart</string>
     <string name="FavoriteNav">Favorite</string>
-    <string name="SettingsNav">Settings</string>
+    <string name="SettingsNav">Profile</string>
     <string name="CategoryNav">Category</string>
     <string name="guest_message">You need to be logged in to access this feature. Please log in to continue.</string>
     <string name="network_message">Please check your network connection and try again.</string>
     <string name="addedSuccessfully">The Order Was Placed Successfully </string>
     <string name="addedSuccessfully2">The Address Was Added Successfully </string>
     <string name="addedSuccessfully3">The Item Was Added To Cart Successfully </string>
-
+    <string name="About_Us">About Us</string>
+    <string name="s1">Company Name: Fashion Shop</string>
+    <string name="s2"> Address: 123 Sedi Gaber St, Alexandria, Egypt</string>
+    <string name="s3"> Phone: +1 123-456-7890</string>
+    <string name="s4">Email: Fashion_app@gmail.com</string>
 </resources>

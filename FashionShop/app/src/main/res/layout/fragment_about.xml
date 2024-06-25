@@ -54,7 +54,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
                                     android:gravity="center"
-                                    android:text="Contact Us : "
+                                    android:text="@string/About_Us"
                                     android:textAlignment="center"
                                     android:textSize="24sp"
                                     android:textStyle="bold" />
@@ -63,7 +63,7 @@
                                     android:id="@+id/textView7"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Company Name: Fashion Shop "
+                                    android:text="@string/s1"
                                     android:textColor="@color/black"
                                     android:textSize="16sp" />
 
@@ -72,7 +72,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
-                                    android:text="Address: 123 Main St, City, Country"
+                                    android:text="@string/s2"
                                     android:textColor="@color/black"
                                     android:textSize="16sp" />
 
@@ -81,7 +81,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
-                                    android:text="Phone: +1 123-456-7890"
+                                    android:text="@string/s3"
                                     android:textColor="@color/black"
                                     android:textSize="16sp" />
 
@@ -90,7 +90,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
-                                    android:text="Email: contact@example.com"
+                                    android:text="@string/s4"
                                     android:textColor="@color/black"
                                     android:textSize="16sp" />
 
