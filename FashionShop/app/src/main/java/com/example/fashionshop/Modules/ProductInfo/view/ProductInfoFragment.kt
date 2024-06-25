@@ -2,6 +2,7 @@ package com.example.fashionshop.Modules.ProductInfo.view
 
 import android.app.AlertDialog
 import android.content.res.ColorStateList
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -27,6 +29,7 @@ import com.example.fashionshop.Model.ProductDetails
 import com.example.fashionshop.Model.Variant
 import com.example.fashionshop.Model.inventoryQuantities
 import com.example.fashionshop.Model.originalPrices
+import com.example.fashionshop.Modules.Authentication.view.LoginActivity
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
@@ -280,7 +283,7 @@ class ProductInfoFragment : Fragment() {
                 }
             }
             else {
-                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
+                showAlertDialog()
             }
         }
         binding.addToCartBtn.setOnClickListener {
@@ -312,7 +315,7 @@ class ProductInfoFragment : Fragment() {
             }
             }
             else {
-                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
+                showAlertDialog()
             }
 
         }
@@ -350,11 +353,16 @@ class ProductInfoFragment : Fragment() {
         binding.progressBar.visibility = View.GONE
         Snackbar.make(requireView(),message.toString(), Snackbar.LENGTH_SHORT).show()
     }
-    private fun showAlertDialog(title: String, message: String) {
+    private fun showAlertDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_alert_dialog_layout, null)
         AlertDialog.Builder(requireContext()).apply {
-            setTitle(title)
-            setMessage(message)
-            setPositiveButton("OK") { dialog, _ ->
+            setView(dialogView)
+            setPositiveButton("Sure") { dialog, _ ->
+                val intent = Intent(requireContext(), LoginActivity::class.java)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            setNegativeButton("No") { dialog, _ ->
                 dialog.dismiss()
             }
             create()
@@ -373,4 +381,5 @@ class ProductInfoFragment : Fragment() {
         binding.variantRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.variantRecyclerView.adapter = variantAdapter
     }
+
 }

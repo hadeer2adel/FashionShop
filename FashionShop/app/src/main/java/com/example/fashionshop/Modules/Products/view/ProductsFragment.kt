@@ -1,7 +1,10 @@
 package com.example.fashionshop.Modules.Products.view
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,12 +21,15 @@ import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModel
 import com.example.fashionshop.Modules.FavProductList.viewModel.FavViewModelFactory
 import com.example.fashionshop.Modules.Products.viewModel.ProductsFactory
 import com.example.fashionshop.Modules.Products.viewModel.ProductsViewModel
+import com.example.fashionshop.R
 import com.example.fashionshop.Repository.Repository
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentProductsBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -51,6 +57,20 @@ class ProductsFragment : Fragment()  {
         super.onViewCreated(view, savedInstanceState)
         setUpRV()
         initViewModel()
+
+        viewModel.collectSearch()
+
+        binding.searchBarText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                viewModel.emitSearch(s.toString().lowercase())
+            }
+        })
+
+        binding.filterBtn.setOnClickListener {
+            showFilterMenu(requireContext())
+        }
     }
 
     override fun onDestroyView() {
@@ -134,6 +154,31 @@ class ProductsFragment : Fragment()  {
             create()
             show()
         }
+    }
+
+    private fun showFilterMenu(context: Context) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_filter, null)
+        val fromInputLayout = dialogView.findViewById<TextInputLayout>(R.id.from)
+        val toInputLayout = dialogView.findViewById<TextInputLayout>(R.id.to)
+        val fromInput = fromInputLayout.editText
+        val toInput = toInputLayout.editText
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle(context.getString(R.string.dialog_filter))
+            .setView(dialogView)
+            .setPositiveButton(context.getString(R.string.ok)) { dialog, which ->
+                val fromValue = fromInput?.text?.toString()?.toFloatOrNull()
+                val toValue = toInput?.text?.toString()?.toFloatOrNull()
+                handleFilterSelection(fromValue, toValue)
+            }
+            .setNegativeButton(context.getString(R.string.cancel)) { dialog, which ->
+                // Handle cancel
+            }
+            .show()
+    }
+
+    private fun handleFilterSelection(fromValue: Float?, toValue: Float?) {
+        viewModel.filterProductsByPrice(fromValue, toValue)
     }
 
 

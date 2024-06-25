@@ -30,6 +30,7 @@ import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.databinding.FragmentCartBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
@@ -57,117 +58,125 @@ class CartFragment : Fragment() ,CartListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+            if (isNetworkConnected(requireContext())) {
+            mAdapter = CartAdapter(this,requireContext(),requireView())
+            mLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            binding.recyclerViewCartItems.apply {
+                adapter = mAdapter
+                layoutManager = mLayoutManager
+            }
+            if (CustomerData.getInstance(requireContext()).isLogged) {
+                val customer = CustomerData.getInstance(requireContext())
+                binding.currency .text = customer.currency
+                allCategoryFactory =
+                    CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+                allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+                var d = 0.0
+                allCategoryViewModel.getLatestRates()
+                lifecycleScope.launch {
+                    allCategoryViewModel.productCurrency.collectLatest { response ->
+                        when(response){
+                            is NetworkState.Loading -> "showLoading()"
+                            is NetworkState.Success -> {
+                                d= response.data.rates.EGP
+                                Log.i("initViewModel", "initViewModel:${  response.data} ")
+                                currencyConversionRate = response.data.rates?.EGP ?: 1.0
+                                val exchangeRate = response.data.rates?.EGP ?: 1.0 // Default to 1.0 if rate is not available
+                                updateCurrencyRates(exchangeRate)
 
-        mAdapter = CartAdapter(this,requireContext(),requireView())
-        mLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        binding.recyclerViewCartItems.apply {
-            adapter = mAdapter
-            layoutManager = mLayoutManager
-        }
-        if (CustomerData.getInstance(requireContext()).isLogged) {
-            val customer = CustomerData.getInstance(requireContext())
-            binding.currency .text = customer.currency
-            allCategoryFactory =
-                CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-            allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
-            var d = 0.0
-            allCategoryViewModel.getLatestRates()
-            lifecycleScope.launch {
-                allCategoryViewModel.productCurrency.collectLatest { response ->
-                    when(response){
-                        is NetworkState.Loading -> "showLoading()"
-                        is NetworkState.Success -> {
-                            d= response.data.rates.EGP
-                            Log.i("initViewModel", "initViewModel:${  response.data} ")
-                            currencyConversionRate = response.data.rates?.EGP ?: 1.0
-                            val exchangeRate = response.data.rates?.EGP ?: 1.0 // Default to 1.0 if rate is not available
-                            updateCurrencyRates(exchangeRate)
 
-
+                            }
+                            is NetworkState.Failure -> ""
+                            else -> { }
                         }
-                        is NetworkState.Failure -> ""
-                        else -> { }
-                    }
-                }}
-            allProductFactory =
-                CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()),CustomerData.getInstance(requireContext()).cartListId)
-            allProductViewModel = ViewModelProvider(this, allProductFactory).get(CartViewModel::class.java)
-            allProductViewModel.getCardProducts()
-            lifecycleScope.launch {
-                allProductViewModel.productCard.collectLatest { response ->
-                    when(response){
-                        is NetworkState.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
-                            binding.recyclerViewCartItems.visibility = View.GONE
-                            binding.emptyView.visibility = View.GONE
-
-                        }
-                        is NetworkState.Success -> {
-                            binding.progressBar.visibility = View.GONE
-                            binding.emptyView.visibility = View.GONE
-
-                            val lineItems = response.data.draft_order.line_items
-                           // val notes = response.data.draft_order.note_attributes
-                            if (lineItems.size <= 1) {
+                    }}
+                allProductFactory =
+                    CartFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()),CustomerData.getInstance(requireContext()).cartListId)
+                allProductViewModel = ViewModelProvider(this, allProductFactory).get(CartViewModel::class.java)
+                allProductViewModel.getCardProducts()
+                lifecycleScope.launch {
+                    allProductViewModel.productCard.collectLatest { response ->
+                        when(response){
+                            is NetworkState.Loading -> {
+                                binding.progressBar.visibility = View.VISIBLE
                                 binding.recyclerViewCartItems.visibility = View.GONE
-                                binding.emptyView.visibility = View.VISIBLE
-                            } else {
-                                binding.recyclerViewCartItems.visibility = View.VISIBLE
                                 binding.emptyView.visibility = View.GONE
-                                mAdapter.setCartList(lineItems.drop(1))
-                               // mAdapter.setCartImages(notes.drop(1))
-                                Log.i("productc", "onViewCreated: ${lineItems.drop(1)}")
 
-                                val subtotal = lineItems.drop(1).sumByDouble { it.properties.get(0).value.split("*").getOrNull(1)?.trim() ?.toDoubleOrNull() ?: 0.0 }
-                                val customer = CustomerData.getInstance(requireContext())
-                                if (customer.currency == "USD") {
-                                    binding.textViewSubtotal.text = "${convertCurrency(subtotal)}"
+                            }
+                            is NetworkState.Success -> {
+                                binding.progressBar.visibility = View.GONE
+                                binding.emptyView.visibility = View.GONE
+
+                                val lineItems = response.data.draft_order.line_items
+                                // val notes = response.data.draft_order.note_attributes
+                                if (lineItems.size <= 1) {
+                                    binding.recyclerViewCartItems.visibility = View.GONE
+                                    binding.emptyView.visibility = View.VISIBLE
                                 } else {
-                                    binding.textViewSubtotal.text = "${String.format("%.2f", subtotal)}"
+                                    binding.recyclerViewCartItems.visibility = View.VISIBLE
+                                    binding.emptyView.visibility = View.GONE
+                                    mAdapter.setCartList(lineItems.drop(1))
+                                    // mAdapter.setCartImages(notes.drop(1))
+                                    Log.i("productc", "onViewCreated: ${lineItems.drop(1)}")
+
+                                    val subtotal = lineItems.drop(1).sumByDouble { it.properties.get(0).value.split("*").getOrNull(1)?.trim() ?.toDoubleOrNull() ?: 0.0 }
+                                    val customer = CustomerData.getInstance(requireContext())
+                                    if (customer.currency == "USD") {
+                                        binding.textViewSubtotal.text = "${convertCurrency(subtotal)}"
+                                    } else {
+                                        binding.textViewSubtotal.text = "${String.format("%.2f", subtotal)}"
+                                    }
                                 }
                             }
+                            is NetworkState.Failure -> {
+                                binding.progressBar.visibility = View.GONE
+                                binding.emptyView.visibility = View.GONE
+
+                                Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
+                            }
                         }
-                        is NetworkState.Failure -> {
-                            binding.progressBar.visibility = View.GONE
-                            binding.emptyView.visibility = View.GONE
+                    } }
 
-                            Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
+
+                binding.buttonCheckout.setOnClickListener {
+                    val args = CartFragmentArgs(draftOrderIds).toBundle()
+                    findNavController().navigate(R.id.action_cartFragment_to_paymentFragment, args)
+                }
+                binding.deleteall.setOnClickListener {
+                    AlertDialog.Builder(requireContext())
+                        .setTitle(getString(R.string.delete_all_cart_items_title))
+                        .setMessage(getString(R.string.delete_all_cart_items_message))
+                        .setPositiveButton(getString(R.string.yes)) { dialog, which ->
+                            allProductViewModel.deleteAllCartProducts()
                         }
-                    }
-                } }
-
-
-            binding.buttonCheckout.setOnClickListener {
-                val args = CartFragmentArgs(draftOrderIds).toBundle()
-                findNavController().navigate(R.id.action_cartFragment_to_paymentFragment, args)
+                        .setNegativeButton(getString(R.string.no)) { dialog, which ->
+                            dialog.dismiss()
+                        }
+                        .show()
+                    Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
+                }
             }
-            binding.deleteall.setOnClickListener {
-                AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.delete_all_cart_items_title))
-                    .setMessage(getString(R.string.delete_all_cart_items_message))
-                    .setPositiveButton(getString(R.string.yes)) { dialog, which ->
-                        allProductViewModel.deleteAllCartProducts()
-                    }
-                    .setNegativeButton(getString(R.string.no)) { dialog, which ->
-                        dialog.dismiss()
-                    }
-                    .show()
-                Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
-            }
-        }
-        else{
-            binding.loginBtn.setOnClickListener {
-                val intent = Intent(requireContext(), LoginActivity::class.java)
-                startActivity(intent)
-            }
-            showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
-            binding.emptyView.visibility = View.GONE
-            binding.emptyViewGuest.visibility = View.VISIBLE
-            showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
-            binding.progressBar.visibility = View.GONE
+            else{
+                binding.loginBtn.setOnClickListener {
+                    val intent = Intent(requireContext(), LoginActivity::class.java)
+                    startActivity(intent)
+                }
+                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
+                binding.emptyView.visibility = View.GONE
+                binding.emptyViewGuest.visibility = View.VISIBLE
+                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
+                binding.progressBar.visibility = View.GONE
 
-        }
-
+            }
+            }
+            else
+            {
+                binding.relativeLayout.visibility = View.GONE
+                binding.recyclerViewCartItems.visibility = View.GONE
+                binding.mainLinear.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
+                binding.layoutConnection.visibility = View.VISIBLE
+            }
 
     }
 

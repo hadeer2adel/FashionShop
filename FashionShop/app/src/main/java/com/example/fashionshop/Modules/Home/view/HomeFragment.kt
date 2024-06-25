@@ -3,6 +3,8 @@ import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -22,6 +24,7 @@ import com.example.fashionshop.Model.PriceRuleX
 import com.example.fashionshop.Model.SmartCollection
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
 import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
+import com.example.fashionshop.Modules.Authentication.view.LoginActivity
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.Home.viewModel.HomeFactory
@@ -34,6 +37,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.databinding.FragmentHomeBinding
 import com.google.android.material.snackbar.Snackbar
 import com.smarteist.autoimageslider.SliderView
@@ -61,64 +65,43 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (isNetworkConnected(requireContext())){
 
-        allCategoryFactory =
-            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+            allCategoryFactory =
+                CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+            allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
 
+            sliderView = view.findViewById(R.id.imageSlider)
+            setUpRV()
+            initViewModel()
+            allProductFactory =
+                HomeFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+            allProductViewModel = ViewModelProvider(this, allProductFactory).get(HomeViewModel::class.java)
+            viewModel.getAdsCode()
+            lifecycleScope.launch {
+                viewModel.products.collectLatest { response ->
+                    when(response) {
+                        is NetworkState.Loading -> {}
+                        is NetworkState.Success -> {
+                            val count = response.data.price_rules
+                            setUpSlider(sliderView, count.size, count)
+                        }
+                        is NetworkState.Failure -> {
+                            Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
+                        }
 
-
-
-
-
-
-
-
-
-
-        sliderView = view.findViewById(R.id.imageSlider)
-        setUpRV()
-        initViewModel()
-     //   setUpSlider(sliderView)
-        allProductFactory =
-            HomeFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allProductViewModel = ViewModelProvider(this, allProductFactory).get(HomeViewModel::class.java)
-        Log.i(
-
-            "onViewCreated", "onViewCreated: ${CustomerData.getInstance(requireContext()).cartListId}"
-
-        )
-
-        Log.i("onViewCreated", "onViewCreated:${CustomerData.getInstance(requireContext()).name} ")
-
-        Log.i("onViewCreated", "onViewCreated:${CustomerData.getInstance(requireContext()).currency} ")
-        Log.i("onViewCreated", "onViewCreated:${CustomerData.getInstance(requireContext()).id} ")
-
-//        viewModel.getAdsCount()
-//        viewModel.products.observe(viewLifecycleOwner, Observer { value ->
-//            value?.let {
-//                val count = value.count
-//                setUpSlider(sliderView,count)
-//            }
-//        })
-
-
-        viewModel.getAdsCode()
-        lifecycleScope.launch {
-            viewModel.products.collectLatest { response ->
-                when(response) {
-                    is NetworkState.Loading -> {}
-                    is NetworkState.Success -> {
-                        val count = response.data.price_rules
-                        setUpSlider(sliderView, count.size,count)
-
-                    }
-                    is NetworkState.Failure -> {
-                        Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
-                        //  Toast.makeText(requireContext(), response.error.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
+        }
+        else{
+            binding.tvBrand.visibility = View.INVISIBLE
+            binding.tvDiscount.visibility = View.INVISIBLE
+            binding.cvCoupone.visibility = View.INVISIBLE
+            binding.cvBrands.visibility = View.INVISIBLE
+            binding.progressBar.visibility = View.INVISIBLE
+            binding.emptyView.visibility = View.VISIBLE
+
         }
 
     }
@@ -171,7 +154,6 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
             }
         }
     }
-
 
     override fun onItemClicked(brand: SmartCollection) {
         //Toast.makeText(requireContext(), "Clicked on ${brand.title}", Toast.LENGTH_SHORT).show()
@@ -229,7 +211,7 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
         clipboardManager.setPrimaryClip(clip)
 
         Snackbar.make(binding.root, "Discount code copied to clipboard", Snackbar.LENGTH_SHORT).show()
-        //Toast.makeText(context, "Discount code copied to clipboard", Toast.LENGTH_SHORT).show()
+
+    }
 
 }
-    }

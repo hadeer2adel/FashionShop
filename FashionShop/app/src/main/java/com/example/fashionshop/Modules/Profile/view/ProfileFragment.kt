@@ -26,6 +26,7 @@ import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentProfileBinding
 import com.google.android.material.snackbar.Snackbar
@@ -59,68 +60,55 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = NavHostFragment.findNavController(this)
         appBarConfiguration = AppBarConfiguration(navController.graph)
-        allProductFactroy= AddressFactory(
-            RepositoryImp.getInstance(
-                NetworkManagerImp.getInstance()
-            )
-        )
-        allProductViewModel= ViewModelProvider(this, allProductFactroy).get(AddressViewModel::class.java)
-        if (CustomerData.getInstance(requireContext()).isLogged) {
-        allProductViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
-        lifecycleScope.launch {
-            allProductViewModel.products.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-                    is NetworkState.Success -> {
-                        Log.i("TAG", "Data updated. Size: ${response.data.customer.id}")
-                        binding.nameCustomer.text = response.data.customer.first_name + " " + response.data.customer.last_name
-                        binding.emailCustomer.text = response.data.customer.email
+        if (isNetworkConnected(requireContext())) {
+            val customer = CustomerData.getInstance(requireContext())
+            if (CustomerData.getInstance(requireContext()).isLogged) {
 
-                    }
-                    is NetworkState.Failure -> {
-                        binding.progressBar.visibility = View.GONE
-                        Snackbar.make(requireView(),response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
-                    }
+                binding.nameCustomer.text = customer.name
+                binding.emailCustomer.text = customer.email
+
+                binding.ordersButton.setOnClickListener {
+                    navController.navigate(R.id.action_profileFragment_to_ordersFragment)
                 }
-            } }
-
-        binding.ordersButton.setOnClickListener {
-            navController.navigate(R.id.action_profileFragment_to_ordersFragment)
-        }
 
 
-        binding.settings.setOnClickListener {
+                binding.settings.setOnClickListener {
 
-            navController.navigate(R.id.action_profileFragment_to_settingFragment)
-        }
+                    navController.navigate(R.id.action_profileFragment_to_settingFragment)
+                }
 
-        binding.logout.setOnClickListener {
-            val onAllow: () -> Unit = {
-                FirebaseAuth.getInstance().signOut()
-                CustomerData.getInstance(requireContext()).logOut()
-                findNavController().navigate(R.id.homeFragment)
-            }
-            showDialog(
-                requireContext(),
-                R.string.Logout,
-                R.string.logout_body,
-                onAllow
-            )
-            inventoryQuantities.clear()
-            originalPrices.clear()
-        }
-        } else{
-            binding.loginBtn.setOnClickListener {
-                val intent = Intent(requireContext(), LoginActivity::class.java)
-                startActivity(intent)
-            }
-                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
+                binding.logout.setOnClickListener {
+                    val onAllow: () -> Unit = {
+                        FirebaseAuth.getInstance().signOut()
+                        CustomerData.getInstance(requireContext()).logOut()
+                        findNavController().navigate(R.id.homeFragment)
+                    }
+                    showDialog(
+                        requireContext(),
+                        R.string.Logout,
+                        R.string.logout_body,
+                        onAllow
+                    )
+                    inventoryQuantities.clear()
+                    originalPrices.clear()
+                }
+            } else {
+                binding.loginBtn.setOnClickListener {
+                    val intent = Intent(requireContext(), LoginActivity::class.java)
+                    startActivity(intent)
+                }
                 binding.emptyView.visibility = View.VISIBLE
+                binding.profileLayout.visibility = View.GONE
+                binding.buttonsLayout.visibility = View.GONE
+            }
+        }
+        else
+        {
             binding.profileLayout.visibility = View.GONE
             binding.buttonsLayout.visibility = View.GONE
-            }
+            binding.progressBar.visibility = View.GONE
+            binding.layoutConnection.visibility = View.VISIBLE
+        }
     }
 
     override fun onDestroyView() {

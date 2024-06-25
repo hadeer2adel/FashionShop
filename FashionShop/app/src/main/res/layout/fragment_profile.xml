@@ -79,10 +79,10 @@
         android:visibility="visible">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center"
-            android:src="@drawable/img" />
+            android:src="@drawable/shopify" />
 
         <TextView
             android:id="@+id/nameCustomer"
@@ -169,6 +169,38 @@
             android:text="@string/Logout"
             android:textAlignment="viewStart"
             android:textColor="@color/favourite"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutConnection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/boy" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="30dp"
+            android:text="@string/network_message"
+            android:textColor="@android:color/black"
             android:textSize="18sp" />
 
 

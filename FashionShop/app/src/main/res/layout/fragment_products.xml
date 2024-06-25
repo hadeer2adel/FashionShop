@@ -19,9 +19,9 @@
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toStartOf="@+id/filterBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent" >
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchBarText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
