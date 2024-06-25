@@ -98,8 +98,7 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
                 listener.deleteCart(nonNullId)
             }
 
-            originalPrices.removeAt(position)
-            inventoryQuantities.removeAt(position)
+
             Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
 
         }
