@@ -5,6 +5,8 @@ import android.content.res.ColorStateList
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -307,6 +309,7 @@ class ProductInfoFragment : Fragment() {
                 if (product != null) {
                     Log.i("ProductInfoFragment", "onViewCreated: $product")
                     viewModel.insertCardProduct(requireView(), product,variantId)
+                    showAlertDialogSucess()
                     Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
 
                 } else {
@@ -381,5 +384,17 @@ class ProductInfoFragment : Fragment() {
         binding.variantRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.variantRecyclerView.adapter = variantAdapter
     }
+    private fun showAlertDialogSucess() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_alert_dialog_layout_sucessed_card, null)
 
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        alertDialog.show()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            alertDialog.dismiss()
+        }, 4000)
+    }
 }

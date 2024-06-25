@@ -6,7 +6,7 @@
     <string name="coupons">كوبونات الخصم</string>
     <string name="brands">العلامات التجارية</string>
     <string name="category">الفئات</string>
-    <string name="search">البجث</string>
+    <string name="search">البحث</string>
     <string name="all">الكل</string>
     <string name="women">العناصر النسائية</string>
     <string name="kid">الأطفال</string>
@@ -169,7 +169,11 @@
     <string name="SettingsNav">حسابي</string>
     <string name="CategoryNav">التصنيفات</string>
 
-
+    <string name="guest_message">أنت بحاجة لتسجيل الدخول لتجربة هذه الإضافة..من فضلك سجل الدخول</string>
+    <string name="network_message">الرجاء التحقق من اتصال الشبكة والمحاولة مرة أخرى.</string>
+    <string name="addedSuccessfully">تم الطلب بنجاح</string>
+    <string name="addedSuccessfully2">تمت إضافة العنوان بنجاح</string>
+    <string name="addedSuccessfully3">تمت إضافة العنصر إلى عربة التسوق بنجاح</string>
 
 
 </resources>

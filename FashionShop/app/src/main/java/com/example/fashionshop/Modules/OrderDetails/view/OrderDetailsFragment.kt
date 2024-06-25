@@ -1,8 +1,11 @@
 package com.example.fashionshop.Modules.OrderDetails.view
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -30,6 +33,7 @@ import com.example.fashionshop.Model.inventoryQuantities
 import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
 import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
+import com.example.fashionshop.Modules.Authentication.view.LoginActivity
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsFactory
@@ -337,7 +341,7 @@ class OrderDetailsFragment() : Fragment() {
             }
             "Cash" -> {
                 placeOrder()
-                findNavController().navigate(R.id.actiomfromSheet_to_order)
+                findNavController().navigate(R.id.homeFragment)
                 //Snackbar.make(binding.root,"You Choose Cash Method Succssed Orde", Snackbar.LENGTH_SHORT).show()
 
             }
@@ -415,6 +419,7 @@ class OrderDetailsFragment() : Fragment() {
         allCodesViewModel.createOrder(wrappedOrderBody,
             onSuccess = {
                 showSnackbar("Order placed successfully")
+                showAlertDialog()
                 Log.d("placeOrder", "success")
                 allProductViewModel.deleteAllCartProducts()
             },
@@ -428,6 +433,23 @@ class OrderDetailsFragment() : Fragment() {
         val parentView = view?.findViewById<View>(android.R.id.content) ?: requireActivity().findViewById(android.R.id.content)
         Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
     }
+
+    private fun showAlertDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_alert_dialog_layout_sucessed, null)
+
+        requireActivity().runOnUiThread {
+            val alertDialog = AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .create()
+
+            alertDialog.show()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                alertDialog.dismiss()
+            }, 4000) 
+        }
+    }
+
 }
 
 

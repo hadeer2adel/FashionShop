@@ -1,6 +1,9 @@
 package com.example.fashionshop.Modules.Address.view
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,7 +93,8 @@ class AddNewAddressFragment : Fragment() {
                 customer_id = CustomerData.getInstance(requireContext()).id,
                 default = false
             )
-            findNavController().navigate(R.id.action_from_map_to_newAddresses)
+            showAlertDialog()
+            findNavController().navigate(R.id.homeFragment)
 
         }
 
@@ -108,7 +112,19 @@ class AddNewAddressFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+    private fun showAlertDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_alert_dialog_layout_sucessed_addresses, null)
 
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        alertDialog.show()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            alertDialog.dismiss()
+        }, 4000)
+    }
     companion object {
 
     }
