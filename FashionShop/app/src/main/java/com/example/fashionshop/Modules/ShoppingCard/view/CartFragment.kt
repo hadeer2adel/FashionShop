@@ -161,10 +161,8 @@ class CartFragment : Fragment() ,CartListener {
                     val intent = Intent(requireContext(), LoginActivity::class.java)
                     startActivity(intent)
                 }
-                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
                 binding.emptyView.visibility = View.GONE
                 binding.emptyViewGuest.visibility = View.VISIBLE
-                showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
                 binding.progressBar.visibility = View.GONE
 
             }

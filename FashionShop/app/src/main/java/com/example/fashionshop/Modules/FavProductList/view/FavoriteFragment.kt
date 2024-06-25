@@ -114,6 +114,7 @@ class FavoriteFragment : Fragment() {
                         if (response.data.draft_order.line_items.size > 1) {
                             binding.progressBar.visibility = View.GONE
                             binding.recycleView.visibility = View.VISIBLE
+                            binding.emptyView.visibility = View.GONE
                             adapter.submitList(response.data.draft_order.line_items.drop(1))
                         } else {
                             binding.recycleView.visibility = View.GONE

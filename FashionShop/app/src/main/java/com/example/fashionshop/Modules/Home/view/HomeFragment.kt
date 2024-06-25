@@ -63,6 +63,18 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root    }
 
+    override fun onStart() {
+        super.onStart()
+        if (!isNetworkConnected(requireContext()))
+        {
+            binding.tvBrand.visibility = View.INVISIBLE
+            binding.tvDiscount.visibility = View.INVISIBLE
+            binding.cvCoupone.visibility = View.INVISIBLE
+            binding.cvBrands.visibility = View.INVISIBLE
+            binding.progressBar.visibility = View.INVISIBLE
+            binding.emptyView.visibility = View.VISIBLE
+            }
+        }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (isNetworkConnected(requireContext())){
