@@ -79,7 +79,7 @@ class CategoryViewModel(private var repository: Repository) : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val apiKey = "oTRkceA7dKXe2EAvtENvRdd0CobNApUD"
+                val apiKey = "B7rLh6S27tkxdyJVatJh2lrRdo8sd7aL"
                 val symbols = "EGP" // Replace with desired symbols
                 val base = "USD"
                 val response = repository.getExchangeRates(apiKey,symbols, base)

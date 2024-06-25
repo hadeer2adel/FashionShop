@@ -84,6 +84,7 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
                 val selectedCurrency = options[which]
                 CustomerData.getInstance(requireContext()).currency = selectedCurrency
                 Snackbar.make(requireView(),"Selected: $selectedCurrency", Snackbar.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.homeFragment)
             }
         builder.create().show()
     }

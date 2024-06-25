@@ -309,7 +309,7 @@ class ProductInfoFragment : Fragment() {
                 if (product != null) {
                     Log.i("ProductInfoFragment", "onViewCreated: $product")
                     viewModel.insertCardProduct(requireView(), product,variantId)
-                    showAlertDialogSucess()
+
                     Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
 
                 } else {
@@ -330,7 +330,7 @@ class ProductInfoFragment : Fragment() {
                     is NetworkState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         Snackbar.make(requireView(),"Product added successfully", Snackbar.LENGTH_SHORT).show()
-                        //findNavController().navigate(R.id.action_cartFragment)
+                        showAlertDialogSucess()
                     }
                     is NetworkState.Failure -> {
                         binding.progressBar.visibility = View.GONE

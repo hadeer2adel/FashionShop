@@ -22,6 +22,8 @@ import com.example.fashionshop.Model.LineItem
 import com.example.fashionshop.Model.LineItemBody
 import com.example.fashionshop.Model.Order
 import com.example.fashionshop.Model.SmartCollection
+import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
+import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.Home.viewModel.OrderInfoFactory
 import com.example.fashionshop.Modules.Home.viewModel.OrderInfoViewModel
 import com.example.fashionshop.Modules.Orders.viewModel.OrdersViewModel
@@ -46,7 +48,19 @@ class OrderInfoFragment : Fragment() {
     private lateinit var viewModel:OrderInfoViewModel
     private val args:OrderInfoFragmentArgs by navArgs()
     private lateinit var adapter: SingleOrderAdapter
+    private var currencyConversionRate: Double = 1.0
+    private lateinit var allCategoryFactory: CategoryFactory
+    private lateinit var allCategoryViewModel: CategoryViewModel
+    override fun onStart() {
+        super.onStart()
+        initViewModelCurrency()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        initViewModelCurrency()
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,6 +72,7 @@ class OrderInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViewModelCurrency()
         navController = NavHostFragment.findNavController(this)
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
@@ -65,6 +80,7 @@ class OrderInfoFragment : Fragment() {
         val toolbar = binding.toolbar
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
         setUpRV()
+        initViewModelCurrency()
         initViewModel()
         viewModel.getOrder(args.orderId)
        // setUpRV()
@@ -89,7 +105,31 @@ class OrderInfoFragment : Fragment() {
         }
 
     }
+    private fun initViewModelCurrency() {
+        allCategoryFactory =
+            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+        var d = 0.0
 
+        allCategoryViewModel.getLatestRates()
+        lifecycleScope.launch {
+            allCategoryViewModel.productCurrency.collectLatest { response ->
+                when(response){
+                    is NetworkState.Loading -> ""
+                    is NetworkState.Success -> {
+                        d= response.data.rates.EGP
+                        Log.i("initViewModel", "initViewModel:${  response.data} ")
+                        currencyConversionRate = response.data.rates?.EGP ?: 1.0
+
+
+                    }
+                    is NetworkState.Failure -> ""
+                    else -> { }
+                }
+            }
+        }
+
+    }
     private fun setUpRV(){
         adapter = SingleOrderAdapter(requireContext())
         binding.rvProducts.layoutManager = LinearLayoutManager(requireContext())
@@ -121,7 +161,18 @@ class OrderInfoFragment : Fragment() {
             binding.tvOrderEmail.text = it.email
             binding.tvOrderPhome.text = it.billing_address?.phone
             binding.tvOrderAddress.text = it.billing_address?.address1
-            binding.tvOrderPrice.text = it.line_items?.get(0)?.properties?.get(0)?.value?.split("*")?.getOrNull(1)?.trim() ?: "0.00"
+            val customer = CustomerData.getInstance(requireContext())
+            val priceString = it.line_items?.get(0)?.properties?.get(0)?.value?.split("*")?.getOrNull(1)?.trim() ?: "0.00"
+
+            val priceDouble = priceString.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails
+
+            if (customer.currency == "USD") {
+                binding.tvOrderPrice.text = convertCurrency(priceDouble)
+            } else {
+                binding.tvOrderPrice.text = String.format("%.2f", priceDouble) // Format directly if not converting
+            }
+
+
             binding.currency.text = CustomerData.getInstance(requireContext()).currency
 
             val lineItemBodies = it.line_items?.map { item -> convertToLineItemBody(item) }?.toMutableList()
@@ -129,7 +180,11 @@ class OrderInfoFragment : Fragment() {
             Log.i("OrderInfo", "Order ID: ${it.id}")
         } ?: showError("Order Not Found", "The order details could not be found.")
     }
-
+    private fun convertCurrency(amount: Double?): String {
+        amount ?: return "" // Handle null or undefined amount gracefully
+        val convertedPrice = amount / currencyConversionRate
+        return String.format("%.2f", convertedPrice)
+    }
     private fun showLoading() {
         binding.progressBar6.visibility = View.VISIBLE
         binding.cardInfo.visibility = View.INVISIBLE

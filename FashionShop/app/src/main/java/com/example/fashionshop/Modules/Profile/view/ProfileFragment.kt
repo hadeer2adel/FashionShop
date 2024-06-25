@@ -89,8 +89,7 @@ class ProfileFragment : Fragment() {
                         R.string.logout_body,
                         onAllow
                     )
-                    inventoryQuantities.clear()
-                    originalPrices.clear()
+
                 }
             } else {
                 binding.loginBtn.setOnClickListener {
