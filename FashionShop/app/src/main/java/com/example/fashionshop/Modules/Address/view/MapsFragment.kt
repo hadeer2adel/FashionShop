@@ -135,7 +135,7 @@ class MapsFragment : Fragment() {
                 country_code = addresses[0].countryCode
                 default = false
                 first_name =  CustomerData.getInstance(requireContext()).name.split(" ")[0]
-                last_name =  CustomerData.getInstance(requireContext()).name.split(" ")[1]
+                last_name = CustomerData.getInstance(requireContext()).name.split(" ").getOrElse(1) { "" }
                 company = addresses[0].featureName
                 name =  CustomerData.getInstance(requireContext()).name.split(" ")[0]
                 country_name = addresses[0].countryName
