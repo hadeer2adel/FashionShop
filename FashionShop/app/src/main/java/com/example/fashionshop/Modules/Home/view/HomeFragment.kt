@@ -89,6 +89,7 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
         )
 
+        Log.i("onViewCreated", "onViewCreated:${CustomerData.getInstance(requireContext()).name} ")
 
         Log.i("onViewCreated", "onViewCreated:${CustomerData.getInstance(requireContext()).currency} ")
         Log.i("onViewCreated", "onViewCreated:${CustomerData.getInstance(requireContext()).id} ")

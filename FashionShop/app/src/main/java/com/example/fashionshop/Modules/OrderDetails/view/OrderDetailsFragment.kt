@@ -306,6 +306,7 @@ class OrderDetailsFragment() : Fragment() {
     }
 
     private fun showPaymentSheet(paymentUrl: String) {
+        allProductViewModel.deleteAllCartProducts()
         val paymentSheetFragment = PaymentSheetFragment.newInstance(paymentUrl)
         paymentSheetFragment.show(childFragmentManager, "PaymentSheetFragment")
     }

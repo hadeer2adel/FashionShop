@@ -164,7 +164,7 @@ class CartViewModelTest {
         val updatedQuantity = 5
         val updatedPrice = "150"
 
-        viewModel.editCardQuantityProduct(product1.id!!, updatedQuantity, updatedPrice)
+        viewModel.editCardQuantityProduct(product1.id!!, updatedQuantity, updatedPrice,"","")
 
         var result: DraftOrderResponse.DraftOrder.LineItem? = product2
 

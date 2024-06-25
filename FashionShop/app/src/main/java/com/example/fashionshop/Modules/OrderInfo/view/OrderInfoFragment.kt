@@ -89,7 +89,6 @@ class OrderInfoFragment : Fragment() {
                                 binding.tvOrderAddress.text = order.billing_address?.address1
                                 binding.tvOrderPrice.text = order.line_items?.get(0)?.properties?.get(0)?.value?.split("*")?.getOrNull(1)?.trim() ?: "0.00"
                                 binding.currency.text = CustomerData.getInstance(requireContext()).currency
-                                // Convert and submit the list
                                 val lineItemBodies = order.line_items?.map { convertToLineItemBody(it) }?.toMutableList()
                                 adapter.submitList(lineItemBodies)
                             }

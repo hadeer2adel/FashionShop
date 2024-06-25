@@ -153,6 +153,7 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
         Snackbar.make(requireView(),"Payment successful", Snackbar.LENGTH_SHORT).show()
         placeOrder()
         dismiss()
+        allProductViewModel.deleteAllCartProducts()
         findNavController().navigate(R.id.actiomfromSheet_to_order)
     }
 
@@ -169,6 +170,7 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
             return fragment
         }
     }
+
     private fun placeOrder() {
         val subtotal = lineItemsList.sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
 

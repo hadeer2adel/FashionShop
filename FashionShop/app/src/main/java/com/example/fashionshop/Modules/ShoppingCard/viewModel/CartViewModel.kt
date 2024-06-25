@@ -101,8 +101,6 @@ class CartViewModel (private val repo: Repository, private var listId: Long
                     repo.updateDraftOrder(listId, DraftOrderResponse(updatedDraftOrder))
                         .catch { _productCard.value = NetworkState.Failure(it) }
                         .collect {
-                            inventoryQuantities.clear()
-                            originalPrices.clear()
                             _productCard.value = NetworkState.Success(it)
                         }
                 }
