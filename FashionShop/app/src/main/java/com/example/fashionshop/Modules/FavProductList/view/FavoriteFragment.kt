@@ -24,6 +24,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.View.showDialog
 import com.example.fashionshop.databinding.FragmentFavoriteBinding
 import com.google.android.material.snackbar.Snackbar
@@ -47,21 +48,27 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (CustomerData.getInstance(requireContext()).isLogged) {
-            setUpRecycleView()
-            initViewModel()
-            viewModel.getFavProducts()
-        }
-        else{
-            binding.loginBtn.setOnClickListener {
-                val intent = Intent(requireContext(), LoginActivity::class.java)
-                startActivity(intent)
+        if (isNetworkConnected(requireContext())){
+            if (CustomerData.getInstance(requireContext()).isLogged) {
+                setUpRecycleView()
+                initViewModel()
+                viewModel.getFavProducts()
             }
-            showAlertDialog("Authentication Error" , "You need to be logged in to access this feature. Please log in to continue.")
-            binding.emptyView.visibility = View.GONE
-            binding.emptyViewGuest.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.GONE
-
+            else {
+                binding.loginBtn.setOnClickListener {
+                    val intent = Intent(requireContext(), LoginActivity::class.java)
+                    startActivity(intent)
+                }
+                binding.emptyView.visibility = View.GONE
+                binding.emptyViewGuest.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
+            }
+        }
+        else
+        {
+            binding.recycleView.visibility = View.INVISIBLE
+            binding.progressBar.visibility = View.INVISIBLE
+            binding.layoutConnection.visibility = View.VISIBLE
         }
     }
 

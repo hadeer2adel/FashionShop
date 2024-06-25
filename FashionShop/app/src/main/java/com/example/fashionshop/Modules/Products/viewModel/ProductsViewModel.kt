@@ -19,6 +19,7 @@ import java.util.Locale
 class ProductsViewModel(private var repository: Repository) : ViewModel() {
     private var _product = MutableStateFlow<NetworkState<ProductResponse>>(NetworkState.Loading)
     val product =_product.asStateFlow()
+
     private var _subProducts: List<Product> = emptyList()
     private val searchSharedFlow = MutableSharedFlow<String>()
 
@@ -52,6 +53,19 @@ class ProductsViewModel(private var repository: Repository) : ViewModel() {
                     it.title?.lowercase(Locale.getDefault())?.contains(s) ?: false
         }.toList()
         _product.value = NetworkState.Success(ProductResponse(filteredProducts))
+    }
+
+    fun filterProductsByPrice(from: Float?, to: Float?) {
+        _product.value = NetworkState.Loading
+        viewModelScope.launch {
+            val filteredProducts = _subProducts.filter {
+                val price = it.variants?.firstOrNull()?.price?.toFloatOrNull() ?: 0f
+                val isWithinFrom = from?.let { price >= it } ?: true
+                val isWithinTo = to?.let { price <= it } ?: true
+                isWithinFrom && isWithinTo
+            }
+            _product.value = NetworkState.Success(ProductResponse(filteredProducts))
+        }
     }
 
     override fun onCleared() {

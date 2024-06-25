@@ -41,19 +41,14 @@ import kotlinx.coroutines.launch
 
 
 class OrdersFragment : Fragment() {
-
-
-    // Binding instance
     private var _binding: FragmentOrdersBinding? = null
     private val binding get() = _binding!!
-
-    // RecyclerView instance
-    private lateinit var recyclerView: RecyclerView
-
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var adapter: OrdersAdapter
     private lateinit var viewModel: OrdersViewModel
+    private var isLoading = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -103,18 +98,17 @@ class OrdersFragment : Fragment() {
     private fun showLoading() {
         binding.progressBar5.visibility = View.VISIBLE
         binding.rvOrders.visibility = View.INVISIBLE
-        binding.emptyView.visibility = View.GONE
+        binding.emptyView.visibility = View.INVISIBLE
     }
 
     private fun showSuccess(orders: List<Order>) {
         binding.progressBar5.visibility = View.INVISIBLE
         if (orders.isEmpty()) {
-            binding.rvOrders.visibility = View.GONE
+            binding.rvOrders.visibility = View.INVISIBLE
             binding.emptyView.visibility = View.VISIBLE
-            binding.toolbar.visibility = View.GONE
         } else {
             binding.rvOrders.visibility = View.VISIBLE
-            binding.emptyView.visibility = View.GONE
+            binding.emptyView.visibility = View.INVISIBLE
             adapter.submitList(orders)
         }
     }
@@ -144,16 +138,29 @@ class OrdersFragment : Fragment() {
         val factory = OrdersFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(OrdersViewModel::class.java)
         val id = CustomerData.getInstance(requireContext()).id
-        //viewModel.getOrders(7371713577180)
         viewModel.getOrders(id)
         lifecycleScope.launch {
             viewModel.orders.collectLatest { response ->
                 when(response){
                     is NetworkState.Loading -> showLoading()
-                    is NetworkState.Success -> response.data.orders?.let { showSuccess(it) }
-                    is NetworkState.Failure -> showError("Network Error", "Failed to load data. Please try again.")
+                    is NetworkState.Success ->{
+                        response.data.orders?.let { showSuccess(it) }
+                        isLoading = false
+                    }
+                    is NetworkState.Failure -> {
+                        showError("Network Error", "Failed to load data. Please try again.")
+                        isLoading = false
+                    }
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!isLoading) {
+            val id = CustomerData.getInstance(requireContext()).id
+            viewModel.getOrders(id)
         }
     }
 

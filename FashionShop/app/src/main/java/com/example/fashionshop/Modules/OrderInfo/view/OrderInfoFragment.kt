@@ -1,5 +1,6 @@
 package com.example.fashionshop.Modules.OrderInfo.view
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -19,6 +20,8 @@ import com.example.fashionshop.Model.CustomerData
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.LineItem
 import com.example.fashionshop.Model.LineItemBody
+import com.example.fashionshop.Model.Order
+import com.example.fashionshop.Model.SmartCollection
 import com.example.fashionshop.Modules.Home.viewModel.OrderInfoFactory
 import com.example.fashionshop.Modules.Home.viewModel.OrderInfoViewModel
 import com.example.fashionshop.Modules.Orders.viewModel.OrdersViewModel
@@ -76,30 +79,9 @@ class OrderInfoFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.order.collectLatest { response ->
                 when (response) {
-                    is NetworkState.Loading -> {
-
-                    }
-
-                    is NetworkState.Success -> {
-                        response.data.order.let { order ->
-                            if (order != null) {
-                                binding.tvOrderEmail.text = order.email
-                                binding.tvOrderPhome.text = order.billing_address?.phone
-                                binding.tvOrderAddress.text = order.billing_address?.address1
-                                binding.tvOrderPrice.text = order.total_price
-                                binding.currency.text = CustomerData.getInstance(requireContext()).currency
-                                // Convert and submit the list
-                                val lineItemBodies = order.line_items?.map { convertToLineItemBody(it) }?.toMutableList()
-                                adapter.submitList(lineItemBodies)
-                            }
-
-                        }
-
-                    }
-
-                    is NetworkState.Failure -> {
-
-                    }
+                    is NetworkState.Loading -> showLoading()
+                    is NetworkState.Success -> showOrderDetails(response.data.order)
+                    is NetworkState.Failure -> showError("Network Error", "Failed to load order. Please try again.")
                 }
             }
         }
@@ -124,4 +106,51 @@ class OrderInfoFragment : Fragment() {
 
         )
     }
+
+    private fun showOrderDetails(order: Order?) {
+        binding.progressBar6.visibility = View.INVISIBLE
+        binding.cardInfo.visibility = View.VISIBLE
+        binding.rvProducts.visibility = View.VISIBLE
+        binding.textView44.visibility = View.VISIBLE
+
+        order?.let {
+            binding.tvOrderEmail.text = it.email
+            binding.tvOrderPhome.text = it.billing_address?.phone
+            binding.tvOrderAddress.text = it.billing_address?.address1
+            binding.tvOrderPrice.text = it.total_price
+            binding.currency.text = CustomerData.getInstance(requireContext()).currency
+
+            val lineItemBodies = it.line_items?.map { item -> convertToLineItemBody(item) }?.toMutableList()
+            adapter.submitList(lineItemBodies)
+            Log.i("OrderInfo", "Order ID: ${it.id}")
+        } ?: showError("Order Not Found", "The order details could not be found.")
+    }
+
+    private fun showLoading() {
+        binding.progressBar6.visibility = View.VISIBLE
+        binding.cardInfo.visibility = View.INVISIBLE
+        binding.rvProducts.visibility = View.INVISIBLE
+        binding.textView44.visibility = View.INVISIBLE
+    }
+
+    private fun showError(title: String, message: String) {
+        binding.progressBar6.visibility = View.INVISIBLE
+        binding.cardInfo.visibility = View.INVISIBLE
+        binding.rvProducts.visibility = View.INVISIBLE
+        binding.textView44.visibility = View.INVISIBLE
+        showAlertDialog(title, message)
+    }
+
+    private fun showAlertDialog(title: String, message: String) {
+        AlertDialog.Builder(requireContext()).apply {
+            setTitle(title)
+            setMessage(message)
+            setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            create()
+            show()
+        }
+    }
+
 }

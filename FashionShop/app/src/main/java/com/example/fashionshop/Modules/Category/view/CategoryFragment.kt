@@ -35,6 +35,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.databinding.FragmentCategoryBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -72,72 +73,83 @@ class CategoryFragment : Fragment() ,CategoryListener{
 
         super.onViewCreated(view, savedInstanceState)
 
+        if (isNetworkConnected(requireContext())){
 
-        isAllFabsVisible = false
+            isAllFabsVisible = false
 
 
-        binding.fabCategory.setOnClickListener {
-            isAllFabsVisible = if (isAllFabsVisible == false) {
-                showAllFabButtons()
-                binding.fabCategory.setImageResource(R.drawable.ic_close)
-                binding.fabCategory.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
-                decreaseBrightness()
-                true
-            } else {
-                increaseBrightness()
-                binding.fabCategory.setImageResource(R.drawable.ic_categories)
-                hideAllFabButtons()
-                binding.fabCategory.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
-                false
+            binding.fabCategory.setOnClickListener {
+                isAllFabsVisible = if (isAllFabsVisible == false) {
+                    showAllFabButtons()
+                    binding.fabCategory.setImageResource(R.drawable.ic_close)
+                    binding.fabCategory.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    decreaseBrightness()
+                    true
+                } else {
+                    increaseBrightness()
+                    binding.fabCategory.setImageResource(R.drawable.ic_categories)
+                    hideAllFabButtons()
+                    binding.fabCategory.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
+                    false
+                }
+
             }
 
-        }
+            binding.filterBtn.setOnClickListener {
+                showFilterMenu(requireContext())
+            }
+            setUpRV()
+            allCategoryFactory =
+                CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+            allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+            var d = 0.0
 
-        binding.filterBtn.setOnClickListener {
-            showFilterMenu(requireContext())
-        }
-        setUpRV()
-        allCategoryFactory =
-            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allCategoryViewModel = ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
-        var d = 0.0
-
-        allCategoryViewModel.getLatestRates()
-        lifecycleScope.launch {
-            allCategoryViewModel.productCurrency.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> showLoading()
-                    is NetworkState.Success -> {
-                        d= response.data.rates.EGP
-                        Log.i("initViewModel", "initViewModel:${  response.data} ")
-                        val exchangeRate = response.data.rates?.EGP ?: 1.0 // Default to 1.0 if rate is not available
-                        updateCurrencyRates(exchangeRate)
+            allCategoryViewModel.getLatestRates()
+            lifecycleScope.launch {
+                allCategoryViewModel.productCurrency.collectLatest { response ->
+                    when(response){
+                        is NetworkState.Loading -> showLoading()
+                        is NetworkState.Success -> {
+                            d= response.data.rates.EGP
+                            Log.i("initViewModel", "initViewModel:${  response.data} ")
+                            val exchangeRate = response.data.rates?.EGP ?: 1.0 // Default to 1.0 if rate is not available
+                            updateCurrencyRates(exchangeRate)
 
 
+                        }
+                        is NetworkState.Failure -> Log.i("TAG", "onViewCreated: \"Failed ttgtgtgtgto load data. Please try again.\"")
+                            //showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
+                        else -> { }
                     }
-                    is NetworkState.Failure -> Log.i("TAG", "onViewCreated: \"Failed ttgtgtgtgto load data. Please try again.\"")
-                        //showError("Network Error", "Failed ttgtgtgtgto load data. Please try again.")
-                    else -> { }
                 }
             }
+
+            initViewModel()
+            binding.category.selectButton(binding.btnAll)
+            observeButtonsGroup()
+            observeFloatingActionButton()
+            changeFabColors()
+            setFabAnimation()
+
+            viewModel.collectSearch()
+
+            binding.searchBarText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable) {
+                    viewModel.emitSearch(s.toString().lowercase())
+                }
+            })
         }
-
-        initViewModel()
-        binding.category.selectButton(binding.btnAll)
-        observeButtonsGroup()
-        observeFloatingActionButton()
-        changeFabColors()
-        setFabAnimation()
-
-        viewModel.collectSearch()
-
-        binding.searchBarText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable) {
-                viewModel.emitSearch(s.toString().lowercase())
-            }
-        })
+        else {
+            binding.searchBar.visibility = View.INVISIBLE
+            binding.filterBtn.visibility = View.INVISIBLE
+            binding.category.visibility = View.INVISIBLE
+            binding.rvProducts.visibility = View.INVISIBLE
+            binding.fabCategory.visibility = View.INVISIBLE
+            binding.progressBar3.visibility = View.INVISIBLE
+            binding.emptyView.visibility = View.VISIBLE
+        }
     }
 
     private fun hideAllFabButtons() {
