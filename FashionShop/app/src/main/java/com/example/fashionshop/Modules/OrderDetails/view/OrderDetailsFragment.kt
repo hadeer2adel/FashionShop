@@ -310,7 +310,7 @@ class OrderDetailsFragment() : Fragment() {
     }
 
     private fun showPaymentSheet(paymentUrl: String) {
-        allProductViewModel.deleteAllCartProducts()
+       // allProductViewModel.deleteAllCartProducts()
         val paymentSheetFragment = PaymentSheetFragment.newInstance(paymentUrl)
         paymentSheetFragment.show(childFragmentManager, "PaymentSheetFragment")
     }
@@ -446,7 +446,7 @@ class OrderDetailsFragment() : Fragment() {
 
             Handler(Looper.getMainLooper()).postDelayed({
                 alertDialog.dismiss()
-            }, 4000) 
+            }, 4000)
         }
     }
 

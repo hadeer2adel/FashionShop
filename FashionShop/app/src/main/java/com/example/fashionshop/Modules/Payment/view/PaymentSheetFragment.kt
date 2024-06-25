@@ -1,7 +1,10 @@
 package com.example.fashionshop.Modules.Payment.view
 
+import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +37,7 @@ import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -42,7 +46,7 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
     private lateinit var allCodesViewModel: OrderDetailsViewModel
     lateinit var addressFactory: AddressFactory
     lateinit var addressViewModel: AddressViewModel
-    lateinit var filteredAddresses : Addresse
+    lateinit var filteredAddresses: Addresse
     private lateinit var webView: WebView
     private val successUrl = "https://example.com/"
     private var lineItemsList: List<DraftOrderResponse.DraftOrder.LineItem> = emptyList()
@@ -75,27 +79,26 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
             allProductViewModel.productCard.collectLatest { response ->
                 when (response) {
                     is NetworkState.Loading -> {
+                        Log.i("PaymentSheetFragment", "Loading cart products")
                     }
-
                     is NetworkState.Success -> {
                         lineItemsList = response.data.draft_order.line_items.drop(1)
-                        var subtotal = response.data.draft_order.line_items.drop(1)
+                        val subtotal = response.data.draft_order.line_items.drop(1)
                             .sumByDouble { it.price?.toDoubleOrNull() ?: 0.0 }
                         val customer = CustomerData.getInstance(requireContext())
-                        if (customer.currency == "USD") {
-                            subtotalInt = convertCurrency(subtotal)
-
+                        subtotalInt = if (customer.currency == "USD") {
+                            convertCurrency(subtotal)
                         } else {
-                            subtotalInt = subtotal
-
+                            subtotal
                         }
                     }
                     is NetworkState.Failure -> {
-
+                        Log.e("PaymentSheetFragment", "Failed to load cart products: ${response.error.message}")
                     }
                 }
             }
         }
+
         addressFactory =
             AddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
         addressViewModel =
@@ -105,22 +108,20 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
             addressViewModel.products.collectLatest { response ->
                 when (response) {
                     is NetworkState.Loading -> {
-                        Log.i("NetworkState", "Loading")
+                        Log.i("PaymentSheetFragment", "Loading customer addresses")
                     }
-
                     is NetworkState.Success -> {
-                        Log.i("NetworkState", "Success: ${response.data.customer.id}")
+                        Log.i("PaymentSheetFragment", "Loaded customer addresses")
                         val (defaultAddresses, nonDefaultAddresses) = response.data.customer.addresses.partition { it.default }
-                        filteredAddresses = defaultAddresses.get(0)
-                        Log.i("filteredAddresses", "${filteredAddresses} ")
+                        filteredAddresses = defaultAddresses[0]
                     }
-
                     is NetworkState.Failure -> {
-                        Log.i("NetworkState", "Failure${response.error.message}")
+                        Log.e("PaymentSheetFragment", "Failed to load customer addresses: ${response.error.message}")
                     }
                 }
             }
         }
+
         webView = view.findViewById(R.id.webView)
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = object : WebViewClient() {
@@ -150,17 +151,24 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun handleSuccess() {
-        Snackbar.make(requireView(),"Payment successful", Snackbar.LENGTH_SHORT).show()
+        Log.i("PaymentSheetFragment", "Payment successful, proceeding with order placement")
+        Snackbar.make(requireView(), "Payment successful", Snackbar.LENGTH_SHORT).show()
         placeOrder()
-        dismiss()
-        allProductViewModel.deleteAllCartProducts()
-        findNavController().navigate(R.id.actiomfromSheet_to_order)
+        lifecycleScope.launch {
+            delay(4000L)
+            dismiss()
+            findNavController().navigate(R.id.homeFragment)
+        }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        Snackbar.make(requireView(),"Payment process finished", Snackbar.LENGTH_SHORT).show()
+        requireActivity().runOnUiThread {
+            Snackbar.make(requireView(), "Payment process finished", Snackbar.LENGTH_SHORT).show()
+
+        }
     }
+
     companion object {
         fun newInstance(paymentUrl: String): PaymentSheetFragment {
             val fragment = PaymentSheetFragment()
@@ -183,9 +191,8 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
             country = filteredAddresses.country,
             last_name = filteredAddresses.last_name,
             name = filteredAddresses.name,
-            country_code = filteredAddresses.country_code,
+            country_code = filteredAddresses.country_code
         )
-
 
         val defaultAddress = DefaultAddressBody(
             first_name = filteredAddresses.first_name,
@@ -223,8 +230,6 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
                         value = draftProperty.value
                     )
                 }
-
-
             )
         }
         val orderBody = OrderBody(
@@ -236,26 +241,45 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
         )
         val wrappedOrderBody = mapOf("order" to orderBody)
 
+        Log.i("PaymentSheetFragment", "Placing order with body: $wrappedOrderBody")
+
         allCodesViewModel.createOrder(wrappedOrderBody,
             onSuccess = {
+                Log.i("PaymentSheetFragment", "Order placed successfully")
+                showAlertDialog()
                 showSnackbar("Order placed successfully")
-                Log.d("placeOrder", "success")
                 allProductViewModel.deleteAllCartProducts()
             },
             onError = { errorMessage ->
+                Log.e("PaymentSheetFragment", "Failed to place order: $errorMessage")
                 showSnackbar(errorMessage)
-                Log.d("placeOrder", "error: $errorMessage")
             }
         )
     }
+
     private fun showSnackbar(message: String) {
         val parentView = view?.findViewById<View>(android.R.id.content) ?: requireActivity().findViewById(android.R.id.content)
         Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
     }
+
     private fun convertCurrency(amount: Double?): Double {
         amount ?: return 0.0
         return amount / currencyConversionRate
     }
 
+    private fun showAlertDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_alert_dialog_layout_sucessed, null)
 
+        requireActivity().runOnUiThread {
+            val alertDialog = AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .create()
+
+            alertDialog.show()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                alertDialog.dismiss()
+            }, 4000)
+        }
+    }
 }
