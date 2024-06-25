@@ -111,9 +111,10 @@
     <string name="error_password_format">يحتوي على الأقل على 8 أحرف
 حرف كبير واحد وحرف صغير ورقم واحد على الأقل</string>
     <string name="error_not_match">كلمة المرور وتأكيد كلمة المرور غير متطابقين</string>
+    <string name="error_name_format">على الأقل ٣ أحرف</string>
 
 
-   <string name="Orders">الطلبات</string>
+    <string name="Orders">الطلبات</string>
     <string name="Logout">تسجيل الخروج</string>
    <string name="Settings">الإعدادات</string>
     <string name="DeleteAll">مسح جميع عناصر عربة التسوق</string>

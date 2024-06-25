@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 
 class SignupActivity : AppCompatActivity() {
 
+    private val nameRegex = "^[a-zA-Z]{3,}$"
     private val emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"
     private val passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$"
     private lateinit var mAuth: FirebaseAuth
@@ -73,6 +75,11 @@ class SignupActivity : AppCompatActivity() {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    changeTextView(binding.firstNameError, R.string.exist, View.GONE)
+                    changeTextView(binding.lastNameError, R.string.exist, View.GONE)
+                    changeTextView(binding.emailError, R.string.exist, View.GONE)
+                    changeTextView(binding.passwordError, R.string.exist, View.GONE)
+                    changeTextView(binding.confirmPasswordError, R.string.exist, View.GONE)
                     val user = mAuth.currentUser
                     val profileUpdates = UserProfileChangeRequest.Builder()
                         .setDisplayName(name)
@@ -82,8 +89,8 @@ class SignupActivity : AppCompatActivity() {
                     user?.let { getFirebaseIdToken(it, request) }
                 } else {
                     onFailure(R.string.error_signup)
-                    binding.emailTxt.error = getString(R.string.exist)
-                    binding.passwordTxt.error = getString(R.string.exist)
+                    changeTextView(binding.emailError, R.string.exist, View.VISIBLE)
+                    changeTextView(binding.passwordError, R.string.exist, View.VISIBLE)
                 }
             }
     }
@@ -122,21 +129,92 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun validation(): Boolean {
-        val name = binding.firstName.text.toString()
+        val fname = binding.firstName.text.toString()
+        val lname = binding.lastName.text.toString()
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
         val confirmPassword = binding.confirmPassword.text.toString()
 
         var valid = false
         when {
-            name.isEmpty() -> binding.firstNameTxt.error = getString(R.string.empty)
-            email.isEmpty() -> binding.emailTxt.error = getString(R.string.empty)
-            !email.matches(emailRegex.toRegex()) -> binding.emailTxt.error = getString(R.string.error_email_format)
-            password.isEmpty() -> binding.passwordTxt.error = getString(R.string.empty)
-            !password.matches(passwordRegex.toRegex()) -> binding.passwordTxt.error = getString(R.string.error_password_format)
-            confirmPassword.isEmpty() -> binding.confirmPasswordTxt.error = getString(R.string.empty)
-            password != confirmPassword -> binding.confirmPasswordTxt.error = getString(R.string.error_not_match)
-            else -> valid = true
+            fname.isEmpty() -> {
+                changeTextView(binding.firstNameError, R.string.empty, View.VISIBLE)
+                changeTextView(binding.lastNameError, R.string.exist, View.GONE)
+                changeTextView(binding.emailError, R.string.exist, View.GONE)
+                changeTextView(binding.passwordError, R.string.exist, View.GONE)
+                changeTextView(binding.confirmPasswordError, R.string.exist, View.GONE)
+            }
+            !fname.matches(nameRegex.toRegex()) -> {
+                changeTextView(binding.firstNameError, R.string.error_name_format, View.VISIBLE)
+                changeTextView(binding.lastNameError, R.string.exist, View.GONE)
+                changeTextView(binding.emailError, R.string.exist, View.GONE)
+                changeTextView(binding.passwordError, R.string.exist, View.GONE)
+                changeTextView(binding.confirmPasswordError, R.string.exist, View.GONE)
+            }
+            lname.isEmpty() -> {
+                changeTextView(binding.firstNameError, R.string.exist, View.GONE)
+                changeTextView(binding.lastNameError, R.string.empty, View.VISIBLE)
+                changeTextView(binding.emailError, R.string.exist, View.GONE)
+                changeTextView(binding.passwordError, R.string.exist, View.GONE)
+                changeTextView(binding.confirmPasswordError, R.string.exist, View.GONE)
+            }
+            !lname.matches(nameRegex.toRegex()) -> {
+                changeTextView(binding.firstNameError, R.string.exist, View.GONE)
+                changeTextView(binding.lastNameError, R.string.error_name_format, View.VISIBLE)
+                changeTextView(binding.emailError, R.string.exist, View.GONE)
+                changeTextView(binding.passwordError, R.string.exist, View.GONE)
+                changeTextView(binding.confirmPasswordError, R.string.exist, View.GONE)
+            }
+            email.isEmpty() -> {
+                changeTextView(binding.firstNameError, R.string.exist, View.GONE)
+                changeTextView(binding.lastNameError, R.string.exist, View.GONE)
+                changeTextView(binding.emailError, R.string.empty, View.VISIBLE)
+                changeTextView(binding.passwordError, R.string.exist, View.GONE)
+                changeTextView(binding.confirmPasswordError, R.string.exist, View.GONE)
+            }
+            !email.matches(emailRegex.toRegex()) -> {
+                changeTextView(binding.firstNameError, R.string.exist, View.GONE)
+                changeTextView(binding.lastNameError, R.string.exist, View.GONE)
+                changeTextView(binding.emailError, R.string.error_email_format, View.VISIBLE)
+                changeTextView(binding.passwordError, R.string.exist, View.GONE)
+                changeTextView(binding.confirmPasswordError, R.string.exist, View.GONE)
+            }
+            password.isEmpty() -> {
+                changeTextView(binding.firstNameError, R.string.exist, View.GONE)
+                changeTextView(binding.lastNameError, R.string.exist, View.GONE)
+                changeTextView(binding.emailError, R.string.exist, View.GONE)
+                changeTextView(binding.passwordError, R.string.empty, View.VISIBLE)
+                changeTextView(binding.confirmPasswordError, R.string.exist, View.GONE)
+            }
+            !password.matches(passwordRegex.toRegex()) -> {
+                changeTextView(binding.firstNameError, R.string.exist, View.GONE)
+                changeTextView(binding.lastNameError, R.string.exist, View.GONE)
+                changeTextView(binding.emailError, R.string.exist, View.GONE)
+                changeTextView(binding.passwordError, R.string.error_password_format, View.VISIBLE)
+                changeTextView(binding.confirmPasswordError, R.string.exist, View.GONE)
+            }
+            confirmPassword.isEmpty() -> {
+                changeTextView(binding.firstNameError, R.string.exist, View.GONE)
+                changeTextView(binding.lastNameError, R.string.exist, View.GONE)
+                changeTextView(binding.emailError, R.string.exist, View.GONE)
+                changeTextView(binding.passwordError, R.string.exist, View.GONE)
+                changeTextView(binding.confirmPasswordError, R.string.empty, View.VISIBLE)
+            }
+            password != confirmPassword -> {
+                changeTextView(binding.firstNameError, R.string.exist, View.GONE)
+                changeTextView(binding.lastNameError, R.string.exist, View.GONE)
+                changeTextView(binding.emailError, R.string.exist, View.GONE)
+                changeTextView(binding.passwordError, R.string.exist, View.GONE)
+                changeTextView(binding.confirmPasswordError, R.string.error_not_match, View.VISIBLE)
+            }
+            else -> {
+                valid = true
+                changeTextView(binding.firstNameError, R.string.exist, View.GONE)
+                changeTextView(binding.lastNameError, R.string.exist, View.GONE)
+                changeTextView(binding.emailError, R.string.exist, View.GONE)
+                changeTextView(binding.passwordError, R.string.exist, View.GONE)
+                changeTextView(binding.confirmPasswordError, R.string.exist, View.GONE)
+            }
         }
 
         return valid
@@ -163,5 +241,10 @@ class SignupActivity : AppCompatActivity() {
        // Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show()
         Snackbar.make(binding.root,  getString(messageId), Snackbar.LENGTH_SHORT).show()
 
+    }
+
+    private fun changeTextView(textView: TextView, textId: Int, visibility: Int){
+        textView.text =  getString(textId)
+        textView.visibility = visibility
     }
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -77,6 +78,8 @@ class LoginActivity : AppCompatActivity() {
                 mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            changeTextView(binding.emailError, R.string.not_exist, View.GONE)
+                            changeTextView(binding.passwordError, R.string.not_exist, View.GONE)
                             val user = FirebaseAuth.getInstance().currentUser
                             if(user?.isEmailVerified == true) {
                                 user.let {
@@ -88,8 +91,8 @@ class LoginActivity : AppCompatActivity() {
                             else { onFailure(R.string.error_email_verify) }
                         } else {
                             onFailure(R.string.error_login)
-                            binding.emailTxt.error = getString(R.string.not_exist)
-                            binding.passwordTxt.error = getString(R.string.not_exist)
+                            changeTextView(binding.emailError, R.string.not_exist, View.VISIBLE)
+                            changeTextView(binding.passwordError, R.string.not_exist, View.VISIBLE)
                         }
                     }
             }
@@ -150,9 +153,19 @@ class LoginActivity : AppCompatActivity() {
     private fun validation(): Boolean {
         var valid = false
         when {
-            binding.email.text.toString().isEmpty() -> binding.emailTxt.error = getString(R.string.empty)
-            binding.password.text.toString().isEmpty() -> binding.passwordTxt.error = getString(R.string.empty)
-            else -> valid = true
+            binding.email.text.toString().isEmpty() -> {
+                changeTextView(binding.emailError, R.string.empty, View.VISIBLE)
+                changeTextView(binding.passwordError, R.string.empty, View.GONE)
+            }
+            binding.password.text.toString().isEmpty() -> {
+                changeTextView(binding.emailError, R.string.empty, View.GONE)
+                changeTextView(binding.passwordError, R.string.empty, View.VISIBLE)
+            }
+            else -> {
+                valid = true
+                changeTextView(binding.emailError, R.string.not_exist, View.GONE)
+                changeTextView(binding.passwordError, R.string.not_exist, View.GONE)
+            }
         }
         return valid
     }
@@ -195,6 +208,11 @@ class LoginActivity : AppCompatActivity() {
       //  Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show()
         Snackbar.make(binding.root,  getString(messageId), Snackbar.LENGTH_SHORT).show()
 
+    }
+
+    private fun changeTextView(textView: TextView, textId: Int, visibility: Int){
+        textView.text =  getString(textId)
+        textView.visibility = visibility
     }
 
 }
