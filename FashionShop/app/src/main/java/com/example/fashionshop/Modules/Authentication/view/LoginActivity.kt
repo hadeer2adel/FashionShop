@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.fashionshop.MainActivity
@@ -21,6 +22,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -47,61 +49,72 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (isNetworkConnected(this)) {
+            if (CustomerData.getInstance(this).isLogged) {
+                startActivity(Intent(this, MainActivity::class.java))
+            }
 
-        if(CustomerData.getInstance(this).isLogged){
-            startActivity(Intent(this, MainActivity::class.java))
-        }
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.client_id))
+                .requestEmail()
+                .build()
 
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.client_id))
-            .requestEmail()
-            .build()
+            googleSignInClient = GoogleSignIn.getClient(this, gso)
+            mAuth = FirebaseAuth.getInstance()
+            initViewModel()
 
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
-        mAuth = FirebaseAuth.getInstance()
-        initViewModel()
+            binding.signupBtn1.setOnClickListener {
+                startActivity(Intent(this, SignupActivity::class.java))
+            }
+            binding.signupBtn2.setOnClickListener {
+                startActivity(Intent(this, SignupActivity::class.java))
+            }
+            binding.skipBtn.setOnClickListener {
+                startActivity(Intent(this, MainActivity::class.java))
+            }
 
-        binding.signupBtn1.setOnClickListener {
-            startActivity(Intent(this, SignupActivity::class.java))
-        }
-        binding.signupBtn2.setOnClickListener {
-            startActivity(Intent(this, SignupActivity::class.java))
-        }
-        binding.skipBtn.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
+            binding.loginBtn.setOnClickListener {
+                val email = binding.email.text.toString()
+                val password = binding.password.text.toString()
 
-        binding.loginBtn.setOnClickListener {
-            val email = binding.email.text.toString()
-            val password = binding.password.text.toString()
-
-            if (validation()) {
-                mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            changeTextView(binding.emailError, R.string.not_exist, View.GONE)
-                            changeTextView(binding.passwordError, R.string.not_exist, View.GONE)
-                            val user = FirebaseAuth.getInstance().currentUser
-                            if(user?.isEmailVerified == true) {
-                                user.let {
-                                    binding.progressBar.visibility = View.VISIBLE
-                                    binding.screen.visibility = View.GONE
-                                    viewModel.getCustomerByEmail(email)
+                if (validation()) {
+                    mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                changeTextView(binding.emailError, R.string.not_exist, View.GONE)
+                                changeTextView(binding.passwordError, R.string.not_exist, View.GONE)
+                                val user = FirebaseAuth.getInstance().currentUser
+                                if (user?.isEmailVerified == true) {
+                                    user.let {
+                                        binding.progressBar.visibility = View.VISIBLE
+                                        binding.screen.visibility = View.GONE
+                                        viewModel.getCustomerByEmail(email)
+                                    }
+                                } else {
+                                    onFailure(R.string.error_email_verify)
                                 }
+                            } else {
+                                onFailure(R.string.error_login)
+                                changeTextView(binding.emailError, R.string.not_exist, View.VISIBLE)
+                                changeTextView(
+                                    binding.passwordError,
+                                    R.string.not_exist,
+                                    View.VISIBLE
+                                )
                             }
-                            else { onFailure(R.string.error_email_verify) }
-                        } else {
-                            onFailure(R.string.error_login)
-                            changeTextView(binding.emailError, R.string.not_exist, View.VISIBLE)
-                            changeTextView(binding.passwordError, R.string.not_exist, View.VISIBLE)
                         }
-                    }
+                }
+            }
+
+            binding.googleBtn.setOnClickListener {
+                val signInIntent = googleSignInClient.signInIntent
+                startActivityForResult(signInIntent, RC_SIGN_IN)
             }
         }
-
-        binding.googleBtn.setOnClickListener {
-            val signInIntent = googleSignInClient.signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
+        else
+        {
+            binding.screen.visibility = View.INVISIBLE
+            binding.emptyView.visibility = View.VISIBLE
         }
     }
 

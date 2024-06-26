@@ -60,7 +60,9 @@ data class OrderBody(
     val line_items: List<LineItemBody>,
     val total_tax: Double,
     val currency: String,
-    val total_discounts : String
+    val total_discounts : String ,
+    val referring_site : String
+
 )
 
 

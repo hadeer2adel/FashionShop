@@ -33,6 +33,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.databinding.FragmentOrderInfoBinding
 import com.example.fashionshop.databinding.FragmentOrdersBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -72,18 +73,26 @@ class OrderInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModelCurrency()
-        navController = NavHostFragment.findNavController(this)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
+        if (isNetworkConnected(requireContext())){
+            initViewModelCurrency()
+            navController = NavHostFragment.findNavController(this)
+            appBarConfiguration = AppBarConfiguration(navController.graph)
 
-        // Set up the toolbar
-        val toolbar = binding.toolbar
-        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
-        setUpRV()
-        initViewModelCurrency()
-        initViewModel()
-        viewModel.getOrder(args.orderId)
-        // setUpRV()
+            // Set up the toolbar
+            val toolbar = binding.toolbar
+            NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
+            setUpRV()
+            initViewModelCurrency()
+            initViewModel()
+            viewModel.getOrder(args.orderId)
+            // setUpRV()
+        }
+        else
+        {
+            binding.toolbar.visibility = View.INVISIBLE
+            binding.linearLayout3.visibility = View.INVISIBLE
+            binding.emptyView.visibility = View.VISIBLE
+        }
     }
 
     private fun initViewModel() {
@@ -161,6 +170,7 @@ class OrderInfoFragment : Fragment() {
             binding.tvOrderEmail.text = it.email
             binding.tvOrderPhome.text = it.billing_address?.phone
             binding.tvOrderAddress.text = it.billing_address?.address1
+            binding.tvPaymentMethod.text = it.referring_site
             val customer = CustomerData.getInstance(requireContext())
             val priceString = it.current_total_price
             val priceDouble = priceString?.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails

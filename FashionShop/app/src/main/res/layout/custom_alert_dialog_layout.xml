@@ -30,6 +30,7 @@
             android:text="@string/guest_message"
             android:textColor="@android:color/black"
             android:padding="5dp"
+            android:textAlignment="center"
             android:textSize="18sp" />
 
 

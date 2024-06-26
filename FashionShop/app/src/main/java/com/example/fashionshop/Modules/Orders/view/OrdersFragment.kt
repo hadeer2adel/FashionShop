@@ -34,6 +34,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.databinding.FragmentOrdersBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
@@ -60,22 +61,38 @@ class OrdersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navController = NavHostFragment.findNavController(this)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
+        if (isNetworkConnected(requireContext())) {
+            navController = NavHostFragment.findNavController(this)
+            appBarConfiguration = AppBarConfiguration(navController.graph)
 
-        // Set up the toolbar
-        val toolbar = binding.toolbar
-        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
+            // Set up the toolbar
+            val toolbar = binding.toolbar
+            NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
 
-        setUpRV()
-        initViewModel()
-
+            setUpRV()
+            initViewModel()
+        }
+        else
+        {
+            binding.rvOrders.visibility = View.INVISIBLE
+            binding.toolbar.visibility = View.INVISIBLE
+            binding.connectionLayout.visibility = View.VISIBLE
+        }
 
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!isNetworkConnected(requireContext())) {
+            binding.rvOrders.visibility = View.INVISIBLE
+            binding.toolbar.visibility = View.INVISIBLE
+            binding.connectionLayout.visibility = View.VISIBLE
+        }
     }
 
     private fun setUpRV(){
@@ -148,7 +165,6 @@ class OrdersFragment : Fragment() {
                         isLoading = false
                     }
                     is NetworkState.Failure -> {
-                        showError("Network Error", "Failed to load data. Please try again.")
                         isLoading = false
                     }
                 }
@@ -156,13 +172,7 @@ class OrdersFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (!isLoading) {
-            val id = CustomerData.getInstance(requireContext()).id
-            viewModel.getOrders(id)
-        }
-    }
+
 
 
 }

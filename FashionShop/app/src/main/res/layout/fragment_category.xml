@@ -177,7 +177,7 @@
         android:elevation="16dp"
         android:focusable="true"
         android:src="@drawable/ic_categories"
-        app:backgroundTint="@color/light"
+        app:backgroundTint="@color/LightGray"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -360,7 +360,7 @@ class ProductInfoFragment : Fragment() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_alert_dialog_layout, null)
         AlertDialog.Builder(requireContext()).apply {
             setView(dialogView)
-            setPositiveButton("Sure") { dialog, _ ->
+            setPositiveButton("Login") { dialog, _ ->
                 val intent = Intent(requireContext(), LoginActivity::class.java)
                 startActivity(intent)
                 dialog.dismiss()

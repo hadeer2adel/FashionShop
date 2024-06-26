@@ -41,6 +41,7 @@ import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.databinding.FragmentOrderDetailsBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
@@ -79,119 +80,134 @@ class OrderDetailsFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        allPaymentFactory =
-            PaymentFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allPaymentViewModel =
-            ViewModelProvider(this, allPaymentFactory).get(PaymentViewModel::class.java)
-        val customer = CustomerData.getInstance(requireContext())
-        binding.currency.text = customer.currency
-        navController = NavHostFragment.findNavController(this)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        val toolbar = binding.toolbar
-        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
-        allCodesFactory =
-            OrderDetailsFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allCodesViewModel =
-            ViewModelProvider(this, allCodesFactory).get(OrderDetailsViewModel::class.java)
-        allCodesViewModel.getAdsCode()
-        fetchTitlesList()
+        if (isNetworkConnected(requireContext())){
+            allPaymentFactory =
+                PaymentFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+            allPaymentViewModel =
+                ViewModelProvider(this, allPaymentFactory).get(PaymentViewModel::class.java)
+            val customer = CustomerData.getInstance(requireContext())
+            binding.currency.text = customer.currency
+            navController = NavHostFragment.findNavController(this)
+            appBarConfiguration = AppBarConfiguration(navController.graph)
+            val toolbar = binding.toolbar
+            NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
+            allCodesFactory =
+                OrderDetailsFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+            allCodesViewModel =
+                ViewModelProvider(this, allCodesFactory).get(OrderDetailsViewModel::class.java)
+            allCodesViewModel.getAdsCode()
+            fetchTitlesList()
 
-        allProductFactory = CartFactory(
-            RepositoryImp.getInstance(NetworkManagerImp.getInstance()),
-            CustomerData.getInstance(requireContext()).cartListId
-        )
-        allProductViewModel =
-            ViewModelProvider(this, allProductFactory).get(CartViewModel::class.java)
+            allProductFactory = CartFactory(
+                RepositoryImp.getInstance(NetworkManagerImp.getInstance()),
+                CustomerData.getInstance(requireContext()).cartListId
+            )
+            allProductViewModel =
+                ViewModelProvider(this, allProductFactory).get(CartViewModel::class.java)
 
-        allCategoryFactory =
-            CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allCategoryViewModel =
-            ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
-        allCategoryViewModel.getLatestRates()
-        lifecycleScope.launch {
-            allCategoryViewModel.productCurrency.collectLatest { response ->
-                when (response) {
-                    is NetworkState.Loading -> "showLoading()"
-                    is NetworkState.Success -> {
-                        Log.i("initViewModel", "initViewModel:${response.data}")
-                        currencyConversionRate = response.data.rates?.EGP ?: 1.0
+            allCategoryFactory =
+                CategoryFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+            allCategoryViewModel =
+                ViewModelProvider(this, allCategoryFactory).get(CategoryViewModel::class.java)
+            allCategoryViewModel.getLatestRates()
+            lifecycleScope.launch {
+                allCategoryViewModel.productCurrency.collectLatest { response ->
+                    when (response) {
+                        is NetworkState.Loading -> "showLoading()"
+                        is NetworkState.Success -> {
+                            Log.i("initViewModel", "initViewModel:${response.data}")
+                            currencyConversionRate = response.data.rates?.EGP ?: 1.0
+                        }
+
+                        is NetworkState.Failure -> ""
+                        else -> {}
                     }
-
-                    is NetworkState.Failure -> ""
-                    else -> {}
                 }
             }
-        }
-        lifecycleScope.launch {
-            allProductViewModel.productCard.collectLatest { response ->
-                when (response) {
-                    is NetworkState.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
+            lifecycleScope.launch {
+                allProductViewModel.productCard.collectLatest { response ->
+                    when (response) {
+                        is NetworkState.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
 
-                    is NetworkState.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        lineItemsList = response.data.draft_order.line_items.drop(1)
-                        var subtotal = response.data.draft_order.line_items.drop(1)
-                            .sumByDouble { it.properties.get(0).value.split("*").getOrNull(1)?.trim() ?.toDoubleOrNull() ?: 0.0}
-//                        subtotalInt=subtotal
-                        val customer = CustomerData.getInstance(requireContext())
-                        if (customer.currency == "USD") {
-                            binding.subTotalValue.text =
-                                "${String.format("%.2f", convertCurrency(subtotal))}"
-                            binding.totalValue.text =
-                                "${String.format("%.2f", convertCurrency(subtotal))}"
-                            subtotalInt = convertCurrency(subtotal)
+                        is NetworkState.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            lineItemsList = response.data.draft_order.line_items.drop(1)
+                            var subtotal = response.data.draft_order.line_items.drop(1)
+                                .sumByDouble { it.properties.get(0).value.split("*").getOrNull(1)?.trim() ?.toDoubleOrNull() ?: 0.0}
+    //                        subtotalInt=subtotal
+                            val customer = CustomerData.getInstance(requireContext())
+                            if (customer.currency == "USD") {
+                                binding.subTotalValue.text =
+                                    "${String.format("%.2f", convertCurrency(subtotal))}"
+                                binding.totalValue.text =
+                                    "${String.format("%.2f", convertCurrency(subtotal))}"
+                                subtotalInt = convertCurrency(subtotal)
 
-                        } else {
-                            binding.subTotalValue.text = "${String.format("%.2f", subtotal)}"
-                            binding.totalValue.text = "${String.format("%.2f", subtotal)}"
-                            subtotalInt = subtotal
+                            } else {
+                                binding.subTotalValue.text = "${String.format("%.2f", subtotal)}"
+                                binding.totalValue.text = "${String.format("%.2f", subtotal)}"
+                                subtotalInt = subtotal
+
+                            }
+                        }
+
+                        is NetworkState.Failure -> {
+                            binding.progressBar.visibility = View.GONE
+                            Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
 
                         }
                     }
+                }
+            }
+            //return address that are selected
+            addressFactory =
+                AddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
+            addressViewModel =
+                ViewModelProvider(this, addressFactory).get(AddressViewModel::class.java)
+            addressViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
+            lifecycleScope.launch {
+                addressViewModel.products.collectLatest { response ->
+                    when (response) {
+                        is NetworkState.Loading -> {
+                            Log.i("NetworkState", "Loading")
+                        }
 
-                    is NetworkState.Failure -> {
-                        binding.progressBar.visibility = View.GONE
-                        Snackbar.make(binding.root, response.error.message.toString(), Snackbar.LENGTH_SHORT).show()
+                        is NetworkState.Success -> {
+                            Log.i("NetworkState", "Success: ${response.data.customer.id}")
+                            val (defaultAddresses, nonDefaultAddresses) = response.data.customer.addresses.partition { it.default }
+                            filteredAddresses = defaultAddresses.get(0)
+                            Log.i("filteredAddresses", "${filteredAddresses} ")
+                        }
 
+                        is NetworkState.Failure -> {
+                            Log.i("NetworkState", "Failure${response.error.message}")
+                        }
                     }
                 }
             }
-        }
-        //return address that are selected
-        addressFactory =
-            AddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        addressViewModel =
-            ViewModelProvider(this, addressFactory).get(AddressViewModel::class.java)
-        addressViewModel.getAllcustomer(CustomerData.getInstance(requireContext()).id)
-        lifecycleScope.launch {
-            addressViewModel.products.collectLatest { response ->
-                when (response) {
-                    is NetworkState.Loading -> {
-                        Log.i("NetworkState", "Loading")
-                    }
+            binding.validate.setOnClickListener {
+                validateCoupon()
+            }
 
-                    is NetworkState.Success -> {
-                        Log.i("NetworkState", "Success: ${response.data.customer.id}")
-                        val (defaultAddresses, nonDefaultAddresses) = response.data.customer.addresses.partition { it.default }
-                        filteredAddresses = defaultAddresses.get(0)
-                        Log.i("filteredAddresses", "${filteredAddresses} ")
-                    }
+            binding.paymentButtonContainer.setOnClickListener {
 
-                    is NetworkState.Failure -> {
-                        Log.i("NetworkState", "Failure${response.error.message}")
-                    }
-                }
+                showPaymentMethodDialog()
             }
         }
-        binding.validate.setOnClickListener {
-            validateCoupon()
-        }
-
-        binding.paymentButtonContainer.setOnClickListener {
-
-            showPaymentMethodDialog()
+        else
+        {
+            binding.toolbar.visibility = View.INVISIBLE
+            binding.linearLayout.visibility = View.INVISIBLE
+            binding.h.visibility = View.INVISIBLE
+            binding.discountValue.visibility = View.INVISIBLE
+            binding.discountTitle.visibility = View.INVISIBLE
+            binding.view.visibility = View.INVISIBLE
+            binding.totalValue.visibility = View.INVISIBLE
+            binding.totalTitle.visibility = View.INVISIBLE
+            binding.paymentButtonContainer.visibility = View.INVISIBLE
+            binding.emptyView.visibility = View.VISIBLE
         }
     }
 
@@ -410,7 +426,8 @@ class OrderDetailsFragment() : Fragment() {
             line_items = lineItem,
             total_tax = 13.5,
             currency = CustomerData.getInstance(requireContext()).currency ,
-            total_discounts = dicountValueBody
+            total_discounts = dicountValueBody ,
+            referring_site = "Cash"
         )
         val wrappedOrderBody = mapOf("order" to orderBody)
         Log.i("current_total_price", " ${wrappedOrderBody}")

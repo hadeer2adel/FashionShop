@@ -359,6 +359,7 @@ class CategoryFragment : Fragment() ,CategoryListener{
             viewModel.filterProducts(mainCategory, subCategory)
             changeFabColors()
             changeSelectedFabColor()
+
         }
 
         binding.fabAccessories.setOnClickListener {
@@ -367,6 +368,7 @@ class CategoryFragment : Fragment() ,CategoryListener{
             viewModel.filterProducts(mainCategory, subCategory)
             changeFabColors()
             changeSelectedFabColor()
+
         }
     }
 
@@ -384,13 +386,13 @@ class CategoryFragment : Fragment() ,CategoryListener{
             when (subCategory) {
                 ACCESSORIES -> {
                     fabAccessories.backgroundTintList =
-                        resources.getColorStateList(R.color.gray1)
+                        resources.getColorStateList(R.color.light)
                 }
                 T_SHIRTS -> {
-                    fabShirt.backgroundTintList = resources.getColorStateList(R.color.gray1)
+                    fabShirt.backgroundTintList = resources.getColorStateList(R.color.light)
                 }
                 SHOES -> {
-                    fabShoes.backgroundTintList = resources.getColorStateList(R.color.gray1)
+                    fabShoes.backgroundTintList = resources.getColorStateList(R.color.light)
                 }
             }
         }

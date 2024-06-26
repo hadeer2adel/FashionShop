@@ -242,7 +242,8 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
             line_items = lineItem,
             total_tax = 13.5,
             currency = CustomerData.getInstance(requireContext()).currency ,
-            total_discounts = discountValueBody
+            total_discounts = discountValueBody ,
+            referring_site = "Visa"
         )
         val wrappedOrderBody = mapOf("order" to orderBody)
         Log.i("current_total_price", " ${wrappedOrderBody}")
