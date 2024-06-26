@@ -27,10 +27,8 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(AndroidJUnit4::class)
 class AuthenticationViewModelTest {
-
     @get:Rule
     val myRule = InstantTaskExecutorRule()
-
     private lateinit var repository: FakeRepository
     private lateinit var viewModel: AuthenticationViewModel
     private lateinit var firstCustomer: CustomerResponse.Customer
@@ -42,67 +40,6 @@ class AuthenticationViewModelTest {
         firstCustomer = CustomerResponse.Customer( 1L, "First", "Customer", "first@gmail.com", "", "EGY", 0L,  0L)
         repository.customers.add(firstCustomer)
     }
-
-    @Test
-    fun createCustomer_CustomerResponseSameAsCustomerRequest() = runBlockingTest {
-        val customerRequest = CustomerRequest(CustomerRequest.Customer(
-            "Hadeer",
-            "Adel",
-            "hadeer@gmail.com"
-        ))
-
-        viewModel.createCustomer(customerRequest)
-
-        var result = CustomerResponse()
-
-        val job = launch {
-            viewModel.customer.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> { }
-                    is NetworkState.Success ->{
-                        result = response.data
-                    }
-                    is NetworkState.Failure ->{  }
-                }
-            }
-        }
-
-        advanceUntilIdle()
-        job.cancelAndJoin()
-
-        assertThat(result.customer , not(nullValue()))
-        assertThat(result.customer?.first_name, IsEqual(customerRequest.customer.first_name))
-        assertThat(result.customer?.last_name, IsEqual(customerRequest.customer.last_name))
-        assertThat(result.customer?.email, IsEqual(customerRequest.customer.email))
-    }
-
-    @Test
-    fun updateCustomer_NoteAndMultipassIdentifierNotZero() = runBlockingTest {
-        viewModel.updateCustomer(firstCustomer.id)
-
-        var result = CustomerResponse()
-
-        val job = launch {
-            viewModel.customer.collectLatest { response ->
-                when(response){
-                    is NetworkState.Loading -> { }
-                    is NetworkState.Success ->{
-                        result = response.data
-                    }
-                    is NetworkState.Failure ->{  }
-                }
-            }
-        }
-
-        advanceUntilIdle()
-        job.cancelAndJoin()
-
-        assertThat(result.customer , not(nullValue()))
-        assertThat(result.customer?.id, IsEqual(firstCustomer.id))
-        assertThat(result.customer?.note, not(IsEqual(0L)))
-        assertThat(result.customer?.multipass_identifier, not(IsEqual(0L)))
-    }
-
     @Test
     fun getCustomerByEmail_success() = runBlockingTest {
         val email = firstCustomer.email

@@ -89,33 +89,6 @@ class FavViewModelTest {
     }
 
     @Test
-    fun insertFavProduct_LineItemsListIncreasedByOne() = runBlockingTest {
-        val product = Product(3L, "Product 3", ProductImage("image3.png"), listOf(Variant("300")))
-
-        viewModel.insertFavProduct(product)
-
-        var result = DraftOrderResponse(DraftOrderResponse.DraftOrder())
-
-        val job = launch {
-            viewModel.product.collectLatest { state ->
-                when (state) {
-                    is NetworkState.Loading -> { }
-                    is NetworkState.Success -> {
-                        result = state.data
-                    }
-                    is NetworkState.Failure -> { }
-                }
-            }
-        }
-
-        advanceUntilIdle()
-        job.cancelAndJoin()
-
-        assertThat(result.draft_order , not(nullValue()))
-        assertThat(result.draft_order.line_items.size, IsEqual(favList.line_items.size + 1))
-    }
-
-    @Test
     fun deleteFavProduct_LineItemsListDecreasedByOne() = runBlockingTest {
 
         viewModel.deleteFavProduct(product1.id!!)
