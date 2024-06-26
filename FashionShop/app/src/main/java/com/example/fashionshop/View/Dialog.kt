@@ -2,22 +2,29 @@ package com.example.fashionshop.View
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.view.LayoutInflater
 import androidx.core.content.ContentProviderCompat.requireContext
+import com.example.fashionshop.Modules.Authentication.view.LoginActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.example.fashionshop.R
 
 fun showDialog(context: Context, titleId: Int, bodyId: Int, onAllow: ()->Unit) {
-    MaterialAlertDialogBuilder(
-        context,
-        com.google.android.material.R.style.MaterialAlertDialog_Material3
-    )
-        .setTitle(context.getString(titleId))
-        .setMessage(context.getString(bodyId))
-        .setPositiveButton(context.getString(R.string.sure)) { _, _ -> onAllow() }
-        .setNegativeButton(context.getString(R.string.cancel), null)
-        .show()
+    AlertDialog.Builder(context).apply {
+        setTitle(context.getString(titleId))
+        setMessage(context.getString(bodyId))
+        setPositiveButton(context.getString(R.string.sure)) { dialog, _ ->
+            onAllow()
+            dialog.dismiss()
+        }
+        setNegativeButton(context.getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        create()
+        show()
+    }
 }
 
 fun isNetworkConnected(context: Context): Boolean {
