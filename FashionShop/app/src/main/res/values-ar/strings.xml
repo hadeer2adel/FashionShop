@@ -185,6 +185,39 @@
     <string name="pieces">قطع</string>
     <string name="valid">صالح</string>
     <string name="next">التالي</string>
+    <string name="decrease_quantity_message">لا يمكن تقليل الكمية إلى أقل من 1</string>
+    <string name="increase_quantity_message_1">لا يمكن زيادة الكمية إلى أكثر من</string>
+    <string name="increase_quantity_message_2">وحدة</string>
+    <string name="delete_d_address_title">لا يمكن حذف العنوان الافتراضي</string>
+    <string name="delete_d_address_body">لا يمكن حذف العنوان الافتراضي.</string>
+    <string name="delete">حذف</string>
+    <string name="delete_address_body">هل أنت متأكد أنك تريد حذف هذا العنوان؟</string>
+    <string name="d_address_success">تم تعيين العنوان الافتراضي بنجاح</string>
+    <string name="permission_denied">تم رفض الإذن</string>
+    <string name="no_current_location">غير قادر على الحصول على الموقع الحالي، يرجى تشغيل إعداد الموقع</string>
+    <string name="your_location">موقعك</string>
+    <string name="network_error">خطأ في الشبكة</string>
+    <string name="failed_load_data">فشل في تحميل البيانات. يرجى المحاولة مرة أخرى.</string>
+    <string name="clicked_on">تم النقر على</string>
+    <string name="copy_discount_code">تم نسخ رمز الخصم إلى الحافظة</string>
+    <string name="coupon_success">تم تطبيق القسيمة بنجاح</string>
+    <string name="invalid_coupon">قسيمة غير صالحة</string>
+    <string name="invalid_coupon_body">القسيمة التي أدخلتها غير صالحة.</string>
+    <string name="choose_payment_method">اختر طريقة الدفع الخاصة بك</string>
+    <string name="order_placed_success">تم تقديم الطلب بنجاح</string>
+    <string name="order_not_found">الطلب غير موجود</string>
+    <string name="order_not_found_body">لا يمكن العثور على تفاصيل الطلب.</string>
+    <string name="visa_select">تم اختيار بطاقة فيزا</string>
+    <string name="cash_select">تم اختيار الدفع عند الاستلام</string>
+    <string name="select_payment_method">يرجى اختيار طريقة الدفع</string>
+    <string name="payment_success">تم الدفع بنجاح</string>
+    <string name="payment_finish">اكتملت عملية الدفع</string>
+    <string name="must_select_variant">يجب اختيار نوع!</string>
+    <string name="product_not_available">معلومات المنتج غير متوفرة</string>
+    <string name="add_product_success">تم إضافة المنتج بنجاح</string>
+    <string name="selected">تم الاختيار</string>
+    <string name="choose_language">اختر اللغة</string>
+    <string name="quantity_change_success">تم تغيير الكمية بنجاح</string>
 
 
 

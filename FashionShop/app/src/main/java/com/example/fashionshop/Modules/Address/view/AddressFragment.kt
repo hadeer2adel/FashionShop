@@ -93,7 +93,8 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
                         binding.progressBar.visibility = View.GONE
                         Log.i("TAG", "Data updated. Size: ${response.data.customer.id}")
                         val (defaultAddresses, nonDefaultAddresses) = response.data.customer.addresses.partition { it.default }
-                        val filteredAddresses = defaultAddresses + nonDefaultAddresses
+                        val nonDefaultAddressess = response.data.customer.addresses.filter { !it.default }
+                        val filteredAddresses = defaultAddresses + nonDefaultAddressess
                         mAdapter.setAddressList(filteredAddresses)
                         mAdapter.notifyDataSetChanged()
 
@@ -129,7 +130,8 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
                             binding.emptyView.visibility = View.GONE
 
                             val (defaultAddresses, nonDefaultAddresses) = addresses.partition { it.default }
-                            val filteredAddresses = defaultAddresses + nonDefaultAddresses
+                            val nonDefaultAddressess = response.data.customer.addresses.filter { !it.default }
+                            val filteredAddresses = defaultAddresses + nonDefaultAddressess
 
                             mAdapter.setAddressList(filteredAddresses)
                             mAdapter.notifyDataSetChanged()
@@ -170,6 +172,9 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
                 setNegativeButton(requireContext().getString(R.string.cancel)) { dialog, _ ->
                     dialog.dismiss()
                 }
+                setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
             }
         } else {
             alertDialogBuilder.apply {
@@ -182,6 +187,9 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
                         CustomerData.getInstance(requireContext()).id
                     )
                     refreshFragment()
+                }
+                setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
                 }
             }
         }
