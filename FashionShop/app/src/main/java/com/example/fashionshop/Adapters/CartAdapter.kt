@@ -134,7 +134,7 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
                 holder.binding.quantityText.text = newQuantity.toString()
 
                 // Recalculate and update item's price
-                val totalPrice = calculateTotalPrice(price, newQuantity)
+                val totalPrice = calculateTotalPrice(item.price, newQuantity)
                 Log.i("totalPrice", "onBindViewHolder: ${totalPrice}")
                 holder.binding.itemPrice.text = price
                 Log.i("itemPrice", "onBindViewHolder: ${holder.binding.itemPrice.text}")
