@@ -76,7 +76,7 @@ class MapsFragment : Fragment() {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 getCurrentLocation()
             } else {
-                Snackbar.make(requireView(), "Permission Denied", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), requireContext().getString(R.string.permission_denied), Snackbar.LENGTH_SHORT).show()
 
                 // Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
             }
@@ -99,9 +99,9 @@ class MapsFragment : Fragment() {
             if (location != null) {
                 val currentLatLng = LatLng(location.latitude, location.longitude)
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
-                googleMap.addMarker(MarkerOptions().position(currentLatLng).title("Your Location"))
+                googleMap.addMarker(MarkerOptions().position(currentLatLng).title(requireContext().getString(R.string.your_location)))
             } else {
-                Snackbar.make(requireView(), "Unable to get current location, please turn your Location Setting", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), requireContext().getString(R.string.no_current_location), Snackbar.LENGTH_SHORT).show()
 
              //   Toast.makeText(requireContext(), "Unable to get current location", Toast.LENGTH_SHORT).show()
             }

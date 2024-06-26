@@ -121,7 +121,7 @@ class ProductsFragment : Fragment()  {
                 when(response){
                     is NetworkState.Loading -> showLoading()
                     is NetworkState.Success -> response.data.products?.let { showSuccess(it) }
-                    is NetworkState.Failure -> showError("Network Error", "Failed to load data. Please try again.")
+                    is NetworkState.Failure -> showError(requireContext().getString(R.string.network_error), requireContext().getString(R.string.failed_load_data))
                 }
             }
         }
@@ -148,7 +148,7 @@ class ProductsFragment : Fragment()  {
         AlertDialog.Builder(requireContext()).apply {
             setTitle(title)
             setMessage(message)
-            setPositiveButton("OK") { dialog, _ ->
+            setNegativeButton(requireContext().getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             create()

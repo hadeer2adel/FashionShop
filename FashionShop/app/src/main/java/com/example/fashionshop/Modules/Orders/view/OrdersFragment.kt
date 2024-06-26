@@ -97,7 +97,7 @@ class OrdersFragment : Fragment() {
 
     private fun setUpRV(){
         val onCardClick: (order : Order) -> Unit = {
-            Snackbar.make(binding.root,"Clicked on ${it.order_number}", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root,requireContext().getString(R.string.clicked_on)+" ${it.order_number}", Snackbar.LENGTH_SHORT).show()
             val action = it.id?.let { it1 ->
                 OrdersFragmentDirections.actionOrderFragmentToOrderInfoFragment(
                     it1
@@ -141,7 +141,7 @@ class OrdersFragment : Fragment() {
         AlertDialog.Builder(requireContext()).apply {
             setTitle(title)
             setMessage(message)
-            setPositiveButton("OK") { dialog, _ ->
+            setNegativeButton(requireContext().getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             create()

@@ -6,9 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -167,20 +165,23 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
         val currentAddress = mAdapter.getAddressList().find { it.id == addressId }
         if (currentAddress != null && currentAddress.default) {
             alertDialogBuilder.apply {
-                setTitle("Cannot Delete Default Address")
-                setMessage("The default address cannot be deleted.")
-                setPositiveButton("OK") { dialog, _ ->
+                setTitle(requireContext().getString(R.string.delete_d_address_title))
+                setMessage(requireContext().getString(R.string.delete_d_address_body))
+                setNegativeButton(requireContext().getString(R.string.cancel)) { dialog, _ ->
                     dialog.dismiss()
                 }
             }
         } else {
             alertDialogBuilder.apply {
-                setTitle("Delete Address")
-                setMessage("Are you sure you want to delete this address?")
-                setPositiveButton("Delete") { dialog, _ ->
+                setTitle(requireContext().getString(R.string.delete_title))
+                setMessage(requireContext().getString(R.string.delete_address_body))
+                setPositiveButton(requireContext().getString(R.string.delete)) { dialog, _ ->
                     dialog.dismiss()
-                allProductViewModel.senddeleteAddressRequest(addressId,CustomerData.getInstance(requireContext()).id)
-                refreshFragment()
+                    allProductViewModel.senddeleteAddressRequest(
+                        addressId,
+                        CustomerData.getInstance(requireContext()).id
+                    )
+                    refreshFragment()
                 }
             }
         }
@@ -189,7 +190,7 @@ class AddressFragment : Fragment(), OnBackPressedListener ,AddressListener {
 
     override fun setAddressDefault(id:Long,default: Boolean) {
         allProductViewModel.sendeditAddressRequest(id,default,CustomerData.getInstance(requireContext()).id)
-        Snackbar.make(binding.root, "Default Address Successfully", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, requireContext().getString(R.string.d_address_success), Snackbar.LENGTH_SHORT).show()
     //    Toast.makeText(requireContext(), "Address Preeesed Successfully", Toast.LENGTH_LONG).show()
         refreshFragment()
 

@@ -245,7 +245,7 @@ class OrderDetailsFragment() : Fragment() {
         if (couponCode in titlesList) {
             val coupon = couponCode
            // Toast.makeText(requireContext(), "Coupon Applied Successfully", Toast.LENGTH_LONG).show()
-            Snackbar.make(binding.root,"Coupon Applied Successfully", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root,requireContext().getString(R.string.coupon_success), Snackbar.LENGTH_SHORT).show()
 
             lifecycleScope.launch {
                 allCodesViewModel.productCode.collectLatest { response ->
@@ -288,16 +288,16 @@ class OrderDetailsFragment() : Fragment() {
     private fun showInvalidCouponDialog() {
         val alertDialogBuilder = AlertDialog.Builder(requireContext())
         alertDialogBuilder.apply {
-            setTitle("Invalid Coupon")
-            setMessage("The coupon you entered is invalid.")
-            setPositiveButton("OK") { dialog, _ ->
+            setTitle(requireContext().getString(R.string.invalid_coupon))
+            setMessage(requireContext().getString(R.string.invalid_coupon_body))
+            setNegativeButton(requireContext().getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
                 binding.discountValue.text = "0"
                 binding.totalValue.text = subtotalInt.toString()
             }
         }
         alertDialogBuilder.create().show()
-        Snackbar.make(binding.root,"Coupon Code is Invalid", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.root,requireContext().getString(R.string.invalid_coupon), Snackbar.LENGTH_SHORT).show()
       //  Toast.makeText(requireContext(), "Coupon Code is Invalid", Toast.LENGTH_LONG).show()
         Log.i("Coupon", "False: ")
     }
@@ -331,7 +331,7 @@ class OrderDetailsFragment() : Fragment() {
         val options = arrayOf("Visa", "Cash")
 
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Choose Your Payment Method")
+        builder.setTitle(requireContext().getString(R.string.choose_payment_method))
             .setSingleChoiceItems(options, -1) { dialog, which ->
                 val selectedPaymentMethod = when (which) {
                     0 -> "Visa"
@@ -436,7 +436,7 @@ class OrderDetailsFragment() : Fragment() {
 
         allCodesViewModel.createOrder(wrappedOrderBody,
             onSuccess = {
-                showSnackbar("Order placed successfully")
+                showSnackbar(requireContext().getString(R.string.order_placed_success))
                 showAlertDialog()
                 Log.d("placeOrder", "success")
                 allProductViewModel.deleteAllCartProducts()

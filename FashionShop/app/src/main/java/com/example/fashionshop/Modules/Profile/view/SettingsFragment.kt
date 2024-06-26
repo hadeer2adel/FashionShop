@@ -83,7 +83,7 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
             .setItems(options) { dialog, which ->
                 val selectedCurrency = options[which]
                 CustomerData.getInstance(requireContext()).currency = selectedCurrency
-                Snackbar.make(requireView(),"Selected: $selectedCurrency", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(requireView(),requireContext().getString(R.string.selected)+": $selectedCurrency", Snackbar.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.homeFragment)
             }
         builder.create().show()
@@ -95,7 +95,7 @@ class SettingsFragment : Fragment() , OnBackPressedListener {
         //    SharedPreferenceManager.getInstance(requireContext()).getLanguageUnit()
 
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Choose Language")
+        builder.setTitle(requireContext().getString(R.string.choose_language))
             .setSingleChoiceItems(options, options.indexOf(getLanguageLabel(currentLanguage))) { dialog, which ->
                 val selectedLanguage = when (which) {
                     0 -> "ar"

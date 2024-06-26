@@ -303,7 +303,7 @@ class ProductInfoFragment : Fragment() {
 //                )
                 Log.i("product", "onViewCreated: $product")
                     if (variantId==-1L){
-                        Snackbar.make(requireView(),"You Must Select Variant !", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), requireContext().getString(R.string.must_select_variant), Snackbar.LENGTH_SHORT).show()
 
                     }else{
                 if (product != null) {
@@ -313,7 +313,7 @@ class ProductInfoFragment : Fragment() {
                     Log.i("list", "onViewCreated: ${inventoryQuantities} , ////  ${originalPrices}")
 
                 } else {
-                    Snackbar.make(requireView(),"Product information not available", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), requireContext().getString(R.string.product_not_available), Snackbar.LENGTH_SHORT).show()
                 }
             }
             }
@@ -329,7 +329,7 @@ class ProductInfoFragment : Fragment() {
                     is NetworkState.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is NetworkState.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        Snackbar.make(requireView(),"Product added successfully", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(),requireContext().getString(R.string.add_product_success), Snackbar.LENGTH_SHORT).show()
                         showAlertDialogSucess()
                     }
                     is NetworkState.Failure -> {
@@ -360,12 +360,12 @@ class ProductInfoFragment : Fragment() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_alert_dialog_layout, null)
         AlertDialog.Builder(requireContext()).apply {
             setView(dialogView)
-            setPositiveButton("Login") { dialog, _ ->
+            setPositiveButton(requireContext().getString(R.string.login)) { dialog, _ ->
                 val intent = Intent(requireContext(), LoginActivity::class.java)
                 startActivity(intent)
                 dialog.dismiss()
             }
-            setNegativeButton("No") { dialog, _ ->
+            setNegativeButton(requireContext().getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             create()

@@ -123,13 +123,13 @@ class PaymentFragment : Fragment() {
 
             when {
                 binding.visaCardCheckBox.isChecked -> {
-                    Snackbar.make(binding.root,"Visa Card selected", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, requireContext().getString(R.string.visa_select), Snackbar.LENGTH_SHORT).show()
                 }
                 binding.cashOnDeliveryCheckBox.isChecked -> {
-                    Snackbar.make(binding.root,"Cash on Delivery selected", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, requireContext().getString(R.string.cash_select), Snackbar.LENGTH_SHORT).show()
                 }
                 else -> {
-                    Snackbar.make(binding.root,"Please select a payment method", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, requireContext().getString(R.string.select_payment_method), Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

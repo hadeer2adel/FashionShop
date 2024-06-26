@@ -152,7 +152,7 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
 
     private fun handleSuccess() {
         Log.i("PaymentSheetFragment", "Payment successful, proceeding with order placement")
-        Snackbar.make(requireView(), "Payment successful", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireView(), requireContext().getString(R.string.payment_success), Snackbar.LENGTH_SHORT).show()
         placeOrder()
         lifecycleScope.launch {
             delay(4000L)
@@ -164,7 +164,7 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         requireActivity().runOnUiThread {
-            Snackbar.make(requireView(), "Payment process finished", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(requireView(), requireContext().getString(R.string.payment_finish), Snackbar.LENGTH_SHORT).show()
 
         }
     }
@@ -252,7 +252,7 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
 
         allCodesViewModel.createOrder(wrappedOrderBody,
             onSuccess = {
-                showSnackbar("Order placed successfully")
+                showSnackbar(requireContext().getString(R.string.order_placed_success))
                 showAlertDialog()
                 Log.d("placeOrder", "success")
                 allProductViewModel.deleteAllCartProducts()

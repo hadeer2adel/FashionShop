@@ -156,20 +156,16 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
                             it
                         )
                     }
-                    is NetworkState.Failure -> showError(
-                        "Network Error",
-                        "Failed to load data. Please try again."
-                    )
+                    is NetworkState.Failure -> showError(requireContext().getString(R.string.network_error), requireContext().getString(R.string.failed_load_data))
 
                     else -> {}
                 }
             }
         }
     }
-
     override fun onItemClicked(brand: SmartCollection) {
         //Toast.makeText(requireContext(), "Clicked on ${brand.title}", Toast.LENGTH_SHORT).show()
-        Snackbar.make(binding.root, "Clicked on ${brand.title}", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, requireContext().getString(R.string.clicked_on) +" ${brand.title}", Snackbar.LENGTH_SHORT).show()
 
         val title: String? = brand.title
         val action = HomeFragmentDirections.actionHomeFragmentToProductsFragment4(title ?: "Default Title")
@@ -180,7 +176,7 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
         AlertDialog.Builder(requireContext()).apply {
             setTitle(title)
             setMessage(message)
-            setPositiveButton("OK") { dialog, _ ->
+            setNegativeButton(requireContext().getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             create()
@@ -222,7 +218,7 @@ class HomeFragment : Fragment() , BrandClickListener ,HomeListener{
 
         clipboardManager.setPrimaryClip(clip)
 
-        Snackbar.make(binding.root, "Discount code copied to clipboard", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, requireContext().getString(R.string.copy_discount_code), Snackbar.LENGTH_SHORT).show()
 
     }
 

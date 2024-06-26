@@ -140,7 +140,7 @@ class FavoriteFragment : Fragment() {
         AlertDialog.Builder(requireContext()).apply {
             setTitle(title)
             setMessage(message)
-            setPositiveButton("OK") { dialog, _ ->
+            setPositiveButton(requireContext().getString(R.string.sure)) { dialog, _ ->
                 dialog.dismiss()
             }
             create()

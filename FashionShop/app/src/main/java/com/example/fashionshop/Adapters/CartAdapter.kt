@@ -121,7 +121,7 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
                 // Notify adapter about data change for this item
                 notifyItemChanged(position)
             } else {
-                Snackbar.make(v, "Cannot decrease below 1 quantity", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(v, context.getString(R.string.decrease_quantity_message), Snackbar.LENGTH_SHORT).show()
 
                 Log.i("CartAdapter", "Cannot decrease below 1 quantity")
             }
@@ -145,7 +145,7 @@ class CartAdapter(private val listener: CartListener, private val context: Conte
 
                 notifyItemChanged(position)
             } else {
-                Snackbar.make(v, "Cannot increase above $quantity quantity", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(v, context.getString(R.string.increase_quantity_message_1) + " $quantity " + context.getString(R.string.increase_quantity_message_2), Snackbar.LENGTH_SHORT).show()
 
                 Log.i("CartAdapter", "Cannot increase above $quantity quantity")
                 // Optionally, you can show a toast or handle this situation as per your app's UX design

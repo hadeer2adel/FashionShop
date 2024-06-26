@@ -138,7 +138,7 @@ class ChooseAddressFragment : Fragment() , AddressListener{
 
     override fun setAddressDefault(id:Long,default: Boolean) {
         allProductViewModel.sendeditAddressRequest(id,default,CustomerData.getInstance(requireContext()).id)
-        Snackbar.make(binding.root, "Default Address Successfully", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, requireContext().getString(R.string.d_address_success), Snackbar.LENGTH_SHORT).show()
         //Toast.makeText(requireContext(), "Address Preeesed Successfully", Toast.LENGTH_LONG).show()
         refreshFragment()
     }

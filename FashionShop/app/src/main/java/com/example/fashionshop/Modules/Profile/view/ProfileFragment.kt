@@ -129,7 +129,7 @@ class ProfileFragment : Fragment() {
         AlertDialog.Builder(requireContext()).apply {
             setTitle(title)
             setMessage(message)
-            setPositiveButton("OK") { dialog, _ ->
+            setNegativeButton(requireContext().getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             create()

@@ -107,7 +107,7 @@ class OrderInfoFragment : Fragment() {
                 when (response) {
                     is NetworkState.Loading -> showLoading()
                     is NetworkState.Success -> showOrderDetails(response.data.order)
-                    is NetworkState.Failure -> showError("Network Error", "Failed to load order. Please try again.")
+                    is NetworkState.Failure -> showError(requireContext().getString(R.string.network_error), requireContext().getString(R.string.failed_load_data))
 
                 }
             }
@@ -183,7 +183,7 @@ class OrderInfoFragment : Fragment() {
             val lineItemBodies = it.line_items?.map { item -> convertToLineItemBody(item) }?.toMutableList()
             adapter.submitList(lineItemBodies)
             Log.i("OrderInfo", "Order ID: ${it.id}")
-        } ?: showError("Order Not Found", "The order details could not be found.")
+        } ?: showError(requireContext().getString(R.string.order_not_found), requireContext().getString(R.string.order_not_found_body))
     }
     private fun convertCurrency(amount: Double?): String {
         amount ?: return "" // Handle null or undefined amount gracefully
@@ -209,7 +209,7 @@ class OrderInfoFragment : Fragment() {
         AlertDialog.Builder(requireContext()).apply {
             setTitle(title)
             setMessage(message)
-            setPositiveButton("OK") { dialog, _ ->
+            setNegativeButton(requireContext().getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             create()

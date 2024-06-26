@@ -146,10 +146,10 @@ class CartFragment : Fragment() ,CartListener {
                     AlertDialog.Builder(requireContext())
                         .setTitle(getString(R.string.delete_all_cart_items_title))
                         .setMessage(getString(R.string.delete_all_cart_items_message))
-                        .setPositiveButton(getString(R.string.yes)) { dialog, which ->
+                        .setPositiveButton(getString(R.string.delete)) { dialog, which ->
                             allProductViewModel.deleteAllCartProducts()
                         }
-                        .setNegativeButton(getString(R.string.no)) { dialog, which ->
+                        .setNegativeButton(getString(R.string.cancel)) { dialog, which ->
                             dialog.dismiss()
                         }
                         .show()
@@ -197,12 +197,12 @@ class CartFragment : Fragment() ,CartListener {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(getString(R.string.confirm_deletion_title))
         builder.setMessage(getString(R.string.confirm_deletion_message))
-        builder.setPositiveButton(getString(R.string.yes)) { dialog, which ->
+        builder.setPositiveButton(getString(R.string.delete)) { dialog, which ->
             allProductViewModel.deleteCardProduct(id)
             Snackbar.make(requireView(), getString(R.string.item_deleted_successfully), Snackbar.LENGTH_SHORT).show()
         }
 
-        builder.setNegativeButton(getString(R.string.no)) { dialog, which ->
+        builder.setNegativeButton(getString(R.string.cancel)) { dialog, which ->
             dialog.dismiss()
         }
 
@@ -214,13 +214,13 @@ class CartFragment : Fragment() ,CartListener {
 
     override  fun sendeditChoosenQuantityRequest(id: Long, quantity: Int,price:String,inventoryQuantitiess:String,images:String){
         allProductViewModel.editCardQuantityProduct(id,quantity,price, inventoryQuantitiess,images)
-        Snackbar.make(requireView(),"Quantity Changed Successfully", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireView(),requireContext().getString(R.string.quantity_change_success), Snackbar.LENGTH_SHORT).show()
     }
     private fun showAlertDialog(title: String, message: String) {
         AlertDialog.Builder(requireContext()).apply {
             setTitle(title)
             setMessage(message)
-            setPositiveButton("OK") { dialog, _ ->
+            setNegativeButton(requireContext().getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             create()
