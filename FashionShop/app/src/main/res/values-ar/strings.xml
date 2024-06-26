@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FashionShop</string>
+
+    <!-- Home -->
+    <string name="coupons">كوبونات الخصم</string>
+    <string name="brands">العلامات التجارية</string>
+    <string name="category">الفئات</string>
+    <string name="search">البحث</string>
+    <string name="all">الكل</string>
+    <string name="women">العناصر النسائية</string>
+    <string name="kid">الأطفال</string>
+    <string name="men">الرجال</string>
+    <string name="sale">الخصم</string>
+
+    //login page
+    <string name="login_title1">أهلا من جديد</string>
+    <string name="login_title2">تسجيل الدخول للمتابعة</string>
+    <string name="skip">التخطى</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="orSignup">ليس لديك حساب؟</string>
+    <string name="or">أو</string>
+    <string name="google">تسجيل الدخول بواسطة حساب جوجل</string>
+    <string name="client_id">546301706385-3ha2dk9gtudv5q6gheem5uh3tmc0kppq.apps.googleusercontent.com</string>
+
+    //Sign up page
+    <string name="signup">إنشاء</string>
+    <string name="signupTitle1">إنشاء حساب</string>
+    <string name="signupTitle2">هيا بنا نبدأ!</string>
+    <string name="orLogin1">هل لديك حساب؟</string>
+    <string name="orLogin2">تسجيل الدخول</string>=
+
+    //data field
+    <string name="fname">الاسم الأول</string>
+    <string name="lname">اسم العائلة</string>
+    <string name="email">البريد إلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="confirmPassword">تأكيد كلمة المرور</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">مرحبا جزء فارغ</string>
+
+    //order details
+    <string name="coupon">كوبونات الخصم</string>
+    <string name="subtotal">المجموع الفرعي</string>
+    <string name="tax">الضرائب</string>
+    <string name="_0">0</string>
+    <string name="discount">الخصم</string>
+    <string name="shipping_fee">رسوم الشحن</string>
+    <string name="total">المجموع</string>
+    <string name="currency_title">العملة</string>
+    <string name="currency">العملة</string>
+    <string name="place_order">إكمال الطلب</string>
+    <string name="order_number">رقم الطلب</string>
+    <string name="order_total">مجموع الطلب</string>
+    <string name="items_number">عدد العناصر</string>
+
+    //product info page
+    <string name="addToCart">أضف إلى السلة</string>
+    <string name="product_description">الوصف</string>
+    <string name="show_reviews">عرض التعليقات</string>
+    <string name="hide_reviews">إخفاء التقييمات</string>
+    <string name="review">Reviews</string>
+    <string name="suggest">اقتراحات المنتج</string>
+    <string name="product_info_title">تفاصيل المنتج</string>
+    <string name="select_variant">اختر البديل</string>
+
+
+    //category
+    <string name="price">نطاق السعر</string>
+    <string name="from">من</string>
+    <string name="to">إلى</string>
+    <string name="dialog_filter">الفلتره</string>
+    <string name="ok">نعم</string>
+    <string name="cancel">لا</string>
+    <string name="validate">التحقق من صحة</string>
+    <string name="sure">بالتأكيد</string>
+
+    //Address
+    <string name="newAddress">أضف عنوان جديد</string>
+    <string name="newAddressAdded">أضف العنوان</string>
+    <string name="chooseAddressOrder">أختر عنوان للطلب</string>
+    <string name="Address">العنوان</string>
+
+
+
+    //payment
+    <string name="payment">إكمال الطلب</string>
+    <string name="checkout">إكمال الطلب</string>
+
+    //settings
+    <string name="language">اللغة</string>
+    <string name="arabic">العربية</string>
+    <string name="english">الإنجليزية</string>
+    <string name="setting">الإعدادت</string>
+    <string name="Currency">العملة</string>
+    <string name="AboutUs">عن المتجر</string>
+    //Dialog
+    <string name="delete_title">طلب الحذف</string>
+    <string name="delete_body">هل أنت متأكد أنك تريد حذف هذا المنتج من قائمتك المفضلة؟</string>
+
+    //auth message
+    <string name="auth">المصادقة</string>
+    <string name="error_login">فشل تسجيل الدخول. يرجى المحاولة مرة أخرى</string>
+    <string name="error_signup">فشل إنشاء الحساب، يرجى المحاولة مرة أخرى</string>
+    <string name="email_message">يرجى التحقق من بريدك الإلكتروني، ثم حاول تسجيل الدخول مرة أخرى</string>
+    <string name="error_email_verify">فشل تسجيل الدخول، يرجى التحقق من بريدك الإلكتروني أولا</string>
+    <string name="exist">موجود مسبقا</string>
+    <string name="not_exist">لا يوجد</string>
+    <string name="empty">حقل فارغ</string>
+    <string name="error_email_format">تنسيق البريد الإلكتروني غير صالح</string>
+    <string name="error_password_format">يحتوي على الأقل على 8 أحرف
+حرف كبير واحد وحرف صغير ورقم واحد على الأقل</string>
+    <string name="error_not_match">كلمة المرور وتأكيد كلمة المرور غير متطابقين</string>
+    <string name="error_name_format">على الأقل ٣ أحرف</string>
+
+
+    <string name="Orders">الطلبات</string>
+    <string name="Logout">تسجيل الخروج</string>
+   <string name="Settings">الإعدادات</string>
+    <string name="DeleteAll">مسح جميع عناصر عربة التسوق</string>
+    <string name="subTotal">المجموع الكلي:</string>
+
+    <string name="country">القارة</string>
+    <string name="address_1">العنوان الأول :</string>
+    <string name="address_2">العنوان الثاني ::</string>
+    <string name="phone">الهاتف :</string>
+    <string name="fav">أضف عناصر للمفضلة</string>
+    <string name="map">أضف عنوانك لقائمه العناوين</string>
+    <string name="logout_body">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
+
+    <string name="order_items">عناصر الطلب</string>
+    <string name="cash">نقدي</string>
+    <string name="payment_method">طريقة الدفع او السداد</string>
+    <string name="total_price">السعر الكلي</string>
+    <string name="_100">100$</string>
+    <string name="ahmed_gmail_com">ahmed@gmail.com</string>
+    <string name="contact_email">تواصل بالبريد الاكتروني</string>
+    <string name="phone_number">رقم التليفون</string>
+    <string name="quantity">الكمية</string>
+    <string name="cart">عربة التسوق فارغة!</string>
+    <string name="a1">العنوان الأول</string>
+    <string name="a2">العنوان الثاني</string>
+    <string name="c">المدينة</string>
+    <string name="co">الشركة</string>
+    <string name="cu">القارة</string>
+    <string name="cu1">إسم القارة</string>
+    <string name="cu2">كود القارة</string>
+    <string name="zip">الرمز البريدي</string>
+    <string name="name">الإسم</string>
+    <string name="ffname">الإسم الأول</string>
+    <string name="llname">الإسم الاخير</string>
+    <string name="phonee">الهاتف</string>
+    <string name="ph">الإقليم</string>
+    <string name="delete_all_cart_items_title">حذف جميع عناصر السلة</string>
+    <string name="delete_all_cart_items_message">هل أنت متأكد أنك تريد حذف جميع عناصر السلة؟</string>
+    <string name="confirm_deletion_title">تأكيد الحذف</string>
+    <string name="confirm_deletion_message">هل أنت متأكد أنك تريد حذف هذا العنصر من سلة التسوق الخاصة بك؟</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="item_deleted_successfully">تم حذف العنصر بنجاح</string>
+    <string name="choose_currency_title">اختر العملة</string>
+    <string name="selected_currency">تم اختيار:</string>
+    <string name="orderEmpty">سلة الطلبات فارغة لنقم بإضافة طلب جديد!</string>
+    <string name="guest_profile">هل لديك حساب لدينا ؟</string>
+    <string name="guest_profile2"> فقط أضغط تسجيل دخول ! </string>
+    <string name="homeNav">الرئيسية</string>
+    <string name="CartNav">عربة التسوق</string>
+    <string name="FavoriteNav">المفضلة</string>
+    <string name="SettingsNav">حسابي</string>
+    <string name="CategoryNav">التصنيفات</string>
+
+    <string name="guest_message">أنت بحاجة لتسجيل الدخول لتجربة هذه الإضافة..من فضلك سجل الدخول</string>
+    <string name="network_message">الرجاء التحقق من اتصال الشبكة والمحاولة مرة أخرى.</string>
+    <string name="addedSuccessfully">تم الطلب بنجاح</string>
+    <string name="addedSuccessfully2">تمت إضافة العنوان بنجاح</string>
+    <string name="addedSuccessfully3">تمت إضافة العنصر إلى عربة التسوق بنجاح</string>
+    <string name="About_Us">معلومات عنا</string>
+    <string name="s1">اسم الشركة: Fashion Shop</string>
+    <string name="s2">العنوان: 123 شارع سيدي جابر، الإسكندرية، مصر</string>
+    <string name="s3">الهاتف: +1 123-456-7890</string>
+    <string name="s4">البريد الإلكتروني: Fashion_app@gmail.com</string>
+    <string name="network_message_first">لم يتم العثور على اتصال بالإنترنت.</string>
+    <string name="network_message_main">لا يوجد اتصال بالإنترنت</string>
+    <string name="network_message_second">يرجى التحقق من إعدادات الإنترنت الخاصة بك.</string>
+    <string name="pieces">قطع</string>
+    <string name="valid">صالح</string>
+    <string name="next">التالي</string>
+    <string name="decrease_quantity_message">لا يمكن تقليل الكمية إلى أقل من 1</string>
+    <string name="increase_quantity_message_1">لا يمكن زيادة الكمية إلى أكثر من</string>
+    <string name="increase_quantity_message_2">وحدة</string>
+    <string name="delete_d_address_title">لا يمكن حذف العنوان الافتراضي</string>
+    <string name="delete_d_address_body">لا يمكن حذف العنوان الافتراضي.</string>
+    <string name="delete">حذف</string>
+    <string name="delete_address_body">هل أنت متأكد أنك تريد حذف هذا العنوان؟</string>
+    <string name="d_address_success">تم تعيين العنوان الافتراضي بنجاح</string>
+    <string name="permission_denied">تم رفض الإذن</string>
+    <string name="no_current_location">غير قادر على الحصول على الموقع الحالي، يرجى تشغيل إعداد الموقع</string>
+    <string name="your_location">موقعك</string>
+    <string name="network_error">خطأ في الشبكة</string>
+    <string name="failed_load_data">فشل في تحميل البيانات. يرجى المحاولة مرة أخرى.</string>
+    <string name="clicked_on">تم النقر على</string>
+    <string name="copy_discount_code">تم نسخ رمز الخصم إلى الحافظة</string>
+    <string name="coupon_success">تم تطبيق القسيمة بنجاح</string>
+    <string name="invalid_coupon">قسيمة غير صالحة</string>
+    <string name="invalid_coupon_body">القسيمة التي أدخلتها غير صالحة.</string>
+    <string name="choose_payment_method">اختر طريقة الدفع الخاصة بك</string>
+    <string name="order_placed_success">تم تقديم الطلب بنجاح</string>
+    <string name="order_not_found">الطلب غير موجود</string>
+    <string name="order_not_found_body">لا يمكن العثور على تفاصيل الطلب.</string>
+    <string name="visa_select">تم اختيار بطاقة فيزا</string>
+    <string name="cash_select">تم اختيار الدفع عند الاستلام</string>
+    <string name="select_payment_method">يرجى اختيار طريقة الدفع</string>
+    <string name="payment_success">تم الدفع بنجاح</string>
+    <string name="payment_finish">اكتملت عملية الدفع</string>
+    <string name="must_select_variant">يجب اختيار نوع!</string>
+    <string name="product_not_available">معلومات المنتج غير متوفرة</string>
+    <string name="add_product_success">تم إضافة المنتج بنجاح</string>
+    <string name="selected">تم الاختيار</string>
+    <string name="choose_language">اختر اللغة</string>
+    <string name="quantity_change_success">تم تغيير الكمية بنجاح</string>
+
+
+
+</resources>

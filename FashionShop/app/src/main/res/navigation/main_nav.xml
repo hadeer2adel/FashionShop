@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.fashionshop.Modules.Home.view.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_homeFragment_to_productsFragment4"
+            app:destination="@id/productsFragment" >
+            <argument
+                android:name="brandName"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.fashionshop.Modules.Category.view.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category" />
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.fashionshop.Modules.FavProductList.view.FavoriteFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/fragment_favorite">
+        <action
+            android:id="@+id/actionFavoriteFragmentToProductInfoFragment"
+            app:destination="@id/productInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.fashionshop.Modules.ShoppingCard.view.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.fashionshop.Modules.Profile.view.ProfileFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/orderFragment"
+        android:name="com.example.fashionshop.Modules.Orders.view.OrdersFragment"
+        android:label="Orders"
+        tools:layout="@layout/fragment_orders" >
+        <argument
+            android:name="orderId"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.fashionshop.Modules.Profile.view.SettingsFragment"
+        android:label="@string/setting"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.example.fashionshop.Modules.Address.view.AddressFragment"
+        android:label="@string/setting"
+        tools:layout="@layout/fragment_address" />
+    <fragment
+        android:id="@+id/aboutusFragment"
+        android:name="com.example.fashionshop.Modules.Profile.view.AboutFragment"
+        android:label="@string/setting"
+        tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.example.fashionshop.Modules.Payment.view.PaymentFragment"
+        android:label="Payment"
+        tools:layout="@layout/fragment_payment" >
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/chooseAdress"
+        android:name="com.example.fashionshop.Modules.Address.view.ChooseAddressFragment"
+        android:label="Payment"
+        tools:layout="@layout/fragment_choose_address" >
+
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/orderdetaile"
+        android:name="com.example.fashionshop.Modules.OrderDetails.view.OrderDetailsFragment"
+        android:label="Payment"
+        tools:layout="@layout/fragment_order_details" />
+    
+    <fragment
+        android:id="@+id/productInfoFragment"
+        android:name="com.example.fashionshop.Modules.ProductInfo.view.ProductInfoFragment"
+        android:label="@string/product_info_title"
+        tools:layout="@layout/fragment_product_info" >
+        <argument
+            android:name="product_id"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/AddAddress"
+        android:name="com.example.fashionshop.Modules.Address.view.AddNewAddressFragment"
+        android:label="fragment_product_info"
+        tools:layout="@layout/fragment_add_new_address" />
+
+    <fragment
+        android:id="@+id/mapsFrgment"
+        android:name="com.example.fashionshop.Modules.Address.view.MapsFragment"
+        android:label="fragment_product_info"
+        tools:layout="@layout/fragment_maps" />
+    <action
+        android:id="@+id/action_profileFragment_to_ordersFragment"
+        app:destination="@id/orderFragment" />
+
+    <action
+        android:id="@+id/action_to_productInfoFragment"
+        app:destination="@id/productInfoFragment" />
+
+    <action
+        android:id="@+id/action_profileFragment_to_favoritesFragment"
+        app:destination="@id/favoriteFragment" />
+
+    <action
+        android:id="@+id/action_profileFragment_to_settingFragment"
+        app:destination="@id/settingsFragment" />
+
+    <action
+        android:id="@+id/action_profileFragment_to_addressFragment"
+        app:destination="@id/addressFragment"
+        />
+
+    <action
+        android:id="@+id/action_profileFragment_to_AboutFragment"
+        app:destination="@id/aboutusFragment" />
+
+    <action
+        android:id="@+id/action_cartFragment_to_paymentFragment"
+        app:destination="@id/chooseAdress" />
+
+    <action
+        android:id="@+id/action_AdressFragment_to_paymentFragment"
+        app:destination="@id/paymentFragment" >
+
+    </action>
+
+
+    <action
+        android:id="@+id/action_Payment_to_orderDetailsFragment"
+        app:destination="@id/orderdetaile" />
+    <fragment
+        android:id="@+id/productsFragment"
+        android:name="com.example.fashionshop.Modules.Products.view.ProductsFragment"
+        android:label="fragment_products"
+        tools:layout="@layout/fragment_products" >
+        <argument
+            android:name="brandName"
+            app:argType="string" />
+    </fragment>
+
+
+    <action
+        android:id="@+id/Adress_to_AddAddressFragment"
+        app:destination="@id/AddAddress" />
+    <action
+        android:id="@+id/action_from_AddnewAddress_to_Map"
+        app:destination="@id/mapsFrgment" />
+
+    <action
+        android:id="@+id/action_from_map_to_newAddresses"
+        app:destination="@id/addressFragment" />
+    <fragment
+        android:id="@+id/orderInfoFragment"
+        android:name="com.example.fashionshop.Modules.OrderInfo.view.OrderInfoFragment"
+        android:label="Order Info"
+        tools:layout="@layout/fragment_order_info" >
+        <argument
+            android:name="orderId"
+            app:argType="long" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_from_map_to_addnewAddresses"
+        app:destination="@id/AddAddress" />
+
+    <action android:id="@+id/actiomfromSheet_to_order"
+        app:destination="@+id/orderFragment"
+        />
+
+
+    <action
+        android:id="@+id/action_cartFragment_to_ChooseAddressFragment"
+        app:destination="@id/chooseAdress" />
+
+    <action
+        android:id="@+id/action_orderFragment_to_orderInfoFragment"
+        app:destination="@id/orderInfoFragment" >
+    </action>
+
+    <action
+        android:id="@+id/action_cartFragment"
+        app:destination="@id/cartFragment" >
+        </action>
+</navigation>

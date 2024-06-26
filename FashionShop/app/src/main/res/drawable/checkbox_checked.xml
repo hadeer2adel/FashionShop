@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:width="20dp" android:height="20dp">
+        <shape android:shape="oval">
+            <solid android:color="#FFA500"/>
+        </shape>
+    </item>
+    <item android:width="20dp" android:height="20dp">
+        <bitmap android:src="@android:drawable/checkbox_on_background"/>
+    </item>
+</layer-list>
