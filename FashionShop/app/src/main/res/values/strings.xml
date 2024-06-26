@@ -173,7 +173,10 @@ at least one upper letter, one lowercase letter, and one digit</string>
     <string name="SettingsNav">Settings</string>
     <string name="CategoryNav">Category</string>
     <string name="guest_message">You need to be logged in to access this feature. Please log in to continue.</string>
-    <string name="network_message">Please check your network connection and try again.</string>
+    <string name="network_message_first">No internet connection found.</string>
+    <string name="network_message_main">No Internet Connection</string>
+    <string name="network_message_second">Please check your internet settings.</string>
+    <string name="network_message">Your network message here</string>
 
 
 </resources>

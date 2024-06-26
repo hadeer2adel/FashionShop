@@ -121,7 +121,7 @@ class OrderInfoFragment : Fragment() {
             binding.tvOrderEmail.text = it.email
             binding.tvOrderPhome.text = it.billing_address?.phone
             binding.tvOrderAddress.text = it.billing_address?.address1
-            binding.tvOrderPrice.text = it.line_items?.get(0)?.properties?.get(0)?.value?.split("*")?.getOrNull(1)?.trim() ?: "0.00"
+            binding.tvOrderPrice.text = it.current_total_price
             binding.currency.text = CustomerData.getInstance(requireContext()).currency
 
             val lineItemBodies = it.line_items?.map { item -> convertToLineItemBody(item) }?.toMutableList()

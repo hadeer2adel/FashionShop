@@ -70,6 +70,7 @@ class OrderDetailsFragment() : Fragment() {
     lateinit var addressFactory: AddressFactory
     lateinit var addressViewModel: AddressViewModel
     lateinit var filteredAddresses : Addresse
+    var dicountValueBody = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -199,7 +200,9 @@ class OrderDetailsFragment() : Fragment() {
 
     private fun convertCurrency(amount: Double?): Double {
         amount ?: return 0.0
-        return amount / currencyConversionRate
+        val convertedAmount = amount / currencyConversionRate
+        subtotalInt = convertedAmount // Update subtotalInt here
+        return convertedAmount
     }
 
     private fun fetchTitlesList() {
@@ -249,6 +252,7 @@ class OrderDetailsFragment() : Fragment() {
                                     binding.discountValue.text = "${String.format("%.2f", kotlin.math.abs(valueOfDis))}%"
                                     binding.totalValue.text = String.format("%.2f", total)
                                     subtotalInt= total
+                                    dicountValueBody = (subtotal - total).toString()
                                     break
                                 }
                             }
@@ -408,9 +412,13 @@ class OrderDetailsFragment() : Fragment() {
             customer = customer,
             line_items = lineItem,
             total_tax = 13.5,
-            currency = CustomerData.getInstance(requireContext()).currency
+            currency = CustomerData.getInstance(requireContext()).currency ,
+            total_discounts = dicountValueBody
         )
         val wrappedOrderBody = mapOf("order" to orderBody)
+        Log.i("current_total_price", " ${wrappedOrderBody}")
+        Log.i("current", " ${subtotalInt?.toString() ?: "0.0"}")
+        Log.i("current", " ${CustomerData.getInstance(requireContext()).id}")
 
         allCodesViewModel.createOrder(wrappedOrderBody,
             onSuccess = {

@@ -227,12 +227,14 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
 
             )
         }
+
         val orderBody = OrderBody(
             billing_address = address,
             customer = customer,
             line_items = lineItem,
             total_tax = 13.5,
-            currency = CustomerData.getInstance(requireContext()).currency
+            currency = CustomerData.getInstance(requireContext()).currency ,
+            total_discounts = "12"
         )
         val wrappedOrderBody = mapOf("order" to orderBody)
 

@@ -59,7 +59,8 @@ data class OrderBody(
     val customer: CustomerBody,
     val line_items: List<LineItemBody>,
     val total_tax: Double,
-    val currency: String
+    val currency: String,
+    val total_discounts : String
 )
 
 

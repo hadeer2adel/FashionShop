@@ -13,6 +13,7 @@ import com.example.fashionshop.Modules.Address.viewModel.AddNewAddressViewModel
 import com.example.fashionshop.R
 import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.databinding.FragmentAddNewAddressBinding
 
 class AddNewAddressFragment : Fragment() {
@@ -38,67 +39,75 @@ class AddNewAddressFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        allProductFactory =
+        if (isNetworkConnected(requireContext())){
+
+            allProductFactory =
             AddNewAddressFactory(RepositoryImp.getInstance(NetworkManagerImp.getInstance()))
-        allProductViewModel = ViewModelProvider(
-            this,
-            allProductFactory
-        ).get(AddNewAddressViewModel::class.java)
-        arguments?.let {
-            val address1 = it.getString("address1")
-            val address2 = it.getString("address2")
-            val city = it.getString("city")
-            val zip = it.getString("zip")
-            val country = it.getString("country")
-            val country_code = it.getString("country_code")
-            val default = it.getBoolean("default")
-            val first_name = it.getString("first_name")
-            val last_name = it.getString("last_name")
-            val company = it.getString("company")
-            val name = it.getString("name")
-            val country_name = it.getString("country_name")
+            allProductViewModel = ViewModelProvider(
+                this,
+                allProductFactory
+            ).get(AddNewAddressViewModel::class.java)
+            arguments?.let {
+                val address1 = it.getString("address1")
+                val address2 = it.getString("address2")
+                val city = it.getString("city")
+                val zip = it.getString("zip")
+                val country = it.getString("country")
+                val country_code = it.getString("country_code")
+                val default = it.getBoolean("default")
+                val first_name = it.getString("first_name")
+                val last_name = it.getString("last_name")
+                val company = it.getString("company")
+                val name = it.getString("name")
+                val country_name = it.getString("country_name")
 
-            if (address1 != null) binding.etAddress1.setText(address1)
-            if (address2 != null) binding.etAddress2.setText(address2)
-            if (city != null) binding.etCity.setText(city)
-            if (zip != null) binding.etZip.setText(zip)
-            if (country != null) binding.etCountry.setText(country)
-            if (country_code != null) binding.etCountryCode.setText(country_code)
-            if (first_name != null) binding.etFirstName.setText(first_name)
-            if (last_name != null) binding.etLastName.setText(last_name)
-            if (company != null) binding.etCompany.setText(company)
-            if (name != null) binding.etName.setText(name)
-            if (country_name != null) binding.etCountryName.setText(country_name)
+                if (address1 != null) binding.etAddress1.setText(address1)
+                if (address2 != null) binding.etAddress2.setText(address2)
+                if (city != null) binding.etCity.setText(city)
+                if (zip != null) binding.etZip.setText(zip)
+                if (country != null) binding.etCountry.setText(country)
+                if (country_code != null) binding.etCountryCode.setText(country_code)
+                if (first_name != null) binding.etFirstName.setText(first_name)
+                if (last_name != null) binding.etLastName.setText(last_name)
+                if (company != null) binding.etCompany.setText(company)
+                if (name != null) binding.etName.setText(name)
+                if (country_name != null) binding.etCountryName.setText(country_name)
+            }
+            binding.buttonSendRequest.setOnClickListener {
+                allProductViewModel.sendAddressRequest(
+                    address1 = binding.etAddress1.text.toString(),
+                    address2 = binding.etAddress2.text.toString(),
+                    city = binding.etCity.text.toString(),
+                    company = binding.etCompany.text.toString(),
+                    first_name = binding.etFirstName.text.toString(),
+                    last_name = binding.etLastName.text.toString(),
+                    phone = binding.etPhone.text.toString(),
+                    province = "",
+                    country = binding.etCountry.text.toString(),
+                    zip = binding.etZip.text.toString(),
+                    name = binding.etName.text.toString(),
+                    province_code = "", // Adjust as needed
+                    country_code = binding.etCountryCode.text.toString(),
+                    country_name = binding.etCountryName.text.toString(),
+                    id = 3,
+                    customer_id = CustomerData.getInstance(requireContext()).id,
+                    default = false
+                )
+                findNavController().navigate(R.id.action_from_map_to_newAddresses)
+
+            }
+
+            binding.mapIcon.setOnClickListener {
+
+                findNavController().navigate(R.id.action_from_AddnewAddress_to_Map)
+
+
+            }
         }
-        binding.buttonSendRequest.setOnClickListener {
-            allProductViewModel.sendAddressRequest(
-                address1 = binding.etAddress1.text.toString(),
-                address2 = binding.etAddress2.text.toString(),
-                city = binding.etCity.text.toString(),
-                company = binding.etCompany.text.toString(),
-                first_name = binding.etFirstName.text.toString(),
-                last_name = binding.etLastName.text.toString(),
-                phone = binding.etPhone.text.toString(),
-                province = "",
-                country = binding.etCountry.text.toString(),
-                zip = binding.etZip.text.toString(),
-                name = binding.etName.text.toString(),
-                province_code = "", // Adjust as needed
-                country_code = binding.etCountryCode.text.toString(),
-                country_name = binding.etCountryName.text.toString(),
-                id = 3,
-                customer_id = CustomerData.getInstance(requireContext()).id,
-                default = false
-            )
-            findNavController().navigate(R.id.action_from_map_to_newAddresses)
-
-        }
-
-        binding.mapIcon.setOnClickListener {
-
-            findNavController().navigate(R.id.action_from_AddnewAddress_to_Map)
-
-
+        else
+        {
+            binding.scroll.visibility = View.GONE
+            binding.layoutConnection.visibility = View.VISIBLE
         }
     }
 

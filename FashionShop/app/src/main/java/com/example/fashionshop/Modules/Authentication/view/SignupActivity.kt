@@ -17,6 +17,7 @@ import com.example.fashionshop.Repository.RepositoryImp
 import com.example.fashionshop.Service.Networking.NetworkManager
 import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
+import com.example.fashionshop.View.isNetworkConnected
 import com.example.fashionshop.databinding.ActivitySignupBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -37,35 +38,42 @@ class SignupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (isNetworkConnected(this)) {
+            mAuth = FirebaseAuth.getInstance()
+            initViewModel()
 
-        mAuth = FirebaseAuth.getInstance()
-        initViewModel()
-
-        binding.loginBtn1.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
-        binding.loginBtn2.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
-
-        binding.skipBtn.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
-
-        binding.signupBtn.setOnClickListener {
-            if (validation()) {
-                val request = CustomerRequest(
-                    CustomerRequest.Customer(
-                        first_name = binding.firstName.text.toString() + " " + binding.lastName.text.toString(),
-                        last_name = "",
-                        email = binding.email.text.toString().trim()
-                    )
-                )
-                val name = binding.firstName.text.toString() + " " + binding.lastName.text.toString()
-                val email = binding.email.text.toString().trim()
-                val password = binding.password.text.toString()
-                fireBaseAuth(name, email, password, request)
+            binding.loginBtn1.setOnClickListener {
+                startActivity(Intent(this, LoginActivity::class.java))
             }
+            binding.loginBtn2.setOnClickListener {
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
+
+            binding.skipBtn.setOnClickListener {
+                startActivity(Intent(this, MainActivity::class.java))
+            }
+
+            binding.signupBtn.setOnClickListener {
+                if (validation()) {
+                    val request = CustomerRequest(
+                        CustomerRequest.Customer(
+                            first_name = binding.firstName.text.toString() + " " + binding.lastName.text.toString(),
+                            last_name = "",
+                            email = binding.email.text.toString().trim()
+                        )
+                    )
+                    val name =
+                        binding.firstName.text.toString() + " " + binding.lastName.text.toString()
+                    val email = binding.email.text.toString().trim()
+                    val password = binding.password.text.toString()
+                    fireBaseAuth(name, email, password, request)
+                }
+            }
+        }
+        else
+        {
+            binding.screen.visibility = View.INVISIBLE
+            binding.emptyView.visibility = View.VISIBLE
         }
     }
 
