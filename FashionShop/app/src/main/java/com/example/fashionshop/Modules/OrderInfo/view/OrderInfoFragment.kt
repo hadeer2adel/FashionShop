@@ -83,7 +83,7 @@ class OrderInfoFragment : Fragment() {
         initViewModelCurrency()
         initViewModel()
         viewModel.getOrder(args.orderId)
-       // setUpRV()
+        // setUpRV()
     }
 
     private fun initViewModel() {
@@ -162,19 +162,14 @@ class OrderInfoFragment : Fragment() {
             binding.tvOrderPhome.text = it.billing_address?.phone
             binding.tvOrderAddress.text = it.billing_address?.address1
             val customer = CustomerData.getInstance(requireContext())
-            val priceString = it.line_items?.get(0)?.properties?.get(0)?.value?.split("*")?.getOrNull(1)?.trim() ?: "0.00"
-
-            val priceDouble = priceString.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails
-
+            val priceString = it.current_total_price
+            val priceDouble = priceString?.toDoubleOrNull() ?: 0.0 // Convert to Double or default to 0.0 if conversion fails
             if (customer.currency == "USD") {
                 binding.tvOrderPrice.text = convertCurrency(priceDouble)
             } else {
                 binding.tvOrderPrice.text = String.format("%.2f", priceDouble) // Format directly if not converting
             }
-
-
             binding.currency.text = CustomerData.getInstance(requireContext()).currency
-
             val lineItemBodies = it.line_items?.map { item -> convertToLineItemBody(item) }?.toMutableList()
             adapter.submitList(lineItemBodies)
             Log.i("OrderInfo", "Order ID: ${it.id}")

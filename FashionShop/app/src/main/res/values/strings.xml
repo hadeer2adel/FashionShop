@@ -183,4 +183,10 @@ at least one upper letter, one lowercase letter, and one digit</string>
     <string name="s2"> Address: 123 Sedi Gaber St, Alexandria, Egypt</string>
     <string name="s3"> Phone: +1 123-456-7890</string>
     <string name="s4">Email: Fashion_app@gmail.com</string>
+    <string name="network_message_first">No internet connection found.</string>
+    <string name="network_message_main">No Internet Connection</string>
+    <string name="network_message_second">Please check your internet settings.</string>
+    <string name="network_message">Your network message here</string>
+
+
 </resources>
