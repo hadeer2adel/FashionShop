@@ -13,7 +13,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -54,7 +53,7 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
     var subtotalInt = 0.0
     private var currencyConversionRate: Double = 1.0
     lateinit var allCodesFactory: OrderDetailsFactory
-
+    var discountValueBody = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -148,6 +147,7 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
         paymentUrl?.let {
             webView.loadUrl(it)
         }
+        discountValueBody = arguments?.getString("ARG_DISCOUNT_VALUE_BODY").toString()
     }
 
     private fun handleSuccess() {
@@ -170,10 +170,11 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        fun newInstance(paymentUrl: String): PaymentSheetFragment {
+        fun newInstance(paymentUrl: String, discountValueBody: String): PaymentSheetFragment {
             val fragment = PaymentSheetFragment()
             val args = Bundle()
             args.putString("paymentUrl", paymentUrl)
+            args.putString("ARG_DISCOUNT_VALUE_BODY" , discountValueBody)
             fragment.arguments = args
             return fragment
         }
@@ -191,8 +192,9 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
             country = filteredAddresses.country,
             last_name = filteredAddresses.last_name,
             name = filteredAddresses.name,
-            country_code = filteredAddresses.country_code
+            country_code = filteredAddresses.country_code,
         )
+
 
         val defaultAddress = DefaultAddressBody(
             first_name = filteredAddresses.first_name,
@@ -230,31 +232,33 @@ class PaymentSheetFragment : BottomSheetDialogFragment() {
                         value = draftProperty.value
                     )
                 }
+
+
             )
         }
-
         val orderBody = OrderBody(
             billing_address = address,
             customer = customer,
             line_items = lineItem,
             total_tax = 13.5,
             currency = CustomerData.getInstance(requireContext()).currency ,
-            total_discounts = "12"
+            total_discounts = discountValueBody
         )
         val wrappedOrderBody = mapOf("order" to orderBody)
-
-        Log.i("PaymentSheetFragment", "Placing order with body: $wrappedOrderBody")
+        Log.i("current_total_price", " ${wrappedOrderBody}")
+        Log.i("current", " ${subtotalInt?.toString() ?: "0.0"}")
+        Log.i("current", " ${CustomerData.getInstance(requireContext()).id}")
 
         allCodesViewModel.createOrder(wrappedOrderBody,
             onSuccess = {
-                Log.i("PaymentSheetFragment", "Order placed successfully")
-                showAlertDialog()
                 showSnackbar("Order placed successfully")
+                showAlertDialog()
+                Log.d("placeOrder", "success")
                 allProductViewModel.deleteAllCartProducts()
             },
             onError = { errorMessage ->
-                Log.e("PaymentSheetFragment", "Failed to place order: $errorMessage")
                 showSnackbar(errorMessage)
+                Log.d("placeOrder", "error: $errorMessage")
             }
         )
     }

@@ -1,7 +1,6 @@
 package com.example.fashionshop.Modules.OrderDetails.view
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
@@ -11,9 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -29,11 +26,8 @@ import com.example.fashionshop.Model.DefaultAddressBody
 import com.example.fashionshop.Model.DraftOrderResponse
 import com.example.fashionshop.Model.LineItemBody
 import com.example.fashionshop.Model.OrderBody
-import com.example.fashionshop.Model.inventoryQuantities
-import com.example.fashionshop.Model.originalPrices
 import com.example.fashionshop.Modules.Address.viewModel.AddressFactory
 import com.example.fashionshop.Modules.Address.viewModel.AddressViewModel
-import com.example.fashionshop.Modules.Authentication.view.LoginActivity
 import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
 import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsFactory
@@ -49,7 +43,6 @@ import com.example.fashionshop.Service.Networking.NetworkManagerImp
 import com.example.fashionshop.Service.Networking.NetworkState
 import com.example.fashionshop.databinding.FragmentOrderDetailsBinding
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -305,7 +298,7 @@ class OrderDetailsFragment() : Fragment() {
                     is NetworkState.Success -> {
                         val paymentUrl = response.data.url
                         // loadPaymentUrl(paymentUrl)
-                        showPaymentSheet(paymentUrl)
+                        showPaymentSheet(paymentUrl , dicountValueBody)
                     }
                     is NetworkState.Failure -> ""
                     else -> { }
@@ -313,11 +306,11 @@ class OrderDetailsFragment() : Fragment() {
             }}
     }
 
-    private fun showPaymentSheet(paymentUrl: String) {
-       // allProductViewModel.deleteAllCartProducts()
-        val paymentSheetFragment = PaymentSheetFragment.newInstance(paymentUrl)
+    private fun showPaymentSheet(paymentUrl: String, discountValueBody: String) {
+        val paymentSheetFragment = PaymentSheetFragment.newInstance(paymentUrl, discountValueBody)
         paymentSheetFragment.show(childFragmentManager, "PaymentSheetFragment")
     }
+
     private fun showPaymentMethodDialog() {
         val options = arrayOf("Visa", "Cash")
 

@@ -179,6 +179,13 @@
     <string name="s2">العنوان: 123 شارع سيدي جابر، الإسكندرية، مصر</string>
     <string name="s3">الهاتف: +1 123-456-7890</string>
     <string name="s4">البريد الإلكتروني: Fashion_app@gmail.com</string>
+    <string name="network_message_first">لم يتم العثور على اتصال بالإنترنت.</string>
+    <string name="network_message_main">لا يوجد اتصال بالإنترنت</string>
+    <string name="network_message_second">يرجى التحقق من إعدادات الإنترنت الخاصة بك.</string>
+    <string name="pieces">قطع</string>
+    <string name="valid">صالح</string>
+    <string name="next">التالي</string>
+
 
 
 </resources>

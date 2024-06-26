@@ -174,7 +174,6 @@ at least one upper letter, one lowercase letter, and one digit</string>
     <string name="SettingsNav">Profile</string>
     <string name="CategoryNav">Category</string>
     <string name="guest_message">You need to be logged in to access this feature. Please log in to continue.</string>
-    <string name="network_message">Please check your network connection and try again.</string>
     <string name="addedSuccessfully">The Order Was Placed Successfully </string>
     <string name="addedSuccessfully2">The Address Was Added Successfully </string>
     <string name="addedSuccessfully3">The Item Was Added To Cart Successfully </string>

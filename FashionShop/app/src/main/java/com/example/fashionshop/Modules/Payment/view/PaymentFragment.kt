@@ -4,16 +4,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebChromeClient
-import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.fashionshop.Model.CustomerData
-import com.example.fashionshop.Modules.Category.viewModel.CategoryFactory
-import com.example.fashionshop.Modules.Category.viewModel.CategoryViewModel
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsFactory
 import com.example.fashionshop.Modules.OrderDetails.viewModel.OrderDetailsViewModel
 import com.example.fashionshop.Modules.Payment.viewModel.PaymentFactory
@@ -155,7 +150,7 @@ class PaymentFragment : Fragment() {
                     is NetworkState.Success -> {
                         val paymentUrl = response.data.url
                        // loadPaymentUrl(paymentUrl)
-                        showPaymentSheet(paymentUrl)
+                        showPaymentSheet(paymentUrl , "")
                     }
                     is NetworkState.Failure -> ""
                     else -> { }
@@ -176,8 +171,8 @@ class PaymentFragment : Fragment() {
     }
 
 
-    private fun showPaymentSheet(paymentUrl: String) {
-        val paymentSheetFragment = PaymentSheetFragment.newInstance(paymentUrl)
+    private fun showPaymentSheet(paymentUrl: String , discountValueBody: String) {
+        val paymentSheetFragment = PaymentSheetFragment.newInstance(paymentUrl, discountValueBody)
         paymentSheetFragment.show(childFragmentManager, "PaymentSheetFragment")
     }
 
