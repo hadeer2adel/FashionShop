@@ -32,7 +32,9 @@ class OrderDetailsViewModelTest {
         ),
         line_items = listOf(LineItemBody(123456, 2, 123456, "dummy", "22", "")),
         total_tax = 13.5,
-        currency = "USD"
+        currency = "USD",
+        total_discounts = "25" ,
+        referring_site = "cash"
     )
     private val priceRule = PriceRule(
         price_rules = listOf(

@@ -463,7 +463,9 @@ class RepositoryImpTest {
         customer = customerOrder,
         line_items = lineItemsList,
         total_tax = 13.5,
-        currency ="EGY"
+        currency ="EGY",
+        total_discounts = "25" ,
+        referring_site = "cash"
     )
     val orderBodyResponse = OrderBodyResponse(orderBody)
     val wrappedOrderBody = mapOf("order" to orderBody)
